@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UICguessr - Learn UIC Campus</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Screen 01: Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <main class="main-container">
+                <div class="welcome-content">
+                    <div class="welcome-icon">🎓</div>
+                    <h1 class="welcome-title">UICguessr</h1>
+                    <p class="welcome-subtitle">Find Your Way Through Campus</p>
+                    <p class="welcome-description">Campus Navigation Game for UIC Students</p>
+                    <p class="welcome-description">Learn UIC's layout by guessing landmark photos.</p>
+                    <p class="welcome-description">Discover resources and build your mental map of campus!</p>
+                    <p class="welcome-description">Perfect for freshmen, transfers, and commuter students.</p>
+                    <div class="welcome-buttons">
+                        <button class="btn btn-primary btn-lg" onclick="game.startGame()">
+                            Start Game
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('tutorial')">
+                            How to Play?
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('options')">
+                            Game Options
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('resources')">
+                            View All Resources
+                        </button>
+                    </div>
+                    <div class="welcome-features">
+                        <div class="feature-card">
+                            <span class="feature-icon">📸</span>
+                            <h3>Photo Challenges</h3>
+                            <p>Identify 5 campus locations from photos</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">🗺️</span>
+                            <h3>Campus Maps</h3>
+                            <p>See exact locations on UIC map</p>
+                        </div>
+                        <div class="feature-card">
+                            <span class="feature-icon">💡</span>
+                            <h3>Campus Resources</h3>
+                            <p>Learn what services are available</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 02: Question Screen -->
+        <div id="question-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                    <h1 class="header-title">Round <span id="question-number">1</span> of 5 • Score: <span id="current-score">0</span></h1>
+                    <span id="timer-display" class="timer-display">⏱ 1:00</span>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="question-layout">
+                    <div class="question-left">
+                        <div class="photo-container">
+                            <img id="question-photo" src="" alt="Location photo">
+                            <button class="btn btn-icon zoom-btn" onclick="game.showHint()">
+                                🔍 View Larger Image
+                            </button>
+                        </div>
+                    </div>
+                    <div class="question-right">
+                        <h2 class="question-title">Where is this location?</h2>
+                        <p class="question-instruction">Select the building that matches the photo:</p>
+                        <div id="answer-options" class="answer-options">
+                            <!-- Options will be populated by JavaScript -->
+                        </div>
+                        
+                        <!-- Hint Container -->
+                        <div id="hint-container" class="hint-container"></div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button id="hint-btn" class="btn btn-secondary" onclick="game.showProgressiveHint()">
+                                💡 Get Hint
+                            </button>
+                            <button id="submit-answer-btn" class="btn btn-primary btn-lg" onclick="game.submitAnswer()" disabled>
+                                Submit Answer
+                            </button>
+                        </div>
+                        
+                        <div class="question-info">
+                            <div class="info-item">
+                                <span class="info-label">Attempts remaining:</span>
+                                <span id="attempts-remaining" class="info-value">2/2</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Points possible:</span>
+                                <span id="points-possible" class="info-value">100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="progress-bar-container" class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                    <span id="progress-text" class="progress-text">0 of 5 Complete</span>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 03: Correct Answer Screen -->
+        <div id="correct-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <h1 class="header-title">UICguessr - Correct!</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="feedback-container">
+                    <div class="feedback-banner success">
+                        <div class="feedback-icon">✓</div>
+                        <div class="feedback-content">
+                            <h2 class="feedback-title">Correct!</h2>
+                            <p class="feedback-points">+<span id="correct-points">100</span> points</p>
+                        </div>
+                    </div>
+                    <div class="feedback-info">
+                        <h3 id="correct-building-name">Student Center East (SCE)</h3>
+                        <p id="correct-building-description"></p>
+                        
+                        <!-- Bonus Display -->
+                        <div id="bonus-display" class="bonus-display" style="display:none;"></div>
+                        
+                        <div class="resources-section">
+                            <h4>What's at this location?</h4>
+                            <div id="correct-resources" class="resource-cards">
+                                <!-- Resources will be populated -->
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-lg" onclick="game.showMap()">
+                            Continue →
+                        </button>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill-correct" class="progress-fill"></div>
+                    </div>
+                    <span id="progress-text-correct" class="progress-text"></span>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 04: Incorrect Answer Screen -->
+        <div id="incorrect-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <h1 class="header-title">UICguessr - Try Again</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="feedback-container">
+                    <div class="feedback-banner error">
+                        <div class="feedback-icon">✗</div>
+                        <div class="feedback-content">
+                            <h2 class="feedback-title" id="incorrect-title">Not quite right...</h2>
+                            <p class="feedback-subtitle" id="incorrect-subtitle">You have 1 attempt remaining</p>
+                        </div>
+                    </div>
+                    <div class="feedback-info">
+                        <div class="helpful-tips">
+                            <h4>💡 Helpful Tips:</h4>
+                            <ul id="incorrect-tips">
+                                <li>Look for building signs and abbreviations</li>
+                                <li>Pay attention to architectural features</li>
+                                <li>Consider the surrounding landscape</li>
+                            </ul>
+                        </div>
+                        <button id="try-again-btn" class="btn btn-primary btn-lg" onclick="game.tryAgain()">
+                            Try Again
+                        </button>
+                        <button id="show-answer-btn" class="btn btn-secondary btn-lg" onclick="game.showAnswerReveal()" style="display:none;">
+                            Show Me The Answer
+                        </button>
+                    </div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar">
+                        <div id="progress-fill-incorrect" class="progress-fill"></div>
+                    </div>
+                    <span id="progress-text-incorrect" class="progress-text"></span>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 05: Map View Screen -->
+        <div id="map-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <h1 class="header-title">UICguessr - Location Details</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="map-layout">
+                    <div class="map-section">
+                        <h3>📍 UIC East Campus Map</h3>
+                        <div class="map-container">
+                            <div id="campus-map" class="campus-map">
+                                <!-- Simplified campus map -->
+                                <div class="map-building highlighted" id="map-building">
+                                    <span class="building-label" id="map-building-label">SCE</span>
+                                </div>
+                                <div class="map-pin" id="map-pin">📍</div>
+                                <p class="map-caption">You are here</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="map-info-section">
+                        <h3 id="map-location-name">Student Center East (SCE)</h3>
+                        <div class="info-card">
+                            <p><strong>📍 Address:</strong> <span id="map-address">750 S Halsted Street, Chicago, IL 60607</span></p>
+                        </div>
+                        <h4>🏛️ Nearby Landmarks</h4>
+                        <div id="map-landmarks" class="landmarks-list">
+                            <!-- Landmarks will be populated -->
+                        </div>
+                        <button class="btn btn-primary btn-lg" onclick="game.continueToNextRound()">
+                            Continue to Next Round →
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 07: Final Answer Reveal Screen -->
+        <div id="answer-reveal-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <h1 class="header-title">UICguessr - Answer Revealed</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="reveal-container">
+                    <div class="reveal-header">
+                        <h2>The correct answer was:</h2>
+                        <h3 id="reveal-building-name" class="reveal-building"></h3>
+                    </div>
+                    <div class="reveal-content">
+                        <div class="reveal-photo">
+                            <img id="reveal-photo" src="" alt="Building photo">
+                        </div>
+                        <div class="reveal-info">
+                            <h4>Why this location?</h4>
+                            <p id="reveal-explanation"></p>
+                            <h4>Key identifying features:</h4>
+                            <ul id="reveal-features">
+                                <!-- Features will be populated -->
+                            </ul>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-lg" onclick="game.showMap()">
+                        Continue to Map View →
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 08: Progress/Score Screen -->
+        <div id="score-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <h1 class="header-title">UICguessr - Game Complete!</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="score-container">
+                    <div class="score-header">
+                        <h2>🎉 Game Complete!</h2>
+                        <div class="final-score">
+                            <span class="score-label">Final Score:</span>
+                            <span id="final-score" class="score-value">0</span>
+                            <span class="score-max">/ 500</span>
+                        </div>
+                    </div>
+                    <div class="score-breakdown">
+                        <h3>Round Breakdown:</h3>
+                        <table class="score-table">
+                            <thead>
+                                <tr>
+                                    <th>Round</th>
+                                    <th>Location</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+                            <tbody id="score-table-body">
+                                <!-- Scores will be populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="score-stats">
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-first-try">0</span>
+                            <span class="stat-label">Correct First Try</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-second-try">0</span>
+                            <span class="stat-label">Correct Second Try</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="stat-missed">0</span>
+                            <span class="stat-label">Missed</span>
+                        </div>
+                    </div>
+                    <div class="score-message" id="score-message"></div>
+                    <div class="score-actions">
+                        <button class="btn btn-primary btn-lg" onclick="game.playAgain()">
+                            🔄 Play Again
+                        </button>
+                        <button class="btn btn-secondary" onclick="game.showScreen('welcome')">
+                            Exit
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 09: Hint Expanded View Screen -->
+        <div id="hint-screen" class="screen">
+            <div class="modal-overlay" onclick="game.closeHint()">
+                <div class="modal-content" onclick="event.stopPropagation()">
+                    <div class="modal-header">
+                        <h2>🔍 Expanded Photo View</h2>
+                        <button class="btn btn-icon close-btn" onclick="game.closeHint()">✕</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="hint-photo">
+                            <img id="hint-photo" src="" alt="Expanded view">
+                        </div>
+                        <div class="hint-tips">
+                            <h3>💡 Tips for identifying this location:</h3>
+                            <ul class="tips-list">
+                                <li><strong>Building signage:</strong> Check for abbreviations (SCE, ARC, BSB, SES, etc.)</li>
+                                <li><strong>Architectural style:</strong> Modern glass vs older brick buildings</li>
+                                <li><strong>Entry features:</strong> Doors, awnings, accessibility ramps</li>
+                                <li><strong>Windows & materials:</strong> Glass panels, brick patterns, concrete</li>
+                                <li><strong>Landscape:</strong> Trees, walkways, outdoor seating areas</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="game.closeHint()">
+                            ← Back to Question
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 10: Game Options Screen -->
+        <div id="options-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                    <h1 class="header-title">Game Options</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="options-container">
+                    <h2>⚙️ Customize Your Experience</h2>
+                    
+                    <div class="option-section">
+                        <h3>Difficulty Level</h3>
+                        <div class="option-group">
+                            <label class="option-label">
+                                <input type="radio" name="difficulty" value="easy" checked>
+                                <span>Easy - Clear photos with obvious features</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="difficulty" value="medium">
+                                <span>Medium - Mix of clear and challenging photos</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="difficulty" value="hard">
+                                <span>Hard - Subtle details and tricky angles</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="option-section">
+                        <h3>Focus Areas</h3>
+                        <div class="option-group">
+                            <label class="option-label">
+                                <input type="checkbox" name="focus" value="academic" checked>
+                                <span>Academic Buildings</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="focus" value="recreation" checked>
+                                <span>Recreation & Wellness</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="focus" value="services" checked>
+                                <span>Student Services</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="focus" value="dining" checked>
+                                <span>Dining & Social Spaces</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="option-section">
+                        <h3>Game Settings</h3>
+                        <div class="option-group">
+                            <label class="option-label">
+                                <input type="checkbox" name="settings" value="sound" checked>
+                                <span>Sound Effects</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="settings" value="hints" checked>
+                                <span>Show Hints Automatically</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="options-actions">
+                        <button class="btn btn-primary btn-lg" onclick="game.saveOptions()">
+                            Save Settings
+                        </button>
+                        <button class="btn btn-secondary" onclick="game.resetOptions()">
+                            Reset to Defaults
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 11: Tutorial Screen -->
+        <div id="tutorial-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">Skip</button>
+                    <h1 class="header-title">📚 How to Play - Tutorial</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="tutorial-container">
+                    <h1 class="tutorial-title">Welcome to UICguessr!</h1>
+                    <p class="tutorial-subtitle">Learn UIC's campus layout through an interactive photo-guessing game</p>
+                    
+                    <h2 class="section-title">🎮 How to Play</h2>
+                    
+                    <div class="tutorial-grid">
+                        <div class="tutorial-card blue">
+                            <div class="card-number">1</div>
+                            <h3>View the Photo</h3>
+                            <p>You'll see a photo of a UIC location - could be a building entrance, study space, or campus landmark.</p>
+                            <p class="card-tip">💡 Tip: Look for signs, architecture, and surroundings!</p>
+                        </div>
+                        
+                        <div class="tutorial-card green">
+                            <div class="card-number">2</div>
+                            <h3>Select Your Answer</h3>
+                            <p>Choose from 4 options with official UIC abbreviations (SCE, ARC, BSB, etc.) - same as your class schedule!</p>
+                            <p class="card-tip">⏱️ No time limit - take your time to learn!</p>
+                        </div>
+                        
+                        <div class="tutorial-card orange">
+                            <div class="card-number">3</div>
+                            <h3>Get Instant Feedback</h3>
+                            <p>Learn if you're correct and discover facts about the location. You have 2 attempts per question.</p>
+                            <p class="card-tip">🎯 Use hints if you need help!</p>
+                        </div>
+                        
+                        <div class="tutorial-card purple">
+                            <div class="card-number">4</div>
+                            <h3>Explore & Learn</h3>
+                            <p>Discover resources available at each location and see exactly where it is on the UIC campus map.</p>
+                            <p class="card-tip">🗺️ Build your mental map of campus!</p>
+                        </div>
+                    </div>
+
+                    <div class="scoring-banner">
+                        <strong>🏆 Scoring:</strong>
+                        <span class="score-item green"><strong>100 pts</strong> (first try)</span>
+                        <span class="score-divider">•</span>
+                        <span class="score-item orange"><strong>50 pts</strong> (second try)</span>
+                        <span class="score-divider">•</span>
+                        <span class="score-item red"><strong>0 pts</strong> (both wrong)</span>
+                        <span class="score-divider">•</span>
+                        <span>Complete 5 rounds to finish the game!</span>
+                    </div>
+                    <p class="tutorial-footer">Learning is the goal - scores are just for fun! 🎓</p>
+
+                    <div class="tutorial-actions">
+                        <button class="btn btn-primary btn-lg" onclick="game.startGame()">
+                            Start Playing! →
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Screen 12: All Resources Guide Screen -->
+        <div id="resources-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                    <h1 class="header-title">🏫 UIC Campus Resources Guide</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="resources-container">
+                    <h2>Complete Guide to Campus Resources</h2>
+                    <p class="resources-intro">Discover all the resources available to UIC students across campus</p>
+                    
+                    <div class="resources-grid" id="all-resources-grid">
+                        <!-- Resources will be populated by JavaScript -->
+                    </div>
+
+                    <div class="resources-actions">
+                        <button class="btn btn-primary btn-lg" onclick="game.showScreen('welcome')">
+                            Back to Game
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="sounds.js"></script>
+    <script src="enhanced-map.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
