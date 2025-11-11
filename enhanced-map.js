@@ -15,7 +15,7 @@ class CampusMap {
         };
         this.buildingStyles = {
             SCE: { color: '#D32F2F', label: 'SCE' },
-            ARC: { color: '#2196F3', label: 'ARC' },
+            SRF: { color: '#2196F3', label: 'SRF' },
             BSB: { color: '#9C27B0', label: 'BSB' },
             LIB: { color: '#795548', label: 'LIB' },
             SES: { color: '#FF5722', label: 'SES' },

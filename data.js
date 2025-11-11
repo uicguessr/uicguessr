@@ -22,7 +22,7 @@ const buildings = {
         landmarks: [
             "Richard J. Daley Library - Main library, 3 min walk (North)",
             "Lecture Center A - Large lecture halls, 2 min walk (West)",
-            "ARC - Recreation center, 4 min walk (East)"
+            "UIC Student Recreation Facility (SRF) - Recreation center, 4 min walk (East)"
         ],
         features: [
             "Large glass entrance with SCE signage",
@@ -32,14 +32,14 @@ const buildings = {
         ],
         tips: "Look for the 'SCE' abbreviation on building signage and the modern glass entrance."
     },
-    ARC: {
-        name: "Activities & Recreation Center (ARC)",
-        fullName: "Activities & Recreation Center",
-        abbreviation: "ARC",
+    SRF: {
+        name: "UIC Student Recreation Facility (SRF)",
+        fullName: "UIC Student Recreation Facility",
+        abbreviation: "SRF",
         categories: ["recreation"],
         address: "737 S Halsted Street, Chicago, IL 60607",
         coordinates: { lat: 41.872627, lng: -87.646351 },
-        description: "The ARC is UIC's premier fitness and recreation facility, offering a wide range of athletic facilities, fitness equipment, and recreational programs for students.",
+        description: "The SRF is UIC's premier fitness and recreation facility, offering a wide range of athletic facilities, fitness equipment, and recreational programs for students.",
         photo: "https://upload.wikimedia.org/wikipedia/commons/b/b8/UIC_SRF.JPG",
         photoCredit: "Hied5 via Wikimedia Commons",
         photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_SRF.JPG",
@@ -57,11 +57,11 @@ const buildings = {
         ],
         features: [
             "Large modern facility with glass windows",
-            "ARC lettering on exterior",
+            "SRF lettering on exterior",
             "Outdoor recreational fields nearby",
             "Multiple entrances with accessibility ramps"
         ],
-        tips: "The ARC has a distinctive modern athletic facility appearance with large windows."
+        tips: "The SRF has a distinctive modern athletic facility appearance with large windows."
     },
     BSB: {
         name: "Behavioral Sciences Building (BSB)",
@@ -283,17 +283,17 @@ const buildings = {
         address: "828 S Wolcott Avenue, Chicago, IL 60612",
         coordinates: { lat: 41.870775, lng: -87.67454 },
         description: "Student Center West offers additional dining, meeting spaces, and student organization offices, complementing the facilities at SCE.",
-        photo: "https://upload.wikimedia.org/wikipedia/commons/5/56/University_of_Illinois_at_Chicago_-2.jpg",
-        photoCredit: "artistmac via Wikimedia Commons",
-        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:University_of_Illinois_at_Chicago_-2.jpg",
-        photoLicense: "CC BY-SA 2.0",
+        photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyD4Q64VZem_2-UlHwBrRK8EW65K5CrM6Y5Rb1yo6JyIMB57DlgPC_XbGd7prCoqepEv2qEIVuAMUtyPtqP1DL7reCjq2-eDgeNzfd0kqEZO-F0_ujYPUWdqxfmCsHyFWWB2Lk0hA=s1360-w1360-h1020-rw",
+        photoCredit: "ch via Google Maps",
+        photoCreditUrl: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyD4Q64VZem_2-UlHwBrRK8EW65K5CrM6Y5Rb1yo6JyIMB57DlgPC_XbGd7prCoqepEv2qEIVuAMUtyPtqP1DL7reCjq2-eDgeNzfd0kqEZO-F0_ujYPUWdqxfmCsHyFWWB2Lk0hA=s1360-w1360-h1020-rw",
+        photoLicense: "Google Maps",
         resources: [
             { name: "Dining Options", description: "Additional food vendors" },
             { name: "Meeting Rooms", description: "Student organization spaces" },
             { name: "Lounge Areas", description: "Social gathering spaces" }
         ],
         landmarks: [
-            "ARC - Recreation center, 3 min walk (East)",
+            "UIC Student Recreation Facility (SRF) - Recreation center, 3 min walk (East)",
             "UIC Pavilion - Sports arena, 2 min walk (North)",
             "Medical District Blue Line - 7 min walk (West)"
         ],
@@ -374,14 +374,14 @@ const questionSets = {
         {
             building: "SCE",
             correctAnswer: "SCE",
-            options: ["SCE", "ARC", "BSB", "LIB"],
+            options: ["SCE", "SRF", "BSB", "LIB"],
             difficulty: "easy",
             hint: "Look for the modern glass entrance and 'SCE' abbreviation on the building signage."
         },
         {
-            building: "ARC",
-            correctAnswer: "ARC",
-            options: ["ARC", "SCE", "SES", "UH"],
+            building: "SRF",
+            correctAnswer: "SRF",
+            options: ["SRF", "SCE", "SES", "UH"],
             difficulty: "easy",
             hint: "This is a large athletic facility with modern architecture and lots of windows."
         },
@@ -402,7 +402,7 @@ const questionSets = {
         {
             building: "SES",
             correctAnswer: "SES",
-            options: ["SES", "ARC", "SCE", "LIB"],
+            options: ["SES", "SRF", "SCE", "LIB"],
             difficulty: "easy",
             hint: "Modern science building with glass and steel construction."
         },
@@ -416,7 +416,7 @@ const questionSets = {
         {
             building: "SCW",
             correctAnswer: "SCW",
-            options: ["SCW", "SCE", "UH", "ARC"],
+            options: ["SCW", "SCE", "UH", "SRF"],
             difficulty: "easy",
             hint: "Student center with dining and meeting spaces, similar to SCE."
         }
@@ -446,14 +446,14 @@ const questionSets = {
         {
             building: "SCE",
             correctAnswer: "SCE",
-            options: ["SCE", "SES", "ARC", "UH"],
+            options: ["SCE", "SES", "SRF", "UH"],
             difficulty: "medium",
             hint: "Central student hub with dining and services."
         },
         {
-            building: "ARC",
-            correctAnswer: "ARC",
-            options: ["ARC", "SES", "SCE", "LCA"],
+            building: "SRF",
+            correctAnswer: "SRF",
+            options: ["SRF", "SES", "SCE", "LCA"],
             difficulty: "medium",
             hint: "Recreation facility with fitness center and pool."
         },
@@ -483,7 +483,7 @@ const questionSets = {
         {
             building: "SES",
             correctAnswer: "SES",
-            options: ["SES", "ARC", "BSB", "LIB"],
+            options: ["SES", "SRF", "BSB", "LIB"],
             difficulty: "hard",
             hint: "Engineering facility with maker spaces and labs."
         },
@@ -518,7 +518,7 @@ const questionSets = {
         {
             building: "SCW",
             correctAnswer: "SCW",
-            options: ["SCW", "SCE", "ARC", "UH"],
+            options: ["SCW", "SCE", "SRF", "UH"],
             difficulty: "hard",
             hint: "West campus student center connected by skybridge."
         }
@@ -582,9 +582,9 @@ const allResources = [
     },
     {
         category: "Health & Wellness",
-        name: "Campus Recreation (ARC)",
+        name: "UIC Student Recreation Facility (SRF)",
         description: "85,000 sq ft fitness facility with cardio equipment, free weights, basketball courts, indoor track, climbing wall, and Olympic-size pool. Group fitness classes included with membership.",
-        location: "Activities & Recreation Center",
+        location: "UIC Student Recreation Facility",
         hours: "Mon-Thu: 6am-midnight, Fri: 6am-10pm, Sat-Sun: 10am-10pm",
         contact: "(312) 413-5150",
         icon: "💪",
