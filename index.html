@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UICguessr - Learn UIC Campus</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -19,6 +20,11 @@
                     <p class="welcome-description">Learn UIC's layout by guessing landmark photos.</p>
                     <p class="welcome-description">Discover resources and build your mental map of campus!</p>
                     <p class="welcome-description">Perfect for freshmen, transfers, and commuter students.</p>
+                    
+                    <div id="current-settings-display" class="current-settings">
+                        <!-- Settings will be populated by JavaScript -->
+                    </div>
+                    
                     <div class="welcome-buttons">
                         <button class="btn btn-primary btn-lg" onclick="game.startGame()">
                             Start Game
@@ -34,20 +40,23 @@
                         </button>
                     </div>
                     <div class="welcome-features">
-                        <div class="feature-card">
+                        <div class="feature-card clickable" onclick="game.startGame()">
                             <span class="feature-icon">📸</span>
                             <h3>Photo Challenges</h3>
                             <p>Identify 5 campus locations from photos</p>
+                            <span class="feature-action">Start Game →</span>
                         </div>
-                        <div class="feature-card">
+                        <div class="feature-card clickable" onclick="game.showCampusMapOverview()">
                             <span class="feature-icon">🗺️</span>
                             <h3>Campus Maps</h3>
                             <p>See exact locations on UIC map</p>
+                            <span class="feature-action">View Map →</span>
                         </div>
-                        <div class="feature-card">
+                        <div class="feature-card clickable" onclick="game.showScreen('resources')">
                             <span class="feature-icon">💡</span>
                             <h3>Campus Resources</h3>
                             <p>Learn what services are available</p>
+                            <span class="feature-action">Browse Resources →</span>
                         </div>
                     </div>
                 </div>
@@ -68,6 +77,7 @@
                     <div class="question-left">
                         <div class="photo-container">
                             <img id="question-photo" src="" alt="Location photo">
+                            <div id="question-photo-credit" class="photo-credit"></div>
                             <button class="btn btn-icon zoom-btn" onclick="game.showHint()">
                                 🔍 View Larger Image
                             </button>
@@ -211,14 +221,7 @@
                     <div class="map-section">
                         <h3>📍 UIC East Campus Map</h3>
                         <div class="map-container">
-                            <div id="campus-map" class="campus-map">
-                                <!-- Simplified campus map -->
-                                <div class="map-building highlighted" id="map-building">
-                                    <span class="building-label" id="map-building-label">SCE</span>
-                                </div>
-                                <div class="map-pin" id="map-pin">📍</div>
-                                <p class="map-caption">You are here</p>
-                            </div>
+                            <div id="campus-map" class="campus-map"></div>
                         </div>
                     </div>
                     <div class="map-info-section">
@@ -254,6 +257,7 @@
                     <div class="reveal-content">
                         <div class="reveal-photo">
                             <img id="reveal-photo" src="" alt="Building photo">
+                            <div id="reveal-photo-credit" class="photo-credit"></div>
                         </div>
                         <div class="reveal-info">
                             <h4>Why this location?</h4>
@@ -341,6 +345,7 @@
                     <div class="modal-body">
                         <div class="hint-photo">
                             <img id="hint-photo" src="" alt="Expanded view">
+                            <div id="hint-photo-credit" class="photo-credit"></div>
                         </div>
                         <div class="hint-tips">
                             <h3>💡 Tips for identifying this location:</h3>
@@ -425,6 +430,10 @@
                                 <input type="checkbox" name="settings" value="hints" checked>
                                 <span>Show Hints Automatically</span>
                             </label>
+                            <label class="option-label">
+                                <input type="checkbox" name="settings" value="timer" checked>
+                                <span>Enable Timer</span>
+                            </label>
                         </div>
                     </div>
 
@@ -495,11 +504,57 @@
                         <span class="score-divider">•</span>
                         <span>Complete 5 rounds to finish the game!</span>
                     </div>
+                    
+                    <div class="keyboard-shortcuts-banner">
+                        <strong>⌨️ Keyboard Shortcuts:</strong>
+                        <span class="shortcut-item"><kbd>1-4</kbd> Select answer</span>
+                        <span class="score-divider">•</span>
+                        <span class="shortcut-item"><kbd>Enter</kbd> Submit</span>
+                        <span class="score-divider">•</span>
+                        <span class="shortcut-item"><kbd>H</kbd> Get hint</span>
+                    </div>
+                    
                     <p class="tutorial-footer">Learning is the goal - scores are just for fun! 🎓</p>
 
                     <div class="tutorial-actions">
                         <button class="btn btn-primary btn-lg" onclick="game.startGame()">
                             Start Playing! →
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Campus Map Overview Screen -->
+        <div id="campus-map-overview-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                    <h1 class="header-title">🗺️ UIC East Campus Map</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="map-overview-container">
+                    <h2>Interactive Campus Map</h2>
+                    <p class="map-overview-intro">Explore all the buildings featured in UICguessr. Click on any building to learn more about it!</p>
+                    
+                    <div class="full-campus-map-container">
+                        <div id="overview-campus-map" class="campus-map-large"></div>
+                    </div>
+                    
+                    <div class="building-legend">
+                        <h3>Building Legend</h3>
+                        <div class="legend-grid" id="building-legend-grid">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="map-overview-actions">
+                        <button class="btn btn-primary btn-lg" onclick="game.startGame()">
+                            Start Playing →
+                        </button>
+                        <button class="btn btn-secondary" onclick="game.showScreen('welcome')">
+                            Back to Home
                         </button>
                     </div>
                 </div>
@@ -516,16 +571,27 @@
             </header>
             <main class="main-container">
                 <div class="resources-container">
-                    <h2>Complete Guide to Campus Resources</h2>
-                    <p class="resources-intro">Discover all the resources available to UIC students across campus</p>
+                    <div class="resources-header">
+                        <h2>📖 Complete Guide to UIC Campus Resources</h2>
+                        <p class="resources-intro">Comprehensive directory of services, facilities, and support available to all UIC students</p>
+                        <div class="resources-stats">
+                            <span class="stat-badge">📚 30+ Resources</span>
+                            <span class="stat-badge">🏛️ 7 Categories</span>
+                            <span class="stat-badge">📞 Direct Contacts</span>
+                            <span class="stat-badge">🕐 Hours Listed</span>
+                        </div>
+                    </div>
                     
-                    <div class="resources-grid" id="all-resources-grid">
+                    <div class="resources-content" id="all-resources-grid">
                         <!-- Resources will be populated by JavaScript -->
                     </div>
 
                     <div class="resources-actions">
                         <button class="btn btn-primary btn-lg" onclick="game.showScreen('welcome')">
-                            Back to Game
+                            ← Back to Home
+                        </button>
+                        <button class="btn btn-secondary" onclick="game.startGame()">
+                            Start Game →
                         </button>
                     </div>
                 </div>
@@ -533,6 +599,7 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script src="sounds.js"></script>
     <script src="enhanced-map.js"></script>
     <script src="data.js"></script>

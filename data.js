@@ -6,9 +6,14 @@ const buildings = {
         name: "Student Center East (SCE)",
         fullName: "Student Center East",
         abbreviation: "SCE",
+        categories: ["services", "dining"],
         address: "750 S Halsted Street, Chicago, IL 60607",
+        coordinates: { lat: 41.871969, lng: -87.647939 },
         description: "The Student Center East is a hub of student activity, featuring dining options, study spaces, and various student services. It's a central gathering point for the UIC community.",
-        photo: "https://via.placeholder.com/600x400/4CAF50/FFFFFF?text=Student+Center+East+(SCE)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/5/58/UIC_Student_Center_East.JPG",
+        photoCredit: "Hied5 via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_Student_Center_East.JPG",
+        photoLicense: "Public Domain",
         resources: [
             { name: "Food Court", description: "Multiple dining options" },
             { name: "Wellness Center", description: "Health & wellness services" },
@@ -31,9 +36,14 @@ const buildings = {
         name: "Activities & Recreation Center (ARC)",
         fullName: "Activities & Recreation Center",
         abbreviation: "ARC",
-        address: "828 S Wolcott Avenue, Chicago, IL 60612",
+        categories: ["recreation"],
+        address: "737 S Halsted Street, Chicago, IL 60607",
+        coordinates: { lat: 41.872627, lng: -87.646351 },
         description: "The ARC is UIC's premier fitness and recreation facility, offering a wide range of athletic facilities, fitness equipment, and recreational programs for students.",
-        photo: "https://via.placeholder.com/600x400/2196F3/FFFFFF?text=Activities+%26+Recreation+Center+(ARC)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/b/b8/UIC_SRF.JPG",
+        photoCredit: "Hied5 via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_SRF.JPG",
+        photoLicense: "Public Domain",
         resources: [
             { name: "Fitness Center", description: "State-of-the-art gym equipment" },
             { name: "Swimming Pool", description: "Olympic-size pool for recreation" },
@@ -57,9 +67,14 @@ const buildings = {
         name: "Behavioral Sciences Building (BSB)",
         fullName: "Behavioral Sciences Building",
         abbreviation: "BSB",
+        categories: ["academic"],
         address: "1007 W Harrison Street, Chicago, IL 60607",
+        coordinates: { lat: 41.873718, lng: -87.65261 },
         description: "BSB houses the College of Liberal Arts and Sciences departments focused on psychology, sociology, and other behavioral sciences. Features classrooms, labs, and faculty offices.",
-        photo: "https://via.placeholder.com/600x400/9C27B0/FFFFFF?text=Behavioral+Sciences+Building+(BSB)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/e/ec/UIC_East_Campus_in_the_fall.JPG",
+        photoCredit: "Hied5 via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_East_Campus_in_the_fall.JPG",
+        photoLicense: "CC BY-SA 3.0",
         resources: [
             { name: "Psychology Labs", description: "Research facilities" },
             { name: "Computer Labs", description: "Student computing resources" },
@@ -82,9 +97,14 @@ const buildings = {
         name: "Richard J. Daley Library",
         fullName: "Richard J. Daley Library",
         abbreviation: "LIB",
+        categories: ["academic", "dining"],
         address: "801 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.871881, lng: -87.650494 },
         description: "UIC's main library is a massive brutalist structure that serves as the university's primary research library, offering extensive collections, study spaces, and research assistance.",
-        photo: "https://via.placeholder.com/600x400/795548/FFFFFF?text=Richard+J.+Daley+Library+(LIB)",
+        photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzEe_V5ceHxVmZ4o_7AR4i7yUQh_IXZK9DlwVxBPGWzwqinMWKAVbAuq3Cc9oG9qCc3kttbnixrc79uVgrZiwyrQepmZcxb0rCuf0C3YCEzxm6ABciwwGnP3v0H1HQKiyL9Fdw=s1360-w1360-h1020-rw",
+        photoCredit: "steven B",
+        photoCreditUrl: "https://maps.google.com",
+        photoLicense: "Google Maps",
         resources: [
             { name: "Research Collections", description: "Extensive book and journal holdings" },
             { name: "Special Collections", description: "Rare books and archives" },
@@ -108,9 +128,14 @@ const buildings = {
         name: "Science & Engineering South (SES)",
         fullName: "Science & Engineering South",
         abbreviation: "SES",
+        categories: ["academic"],
         address: "845 W Taylor Street, Chicago, IL 60607",
+        coordinates: { lat: 41.869726, lng: -87.648086 },
         description: "SES is a modern facility housing laboratories, classrooms, and collaborative spaces for science and engineering students and faculty.",
-        photo: "https://via.placeholder.com/600x400/FF5722/FFFFFF?text=Science+%26+Engineering+South+(SES)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/4/4f/UIC-CollegeOfEngineering3buildings.jpg",
+        photoCredit: "Tmatthes via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC-CollegeOfEngineering3buildings.jpg",
+        photoLicense: "Public Domain",
         resources: [
             { name: "Engineering Labs", description: "Specialized research labs" },
             { name: "Maker Space", description: "3D printing and prototyping" },
@@ -134,9 +159,14 @@ const buildings = {
         name: "University Hall (UH)",
         fullName: "University Hall",
         abbreviation: "UH",
+        categories: ["services"],
         address: "601 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.873779, lng: -87.651001 },
         description: "University Hall houses administrative offices including Admissions, Registrar, Financial Aid, and other student services. It's often the first stop for new students.",
-        photo: "https://via.placeholder.com/600x400/607D8B/FFFFFF?text=University+Hall+(UH)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/a/ac/UIC_University_Hall_at_night.JPG",
+        photoCredit: "Victorgrigas via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_University_Hall_at_night.JPG",
+        photoLicense: "Public Domain",
         resources: [
             { name: "Admissions Office", description: "Undergraduate admissions" },
             { name: "Registrar", description: "Course registration and records" },
@@ -160,9 +190,14 @@ const buildings = {
         name: "Taft Hall (TH)",
         fullName: "Taft Hall",
         abbreviation: "TH",
+        categories: ["academic"],
         address: "929 W Harrison Street, Chicago, IL 60607",
+        coordinates: { lat: 41.873981, lng: -87.650234 },
         description: "Taft Hall houses various academic departments and classrooms, serving as a key instructional building on campus.",
-        photo: "https://via.placeholder.com/600x400/3F51B5/FFFFFF?text=Taft+Hall+(TH)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/4/46/UIC_EastCampus.jpg",
+        photoCredit: "Vikingstad via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_EastCampus.jpg",
+        photoLicense: "Public Domain",
         resources: [
             { name: "Classrooms", description: "General education courses" },
             { name: "Faculty Offices", description: "Office hours and meetings" },
@@ -185,9 +220,14 @@ const buildings = {
         name: "Lecture Center A (LCA)",
         fullName: "Lecture Center A",
         abbreviation: "LCA",
+        categories: ["academic"],
         address: "1000 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.869384, lng: -87.651232 },
         description: "Lecture Center A contains large auditorium-style classrooms for introductory and general education courses.",
-        photo: "https://via.placeholder.com/600x400/00BCD4/FFFFFF?text=Lecture+Center+A+(LCA)",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/8/80/Uic_east_campus_spring.JPG",
+        photoCredit: "Hied5 via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:Uic_east_campus_spring.JPG",
+        photoLicense: "CC BY-SA 3.0",
         resources: [
             { name: "Large Lecture Halls", description: "100-300 seat auditoriums" },
             { name: "Study Lounges", description: "Between-class study space" }
@@ -204,6 +244,127 @@ const buildings = {
             "Connected to library via skywalk"
         ],
         tips: "Lecture centers are interconnected buildings near the library."
+    },
+    ERF: {
+        name: "Engineering Research Facility (ERF)",
+        fullName: "Engineering Research Facility",
+        abbreviation: "ERF",
+        categories: ["academic"],
+        address: "842 W Taylor Street, Chicago, IL 60607",
+        coordinates: { lat: 41.869941, lng: -87.647958 },
+        description: "ERF is dedicated to cutting-edge engineering research, featuring state-of-the-art laboratories and collaborative research spaces.",
+        photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyH3tnWPxpUEKIGkXsjO3_RejpQmvlakTwlO95shmYw1hUCHMbrgC_pGwO3Tf0FrgCupSBeiwUTyx066kYnUUAQb0tYZQgo92iiPnhkteQyoJB6mRypUt3WQ3HKjup87qXXHViG=s1360-w1360-h1020-rw",
+        photoCredit: "Pierre Jezraoui",
+        photoCreditUrl: "https://maps.google.com",
+        photoLicense: "Google Maps",
+        resources: [
+            { name: "Research Labs", description: "Advanced engineering research facilities" },
+            { name: "Clean Rooms", description: "Specialized fabrication spaces" },
+            { name: "Collaboration Spaces", description: "Team project areas" }
+        ],
+        landmarks: [
+            "SES - Science & Engineering South, 1 min walk (West)",
+            "Engineering Innovation Building - 2 min walk (South)",
+            "Halsted Street Blue Line - 5 min walk (North)"
+        ],
+        features: [
+            "Modern research facility design",
+            "Glass and concrete construction",
+            "ERF signage visible",
+            "Advanced equipment visible through windows"
+        ],
+        tips: "ERF is a modern research building near SES with distinctive laboratory features."
+    },
+    SCW: {
+        name: "Student Center West (SCW)",
+        fullName: "Student Center West",
+        abbreviation: "SCW",
+        categories: ["dining", "services"],
+        address: "828 S Wolcott Avenue, Chicago, IL 60612",
+        coordinates: { lat: 41.870775, lng: -87.67454 },
+        description: "Student Center West offers additional dining, meeting spaces, and student organization offices, complementing the facilities at SCE.",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/5/56/University_of_Illinois_at_Chicago_-2.jpg",
+        photoCredit: "artistmac via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:University_of_Illinois_at_Chicago_-2.jpg",
+        photoLicense: "CC BY-SA 2.0",
+        resources: [
+            { name: "Dining Options", description: "Additional food vendors" },
+            { name: "Meeting Rooms", description: "Student organization spaces" },
+            { name: "Lounge Areas", description: "Social gathering spaces" }
+        ],
+        landmarks: [
+            "ARC - Recreation center, 3 min walk (East)",
+            "UIC Pavilion - Sports arena, 2 min walk (North)",
+            "Medical District Blue Line - 7 min walk (West)"
+        ],
+        features: [
+            "Similar architecture to SCE",
+            "SCW signage on building",
+            "Multiple entrances",
+            "Connected to campus via skybridge"
+        ],
+        tips: "SCW complements SCE and has similar modern architecture with clear signage."
+    },
+    SELE: {
+        name: "Science & Engineering Laboratories (SEL)",
+        fullName: "Science & Engineering Laboratories",
+        abbreviation: "SELE",
+        categories: ["academic"],
+        address: "845 W Taylor Street, Chicago, IL 60607",
+        coordinates: { lat: 41.869685, lng: -87.650075 },
+        description: "SEL provides specialized laboratory spaces for undergraduate and graduate students in science and engineering programs.",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/d/dd/Pathway_in_the_Chicago_Circle_Memorial_Grove.jpg",
+        photoCredit: "Chris Rycroft via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:Pathway_in_the_Chicago_Circle_Memorial_Grove.jpg",
+        photoLicense: "CC BY 2.0",
+        resources: [
+            { name: "Teaching Labs", description: "Undergraduate lab courses" },
+            { name: "Equipment Checkout", description: "Lab equipment and supplies" },
+            { name: "Safety Training", description: "Lab safety certifications" }
+        ],
+        landmarks: [
+            "SES - Adjacent building (East)",
+            "ERF - Engineering Research, 2 min walk (South)",
+            "Taylor Street - Main thoroughfare"
+        ],
+        features: [
+            "Laboratory building design",
+            "SELE or SEL signage",
+            "Safety equipment visible",
+            "Multiple ventilation systems"
+        ],
+        tips: "SEL is recognizable by its laboratory-specific architecture and safety features."
+    },
+    CASA: {
+        name: "College of Architecture, Design and the Arts (CADA)",
+        fullName: "College of Architecture, Design and the Arts",
+        abbreviation: "CASA",
+        categories: ["academic"],
+        address: "845 W Harrison Street, Chicago, IL 60607",
+        coordinates: { lat: 41.873585, lng: -87.648805 },
+        description: "CADA houses studios, workshops, and galleries for architecture, graphic design, industrial design, and art students.",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/e/eb/University_of_Illinois_at_Chicago_-1.jpg",
+        photoCredit: "artistmac via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:University_of_Illinois_at_Chicago_-1.jpg",
+        photoLicense: "CC BY-SA 2.0",
+        resources: [
+            { name: "Design Studios", description: "24/7 studio access for students" },
+            { name: "Fabrication Lab", description: "Wood shop, metal shop, 3D printing" },
+            { name: "Gallery 400", description: "Contemporary art exhibitions" },
+            { name: "Print Shop", description: "Large format printing services" }
+        ],
+        landmarks: [
+            "BSB - Behavioral Sciences, 3 min walk (South)",
+            "Roosevelt Road - Major street (North)",
+            "Halsted Street - 2 min walk (East)"
+        ],
+        features: [
+            "Creative, artistic building design",
+            "Large windows for natural light",
+            "Student artwork often displayed outside",
+            "CADA or CASA signage"
+        ],
+        tips: "CADA has a distinctive creative atmosphere with visible studio spaces and artistic elements."
     }
 };
 
@@ -244,6 +405,20 @@ const questionSets = {
             options: ["SES", "ARC", "SCE", "LIB"],
             difficulty: "easy",
             hint: "Modern science building with glass and steel construction."
+        },
+        {
+            building: "ERF",
+            correctAnswer: "ERF",
+            options: ["ERF", "SES", "SELE", "BSB"],
+            difficulty: "easy",
+            hint: "Modern engineering research facility with visible lab equipment."
+        },
+        {
+            building: "SCW",
+            correctAnswer: "SCW",
+            options: ["SCW", "SCE", "UH", "ARC"],
+            difficulty: "easy",
+            hint: "Student center with dining and meeting spaces, similar to SCE."
         }
     ],
     medium: [
@@ -281,6 +456,20 @@ const questionSets = {
             options: ["ARC", "SES", "SCE", "LCA"],
             difficulty: "medium",
             hint: "Recreation facility with fitness center and pool."
+        },
+        {
+            building: "SELE",
+            correctAnswer: "SELE",
+            options: ["SELE", "SES", "ERF", "BSB"],
+            difficulty: "medium",
+            hint: "Laboratory building with specialized teaching spaces."
+        },
+        {
+            building: "CASA",
+            correctAnswer: "CASA",
+            options: ["CASA", "LCA", "BSB", "TH"],
+            difficulty: "medium",
+            hint: "Creative arts building with studios and workshops."
         }
     ],
     hard: [
@@ -318,119 +507,299 @@ const questionSets = {
             options: ["TH", "BSB", "LCA", "UH"],
             difficulty: "hard",
             hint: "Academic building near Grant and Burnham Halls."
+        },
+        {
+            building: "ERF",
+            correctAnswer: "ERF",
+            options: ["ERF", "SELE", "SES", "LCA"],
+            difficulty: "hard",
+            hint: "Advanced research facility with clean rooms."
+        },
+        {
+            building: "SCW",
+            correctAnswer: "SCW",
+            options: ["SCW", "SCE", "ARC", "UH"],
+            difficulty: "hard",
+            hint: "West campus student center connected by skybridge."
         }
     ]
 };
 
-// All Campus Resources
+// All Campus Resources - Comprehensive UIC Guide
 const allResources = [
+    // Academic Support & Success
     {
         category: "Academic Support",
-        name: "Writing Center",
-        description: "Get help with papers, essays, and writing assignments from trained peer tutors.",
-        location: "University Hall"
-    },
-    {
-        category: "Academic Support",
-        name: "Math Tutoring Center",
-        description: "Free drop-in tutoring for math courses at all levels.",
-        location: "Taft Hall"
-    },
-    {
-        category: "Academic Support",
-        name: "Library Research Help",
-        description: "Librarians provide research assistance and source guidance.",
-        location: "Daley Library"
+        name: "UIC Writing Center",
+        description: "Free one-on-one consultations for writing at any stage. Trained peer tutors help with brainstorming, drafting, revising, and editing.",
+        location: "Grant Hall 105",
+        hours: "Mon-Thu: 10am-7pm, Fri: 10am-4pm",
+        contact: "(312) 413-2206",
+        website: "writingcenter.uic.edu",
+        icon: "✍️",
+        services: ["Essay help", "Research papers", "Graduate writing", "ESL support"]
     },
     {
         category: "Academic Support",
-        name: "Academic Success Programs",
-        description: "Workshops on study skills, time management, and academic strategies.",
-        location: "Student Center East"
+        name: "Learning Sciences Research Institute (LSRI)",
+        description: "Free tutoring for STEM courses including math, chemistry, physics, and biology. Drop-in and by appointment.",
+        location: "Grant Hall 1600",
+        hours: "Mon-Thu: 9am-5pm, Fri: 9am-4pm",
+        contact: "(312) 355-0068",
+        icon: "🧮",
+        services: ["Math tutoring", "Science help", "Study groups", "SI sessions"]
+    },
+    {
+        category: "Academic Support",
+        name: "Richard J. Daley Library",
+        description: "Main research library with over 3 million volumes. Librarians offer research consultations, citation help, and database training.",
+        location: "801 S Morgan St",
+        hours: "Mon-Thu: 7:30am-11pm, Fri: 7:30am-6pm, Sat-Sun: 10am-6pm",
+        contact: "(312) 996-2716",
+        icon: "📚",
+        services: ["Research help", "Study rooms", "Computer labs", "Special collections", "24/7 online chat"]
+    },
+    {
+        category: "Academic Support",
+        name: "UIC Academic Center for Excellence (ACE)",
+        description: "Academic coaching, workshops on study skills, time management, test anxiety, and learning strategies. Peer mentoring available.",
+        location: "Student Center East 2095",
+        hours: "Mon-Fri: 9am-5pm",
+        contact: "(312) 413-0031",
+        icon: "🎯",
+        services: ["Academic coaching", "Workshops", "Peer mentoring", "Learning strategies"]
+    },
+    // Health & Wellness
+    {
+        category: "Health & Wellness",
+        name: "UIC Counseling Center",
+        description: "Confidential mental health services including individual counseling, group therapy, crisis intervention, and psychiatric services. All services are free for UIC students.",
+        location: "Student Services Building 2010",
+        hours: "Mon-Fri: 8:30am-5pm, Crisis services 24/7",
+        contact: "(312) 996-3490",
+        icon: "🧠",
+        services: ["Individual therapy", "Group counseling", "Crisis support", "Psychiatric care", "Workshops"]
     },
     {
         category: "Health & Wellness",
-        name: "Campus Recreation",
-        description: "Fitness center, pool, courts, and group fitness classes.",
-        location: "ARC"
+        name: "Campus Recreation (ARC)",
+        description: "85,000 sq ft fitness facility with cardio equipment, free weights, basketball courts, indoor track, climbing wall, and Olympic-size pool. Group fitness classes included with membership.",
+        location: "Activities & Recreation Center",
+        hours: "Mon-Thu: 6am-midnight, Fri: 6am-10pm, Sat-Sun: 10am-10pm",
+        contact: "(312) 413-5150",
+        icon: "💪",
+        services: ["Gym access", "Pool", "Group fitness", "Intramural sports", "Personal training", "Climbing wall"]
     },
     {
         category: "Health & Wellness",
-        name: "Counseling Center",
-        description: "Mental health services and counseling for students.",
-        location: "Student Center East"
+        name: "Student Health Service (Wellness Center)",
+        description: "Primary medical care, immunizations, women's health, travel clinic, lab services, and pharmacy. Most services covered by student health fee.",
+        location: "Student Services Building",
+        hours: "Mon-Fri: 8am-5pm",
+        contact: "(312) 996-3420",
+        icon: "🏥",
+        services: ["Primary care", "Immunizations", "Lab work", "Pharmacy", "Women's health", "Travel clinic"]
     },
     {
         category: "Health & Wellness",
-        name: "Student Health Services",
-        description: "Medical care, immunizations, and health consultations.",
-        location: "Wellness Center"
+        name: "Disability Resource Center (DRC)",
+        description: "Academic accommodations, assistive technology, sign language interpreters, note-taking services, and accessibility support for students with disabilities.",
+        location: "Student Services Building 1190",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 413-2183",
+        icon: "♿",
+        services: ["Accommodations", "Assistive tech", "Testing support", "Note-taking", "Sign language"]
     },
     {
         category: "Health & Wellness",
-        name: "Disability Resource Center",
-        description: "Accommodations and support for students with disabilities.",
-        location: "University Hall"
+        name: "Campus Advocacy Network",
+        description: "Free, confidential support for students affected by sexual misconduct, relationship violence, and stalking. Advocacy, resources, and safety planning.",
+        location: "Student Services Building 3030",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 413-1025",
+        icon: "🛡️",
+        services: ["Advocacy", "Safety planning", "Resource connection", "Support groups"]
+    },
+    // Student Services & Administration
+    {
+        category: "Student Services",
+        name: "Office of the Registrar",
+        description: "Course registration, enrollment verification, transcripts, degree audits, and academic records. Online services available through my.UIC.edu portal.",
+        location: "Student Services Building 1200",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 996-4350",
+        icon: "📋",
+        services: ["Registration", "Transcripts", "Degree audits", "Enrollment verification", "Grade changes"]
     },
     {
         category: "Student Services",
-        name: "Admissions Office",
-        description: "Information for prospective and new students.",
-        location: "University Hall"
-    },
-    {
-        category: "Student Services",
-        name: "Registrar",
-        description: "Course registration, transcripts, and academic records.",
-        location: "University Hall"
-    },
-    {
-        category: "Student Services",
-        name: "Financial Aid Office",
-        description: "Scholarships, grants, loans, and financial planning.",
-        location: "University Hall"
+        name: "Office of Student Financial Aid",
+        description: "FAFSA assistance, scholarships, grants, loans, work-study programs, and financial literacy. Free financial counseling available.",
+        location: "Student Services Building 1700",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 996-3126",
+        icon: "💰",
+        services: ["FAFSA help", "Scholarships", "Loans", "Work-study", "Financial counseling"]
     },
     {
         category: "Student Services",
         name: "Career Services",
-        description: "Resume help, interview prep, internship and job search support.",
-        location: "Student Center East"
+        description: "Career counseling, resume/cover letter review, mock interviews, job/internship search, employer connections, and career fairs. Handshake platform access.",
+        location: "Student Services Building 3050",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 996-2300",
+        icon: "💼",
+        services: ["Career counseling", "Resume help", "Mock interviews", "Job search", "Internships", "Career fairs"]
+    },
+    {
+        category: "Student Services",
+        name: "Office of Admissions",
+        description: "Information for prospective undergraduate students, campus tours, application support, and new student orientation programs.",
+        location: "Student Services Building 1100",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 996-4350",
+        icon: "🎓",
+        services: ["Campus tours", "Application help", "Transfer credit", "Orientation"]
+    },
+    {
+        category: "Student Services",
+        name: "Office of International Services",
+        description: "Immigration advising for F-1 and J-1 students/scholars, visa support, cultural adjustment programs, and international student orientation.",
+        location: "Student Services Building 3020",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 996-3121",
+        icon: "🌍",
+        services: ["Visa support", "Immigration advising", "Cultural programs", "Orientation", "Work authorization"]
+    },
+    // Dining & Social Spaces
+    {
+        category: "Dining & Social",
+        name: "Student Center East Food Court",
+        description: "Multiple dining options including Chick-fil-A, Panda Express, Starbucks, Subway, and more. Meal plans and Flame Dollars accepted.",
+        location: "Student Center East, Lower Level",
+        hours: "Mon-Fri: 7am-8pm, Sat-Sun: 10am-6pm (varies by vendor)",
+        icon: "🍔",
+        services: ["Fast food", "Coffee", "Meal plans", "Grab & go", "Halal options"]
     },
     {
         category: "Dining & Social",
-        name: "SCE Food Court",
-        description: "Multiple dining options including chains and local vendors.",
-        location: "Student Center East"
+        name: "Cafe Belevedere (Library)",
+        description: "Coffee, sandwiches, snacks, and study-friendly atmosphere inside the library. Great for study breaks.",
+        location: "Richard J. Daley Library, Ground Floor",
+        hours: "Mon-Thu: 8am-8pm, Fri: 8am-6pm, Sat-Sun: 12pm-5pm",
+        icon: "☕",
+        services: ["Coffee", "Sandwiches", "Snacks", "Study space"]
     },
     {
         category: "Dining & Social",
-        name: "Library Café",
-        description: "Coffee shop for studying and quick meals.",
-        location: "Daley Library"
+        name: "Student Center West Food Options",
+        description: "Additional dining with Einstein Bros Bagels, salad bar, and various meal options. Quieter alternative to SCE.",
+        location: "Student Center West",
+        hours: "Mon-Fri: 7:30am-7pm",
+        icon: "🥗",
+        services: ["Bagels", "Salads", "Hot meals", "Vegetarian options"]
     },
     {
         category: "Dining & Social",
-        name: "Student Organization Spaces",
-        description: "Meeting rooms and offices for registered student organizations.",
-        location: "Student Center East"
+        name: "Center for Student Involvement",
+        description: "350+ student organizations, event planning support, leadership programs, and student government. Get involved in campus life!",
+        location: "Student Center East 3144",
+        hours: "Mon-Fri: 8:30am-5pm",
+        contact: "(312) 996-2585",
+        icon: "🎉",
+        services: ["Student orgs", "Event planning", "Leadership programs", "Meeting rooms"]
+    },
+    // Technology & Innovation
+    {
+        category: "Technology",
+        name: "Technology Solutions Computer Labs",
+        description: "Free computer access with Microsoft Office, Adobe Creative Suite, statistical software, and specialized programs. Printing available.",
+        location: "Multiple locations (LIB, SCE, UH, BSB)",
+        hours: "Varies by location, some 24/7 in Library",
+        contact: "(312) 413-0003",
+        icon: "💻",
+        services: ["Free computing", "Software", "Printing", "Scanning", "24/7 access"]
     },
     {
         category: "Technology",
-        name: "Computer Labs",
-        description: "Free computer access with software for coursework.",
-        location: "Multiple Buildings"
+        name: "ACCC Help Desk",
+        description: "Technical support for UIC accounts, wifi, email, software, and IT issues. Walk-in and remote support available.",
+        location: "Library 120",
+        hours: "Mon-Fri: 8am-5pm, 24/7 phone support",
+        contact: "(312) 413-0003",
+        icon: "🖥️",
+        services: ["Account help", "Password resets", "Software support", "Wifi troubleshooting"]
     },
     {
         category: "Technology",
-        name: "IT Help Desk",
-        description: "Technical support for UIC accounts and systems.",
-        location: "Daley Library"
+        name: "Innovation Center & Maker Space",
+        description: "3D printing, laser cutting, electronics prototyping, sewing machines, and design software. Training workshops offered regularly.",
+        location: "Addams Hall (west campus)",
+        hours: "Mon-Fri: 10am-6pm",
+        icon: "🔧",
+        services: ["3D printing", "Laser cutting", "Prototyping", "Workshops", "Design software"]
+    },
+    // Safety & Transportation
+    {
+        category: "Safety & Transportation",
+        name: "UIC Police Department",
+        description: "24/7 campus police, emergency response, safety escorts, crime prevention programs, and emergency blue light phones across campus.",
+        location: "1140 S Paulina St",
+        hours: "24/7",
+        contact: "Emergency: (312) 355-5555, Non-emergency: (312) 996-2830",
+        icon: "👮",
+        services: ["24/7 patrol", "Safety escorts", "Emergency response", "Crime prevention", "Blue lights"]
     },
     {
-        category: "Technology",
-        name: "Maker Space",
-        description: "3D printing, laser cutting, and prototyping equipment.",
-        location: "Science & Engineering South"
+        category: "Safety & Transportation",
+        name: "UIC Night Ride",
+        description: "Free evening shuttle service within campus boundaries for student safety. Track shuttles in real-time via app.",
+        location: "Campus-wide service",
+        hours: "Mon-Thu: 6pm-2am, Fri: 6pm-4am, Sat-Sun: 6pm-2am",
+        contact: "(312) 355-7433",
+        icon: "🚐",
+        services: ["Free shuttles", "Real-time tracking", "Safe transport", "Campus routes"]
+    },
+    {
+        category: "Safety & Transportation",
+        name: "Parking & Transportation",
+        description: "Parking permits, garages, CTA U-Pass program (free unlimited CTA rides), bike racks, and Divvy bike share.",
+        location: "Parking Office: 1200 W Harrison St",
+        hours: "Mon-Fri: 8am-5pm",
+        contact: "(312) 996-7275",
+        icon: "🅿️",
+        services: ["Parking permits", "U-Pass", "CTA access", "Bike parking", "Divvy stations"]
+    },
+    // Cultural Centers
+    {
+        category: "Cultural & Community",
+        name: "Centers for Cultural Understanding & Social Change",
+        description: "Seven identity-based centers providing community, cultural programs, mentorship, and safe spaces. Includes African American, Asian American, Latino, LGBTQ+, and more.",
+        location: "Various locations (SCE, UH)",
+        hours: "Mon-Fri: 9am-5pm (varies by center)",
+        contact: "(312) 355-2727",
+        icon: "🌈",
+        services: ["Cultural programs", "Mentorship", "Safe spaces", "Community events", "Identity support"]
+    },
+    {
+        category: "Cultural & Community",
+        name: "Jane Addams Hull-House Museum",
+        description: "National Historic Landmark and museum on UIC campus. Free admission. Exhibitions on social justice, immigration, and Chicago history.",
+        location: "800 S Halsted St",
+        hours: "Tue-Fri: 10am-4pm, Sun: 12pm-4pm",
+        contact: "(312) 413-5353",
+        icon: "🏛️",
+        services: ["Free museum", "Exhibitions", "Tours", "Events", "Historical site"]
+    },
+    {
+        category: "Cultural & Community",
+        name: "Gallery 400",
+        description: "Contemporary art exhibitions and programs. Free and open to the public. Features emerging and established artists.",
+        location: "400 S Peoria St",
+        hours: "Tue-Fri: 10am-6pm, Sat: 12pm-6pm",
+        contact: "(312) 996-6114",
+        icon: "🎨",
+        services: ["Art exhibitions", "Artist talks", "Free admission", "Contemporary art"]
     }
 ];
 

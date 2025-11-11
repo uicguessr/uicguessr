@@ -10,12 +10,18 @@ class UICGuessrGame {
         this.roundResults = [];
         this.difficulty = 'easy';
         this.gameStarted = false;
+        this.focusFilters = ['academic', 'recreation', 'services', 'dining'];
         
         // Timer properties
         this.timer = null;
         this.timeRemaining = 0;
         this.timerEnabled = true;
         this.timePerQuestion = 60; // seconds
+        this.hintTimeoutId = null;
+        
+        // Question pool per game session
+        this.activeQuestionPool = [];
+        this.activeQuestionIndex = 0;
         
         // Hint properties
         this.hintsUsed = 0;
@@ -36,10 +42,116 @@ class UICGuessrGame {
         console.log('UICguessr initialized');
         // Show welcome screen by default
         this.showScreen('welcome');
+        this.updateSettingsDisplay();
+        this.setupKeyboardShortcuts();
+        this.loadStats();
+    }
+    
+    setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+            // Only handle shortcuts on question screen
+            const questionScreen = document.getElementById('question-screen');
+            if (!questionScreen || !questionScreen.classList.contains('active')) return;
+            
+            // Enter key to submit answer
+            if (e.key === 'Enter') {
+                const submitBtn = document.getElementById('submit-answer-btn');
+                if (submitBtn && !submitBtn.disabled) {
+                    submitBtn.click();
+                }
+            }
+            
+            // Number keys 1-4 to select options
+            if (['1', '2', '3', '4'].includes(e.key)) {
+                const optionIndex = parseInt(e.key) - 1;
+                const options = document.querySelectorAll('.answer-option');
+                if (options[optionIndex]) {
+                    const input = options[optionIndex].querySelector('input');
+                    if (input) {
+                        this.selectAnswer(input.value);
+                    }
+                }
+            }
+            
+            // H key for hint
+            if (e.key === 'h' || e.key === 'H') {
+                const hintBtn = document.getElementById('hint-btn');
+                if (hintBtn && !hintBtn.disabled) {
+                    hintBtn.click();
+                }
+            }
+        });
+    }
+    
+    updateSettingsDisplay() {
+        const container = document.getElementById('current-settings-display');
+        if (!container) return;
+        
+        const difficultyEmoji = {
+            'easy': '🟢',
+            'medium': '🟡',
+            'hard': '🔴'
+        };
+        
+        const badges = [];
+        
+        // Difficulty badge
+        badges.push(`<div class="settings-badge">
+            <span class="settings-badge-icon">${difficultyEmoji[this.difficulty]}</span>
+            <span>${this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1)}</span>
+        </div>`);
+        
+        // Focus areas count
+        const focusCount = this.focusFilters.length;
+        badges.push(`<div class="settings-badge">
+            <span class="settings-badge-icon">🎯</span>
+            <span>${focusCount} Focus Area${focusCount !== 1 ? 's' : ''}</span>
+        </div>`);
+        
+        // Timer status
+        if (this.timerEnabled) {
+            badges.push(`<div class="settings-badge">
+                <span class="settings-badge-icon">⏱️</span>
+                <span>Timer On</span>
+            </div>`);
+        }
+        
+        // Sound status
+        if (gameSettings.soundEnabled) {
+            badges.push(`<div class="settings-badge">
+                <span class="settings-badge-icon">🔊</span>
+                <span>Sound On</span>
+            </div>`);
+        }
+        
+        container.innerHTML = badges.join('');
+    }
+    
+    loadStats() {
+        const statsStr = localStorage.getItem('uicguessr_stats');
+        if (statsStr) {
+            this.stats = JSON.parse(statsStr);
+        } else {
+            this.stats = {
+                gamesPlayed: 0,
+                bestScore: 0,
+                totalScore: 0,
+                perfectGames: 0
+            };
+        }
+    }
+    
+    saveStats() {
+        localStorage.setItem('uicguessr_stats', JSON.stringify(this.stats));
     }
 
     // Screen Management
     showScreen(screenId) {
+        // Stop ticking mechanisms when leaving the question flow
+        if (screenId !== 'question') {
+            this.stopTimer();
+            this.clearHintTimeout();
+        }
         // Hide all screens
         const screens = document.querySelectorAll('.screen');
         screens.forEach(screen => screen.classList.remove('active'));
@@ -55,6 +167,25 @@ class UICGuessrGame {
             // Handle screen-specific initialization
             if (screenId === 'resources') {
                 this.populateAllResources();
+            } else if (screenId === 'campus-map-overview') {
+                this.showCampusMapOverviewContent();
+            } else if (screenId === 'options') {
+                // Reflect current settings to the options UI
+                const difficultyInput = document.querySelector(`input[name="difficulty"][value="${this.difficulty}"]`);
+                if (difficultyInput) difficultyInput.checked = true;
+                
+                const soundInput = document.querySelector('input[name="settings"][value="sound"]');
+                if (soundInput) soundInput.checked = !!gameSettings.soundEnabled;
+                
+                const hintsInput = document.querySelector('input[name="settings"][value="hints"]');
+                if (hintsInput) hintsInput.checked = !!gameSettings.hintsEnabled;
+                
+                const timerInput = document.querySelector('input[name="settings"][value="timer"]');
+                if (timerInput) timerInput.checked = !!this.timerEnabled;
+                
+                document.querySelectorAll('input[name="focus"]').forEach(cb => {
+                    cb.checked = this.focusFilters.includes(cb.value);
+                });
             }
         }
     }
@@ -65,8 +196,23 @@ class UICGuessrGame {
         this.score = 0;
         this.roundResults = [];
         this.gameStarted = true;
+        this.activeQuestionIndex = 0;
+        this.buildActiveQuestionPool();
         
         this.loadNextQuestion();
+    }
+
+    buildActiveQuestionPool() {
+        const questions = questionSets[this.difficulty] || [];
+        // Filter by focus categories if possible
+        const filtered = questions.filter(q => {
+            const b = buildings[q.building];
+            if (!b || !Array.isArray(b.categories)) return true;
+            return b.categories.some(cat => this.focusFilters.includes(cat));
+        });
+        // Fallback to original if filter removes everything
+        const pool = filtered.length > 0 ? filtered.slice() : questions.slice();
+        this.activeQuestionPool = this.shuffleArray(pool);
     }
 
     loadNextQuestion() {
@@ -82,11 +228,15 @@ class UICGuessrGame {
         this.selectedAnswer = null;
         this.hintAvailable = true;
         this.currentHints = [];
+        this.clearHintTimeout();
         
-        // Get question set based on difficulty
-        const questions = questionSets[this.difficulty];
-        const questionIndex = (this.currentRound - 1) % questions.length;
-        this.currentQuestion = questions[questionIndex];
+        // Pull from active question pool
+        if (!this.activeQuestionPool || this.activeQuestionPool.length === 0) {
+            this.buildActiveQuestionPool();
+        }
+        const questionIndex = this.activeQuestionIndex % this.activeQuestionPool.length;
+        this.currentQuestion = this.activeQuestionPool[questionIndex];
+        this.activeQuestionIndex++;
         
         // Generate contextual hints
         this.generateHints();
@@ -137,11 +287,20 @@ class UICGuessrGame {
     }
 
     updateTimerDisplay() {
+        const timerElement = document.getElementById('timer-display');
+        if (!this.timerEnabled) {
+            if (timerElement) {
+                timerElement.style.visibility = 'hidden';
+            }
+            return;
+        }
+        if (timerElement) {
+            timerElement.style.visibility = 'visible';
+        }
         const minutes = Math.floor(this.timeRemaining / 60);
         const seconds = this.timeRemaining % 60;
         const timeString = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         
-        const timerElement = document.getElementById('timer-display');
         if (timerElement) {
             timerElement.textContent = `⏱ ${timeString}`;
             
@@ -155,6 +314,13 @@ class UICGuessrGame {
                 timerElement.style.color = '#FFFFFF';
                 timerElement.style.fontWeight = '600';
             }
+        }
+    }
+
+    clearHintTimeout() {
+        if (this.hintTimeoutId) {
+            clearTimeout(this.hintTimeoutId);
+            this.hintTimeoutId = null;
         }
     }
 
@@ -255,12 +421,15 @@ class UICGuessrGame {
         const building = buildings[this.currentQuestion.building];
         document.getElementById('question-photo').src = building.photo;
         document.getElementById('question-photo').alt = `Photo of ${building.name}`;
+        this.setPhotoCredit('question-photo-credit', building);
         
         // Update answer options
         const optionsContainer = document.getElementById('answer-options');
         optionsContainer.innerHTML = '';
         
-        this.currentQuestion.options.forEach((option, index) => {
+        // Shuffle options for variety
+        const shuffledOptions = this.shuffleArray(this.currentQuestion.options.slice());
+        shuffledOptions.forEach((option, index) => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'answer-option';
             optionDiv.onclick = () => this.selectAnswer(option);
@@ -282,23 +451,18 @@ class UICGuessrGame {
         
         // Disable submit button initially
         document.getElementById('submit-answer-btn').disabled = true;
-    }
 
-    selectAnswer(answer) {
-        this.selectedAnswer = answer;
-        
-        // Update visual selection
-        const options = document.querySelectorAll('.answer-option');
-        options.forEach(option => {
-            option.classList.remove('selected');
-            if (option.querySelector('input').value === answer) {
-                option.classList.add('selected');
-                option.querySelector('input').checked = true;
-            }
-        });
-        
-        // Enable submit button
-        document.getElementById('submit-answer-btn').disabled = false;
+        // Auto-hint if enabled and no selection after delay
+        this.clearHintTimeout();
+        if (gameSettings.hintsEnabled) {
+            this.hintTimeoutId = setTimeout(() => {
+                // Only show if still on question screen and nothing selected
+                const questionScreen = document.getElementById('question-screen');
+                if (questionScreen && questionScreen.classList.contains('active') && !this.selectedAnswer) {
+                    this.showProgressiveHint();
+                }
+            }, 15000);
+        }
     }
 
     submitAnswer() {
@@ -308,6 +472,7 @@ class UICGuessrGame {
         
         // Stop timer
         this.stopTimer();
+        this.clearHintTimeout();
         
         // Animate feedback
         const options = document.querySelectorAll('.answer-option');
@@ -333,6 +498,7 @@ class UICGuessrGame {
         
         // Play click sound
         if (soundManager) soundManager.playClick();
+        this.clearHintTimeout();
         
         // Update visual selection
         const options = document.querySelectorAll('.answer-option');
@@ -477,6 +643,9 @@ class UICGuessrGame {
         // Reload question with reduced attempts
         this.displayQuestion();
         this.showScreen('question');
+        if (this.timerEnabled) {
+            this.startTimer();
+        }
     }
 
     showAnswerReveal() {
@@ -485,6 +654,7 @@ class UICGuessrGame {
         document.getElementById('reveal-building-name').textContent = building.name;
         document.getElementById('reveal-photo').src = building.photo;
         document.getElementById('reveal-explanation').textContent = building.description;
+        this.setPhotoCredit('reveal-photo-credit', building);
         
         // Populate features
         const featuresList = document.getElementById('reveal-features');
@@ -504,7 +674,10 @@ class UICGuessrGame {
         // Update map info
         document.getElementById('map-location-name').textContent = building.name;
         document.getElementById('map-address').textContent = building.address;
-        document.getElementById('map-building-label').textContent = building.abbreviation;
+        const mapBuildingLabel = document.getElementById('map-building-label');
+        if (mapBuildingLabel) {
+            mapBuildingLabel.textContent = building.abbreviation;
+        }
         
         // Render enhanced interactive map
         if (typeof campusMap !== 'undefined') {
@@ -538,6 +711,17 @@ class UICGuessrGame {
     showGameComplete() {
         // Stop any running timer
         this.stopTimer();
+        
+        // Update global stats
+        this.stats.gamesPlayed++;
+        this.stats.totalScore += this.score;
+        if (this.score > this.stats.bestScore) {
+            this.stats.bestScore = this.score;
+        }
+        if (this.score === gameSettings.totalRounds * gameSettings.pointsFirstTry) {
+            this.stats.perfectGames++;
+        }
+        this.saveStats();
         
         // Play game complete sound
         if (soundManager) soundManager.playGameComplete();
@@ -625,6 +809,7 @@ class UICGuessrGame {
     showHint() {
         const building = buildings[this.currentQuestion.building];
         document.getElementById('hint-photo').src = building.photo;
+        this.setPhotoCredit('hint-photo-credit', building);
         this.showScreen('hint');
     }
 
@@ -672,17 +857,41 @@ class UICGuessrGame {
         // Get sound setting
         const soundInput = document.querySelector('input[name="settings"][value="sound"]');
         gameSettings.soundEnabled = soundInput.checked;
+        if (typeof soundManager !== 'undefined') {
+            soundManager.setEnabled(gameSettings.soundEnabled);
+        }
         
         // Get hints setting
         const hintsInput = document.querySelector('input[name="settings"][value="hints"]');
         gameSettings.hintsEnabled = hintsInput.checked;
         
+        // Get timer setting (if present)
+        const timerInput = document.querySelector('input[name="settings"][value="timer"]');
+        if (timerInput) {
+            this.timerEnabled = timerInput.checked;
+            this.updateTimerDisplay();
+        }
+        
+        // Get focus filters
+        const focusInputs = document.querySelectorAll('input[name="focus"]');
+        const selectedFocus = Array.from(focusInputs)
+            .filter(i => i.checked)
+            .map(i => i.value);
+        // Ensure at least one category
+        this.focusFilters = selectedFocus.length > 0 ? selectedFocus : ['academic', 'recreation', 'services', 'dining'];
+        
         // Save to localStorage
         localStorage.setItem('uicguessr_difficulty', this.difficulty);
         localStorage.setItem('uicguessr_sound', gameSettings.soundEnabled);
         localStorage.setItem('uicguessr_hints', gameSettings.hintsEnabled);
+        localStorage.setItem('uicguessr_timer', this.timerEnabled);
+        localStorage.setItem('uicguessr_focus', JSON.stringify(this.focusFilters));
         
-        alert('Settings saved successfully!');
+        // Update settings display on welcome screen
+        this.updateSettingsDisplay();
+        
+        if (soundManager) soundManager.playSuccess();
+        alert('✅ Settings saved successfully!');
         this.showScreen('welcome');
     }
 
@@ -690,16 +899,26 @@ class UICGuessrGame {
         this.difficulty = 'easy';
         gameSettings.soundEnabled = true;
         gameSettings.hintsEnabled = true;
+        this.timerEnabled = true;
+        this.focusFilters = ['academic', 'recreation', 'services', 'dining'];
         
         // Update UI
         document.querySelector('input[name="difficulty"][value="easy"]').checked = true;
         document.querySelector('input[name="settings"][value="sound"]').checked = true;
         document.querySelector('input[name="settings"][value="hints"]').checked = true;
+        const timerInput = document.querySelector('input[name="settings"][value="timer"]');
+        if (timerInput) timerInput.checked = true;
+        document.querySelectorAll('input[name="focus"]').forEach(cb => cb.checked = true);
+        if (typeof soundManager !== 'undefined') {
+            soundManager.setEnabled(true);
+        }
         
         // Clear localStorage
         localStorage.removeItem('uicguessr_difficulty');
         localStorage.removeItem('uicguessr_sound');
         localStorage.removeItem('uicguessr_hints');
+        localStorage.removeItem('uicguessr_timer');
+        localStorage.removeItem('uicguessr_focus');
         
         alert('Settings reset to defaults!');
     }
@@ -720,12 +939,98 @@ class UICGuessrGame {
         if (savedHints !== null) {
             gameSettings.hintsEnabled = savedHints === 'true';
         }
+        
+        const savedTimer = localStorage.getItem('uicguessr_timer');
+        if (savedTimer !== null) {
+            this.timerEnabled = savedTimer === 'true';
+        }
+        
+        const savedFocus = localStorage.getItem('uicguessr_focus');
+        if (savedFocus) {
+            try {
+                const parsed = JSON.parse(savedFocus);
+                if (Array.isArray(parsed) && parsed.length) {
+                    this.focusFilters = parsed;
+                }
+            } catch (e) {}
+        }
+        
+        // Reflect to runtime systems
+        if (typeof soundManager !== 'undefined') {
+            soundManager.setEnabled(gameSettings.soundEnabled);
+        }
+        this.updateTimerDisplay();
     }
 
+    // Campus Map Overview
+    showCampusMapOverview() {
+        this.showScreen('campus-map-overview');
+    }
+    
+    showCampusMapOverviewContent() {
+        // Render the full campus map
+        if (typeof campusMap !== 'undefined') {
+            campusMap.renderMap('overview-campus-map', null, true); // Pass true for interactive mode
+        }
+        
+        // Populate building legend
+        const legendGrid = document.getElementById('building-legend-grid');
+        if (legendGrid) {
+            legendGrid.innerHTML = '';
+            
+            Object.keys(buildings).forEach(key => {
+                const building = buildings[key];
+                const style = typeof campusMap.getBuildingStyle === 'function'
+                    ? campusMap.getBuildingStyle(key)
+                    : null;
+                
+                if (!style) return;
+                
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                legendItem.onclick = () => this.showBuildingDetail(key);
+                
+                legendItem.innerHTML = `
+                    <div class="legend-color" style="background: ${style.color};"></div>
+                    <div class="legend-info">
+                        <div class="legend-name">${building.name}</div>
+                        <div class="legend-abbr">${style.label || building.abbreviation}</div>
+                    </div>
+                `;
+                
+                legendGrid.appendChild(legendItem);
+            });
+        }
+    }
+    
+    showBuildingDetail(buildingKey) {
+        const building = buildings[buildingKey];
+        if (!building) return;
+        
+        if (typeof campusMap !== 'undefined' && document.getElementById('overview-campus-map')) {
+            campusMap.renderMap('overview-campus-map', buildingKey, true);
+        }
+        
+        // Show an alert with building info (could be enhanced with a modal later)
+        const info = `
+${building.name}
+
+📍 ${building.address}
+
+${building.description}
+
+Resources Available:
+${building.resources.map(r => `• ${r.name}: ${r.description}`).join('\n')}
+        `;
+        
+        alert(info);
+        if (soundManager) soundManager.playClick();
+    }
+    
     // All Resources Screen
     populateAllResources() {
-        const grid = document.getElementById('all-resources-grid');
-        grid.innerHTML = '';
+        const container = document.getElementById('all-resources-grid');
+        container.innerHTML = '';
         
         // Group resources by category
         const categories = {};
@@ -736,20 +1041,110 @@ class UICGuessrGame {
             categories[resource.category].push(resource);
         });
         
-        // Create resource items
+        // Category icons
+        const categoryIcons = {
+            'Academic Support': '📚',
+            'Health & Wellness': '🏥',
+            'Student Services': '🎓',
+            'Dining & Social': '🍔',
+            'Technology': '💻',
+            'Safety & Transportation': '🚨',
+            'Cultural & Community': '🎨'
+        };
+        
+        // Create sections for each category
         Object.keys(categories).forEach(category => {
+            // Category header
+            const categorySection = document.createElement('div');
+            categorySection.className = 'resource-category-section';
+            
+            const categoryHeader = document.createElement('div');
+            categoryHeader.className = 'resource-category-header';
+            categoryHeader.innerHTML = `
+                <h3>${categoryIcons[category] || '📌'} ${category}</h3>
+                <span class="resource-count">${categories[category].length} resources</span>
+            `;
+            categorySection.appendChild(categoryHeader);
+            
+            // Resources grid for this category
+            const resourcesGrid = document.createElement('div');
+            resourcesGrid.className = 'resources-category-grid';
+            
             categories[category].forEach(resource => {
                 const item = document.createElement('div');
-                item.className = 'resource-item';
+                item.className = 'resource-detail-card';
+                
+                // Build services list
+                const servicesList = resource.services ? 
+                    `<div class="resource-services">
+                        ${resource.services.slice(0, 4).map(s => `<span class="service-tag">${s}</span>`).join('')}
+                        ${resource.services.length > 4 ? `<span class="service-tag more">+${resource.services.length - 4} more</span>` : ''}
+                    </div>` : '';
+                
                 item.innerHTML = `
-                    <h4>${resource.name}</h4>
-                    <p>${resource.description}</p>
-                    <p><strong>📍 ${resource.location}</strong></p>
-                    <span class="resource-category">${category}</span>
+                    <div class="resource-icon">${resource.icon || '📍'}</div>
+                    <h4 class="resource-name">${resource.name}</h4>
+                    <p class="resource-description">${resource.description}</p>
+                    ${servicesList}
+                    <div class="resource-details">
+                        <div class="resource-detail-item">
+                            <span class="detail-icon">📍</span>
+                            <span class="detail-text">${resource.location}</span>
+                        </div>
+                        ${resource.hours ? `
+                        <div class="resource-detail-item">
+                            <span class="detail-icon">🕐</span>
+                            <span class="detail-text">${resource.hours}</span>
+                        </div>
+                        ` : ''}
+                        ${resource.contact ? `
+                        <div class="resource-detail-item">
+                            <span class="detail-icon">📞</span>
+                            <span class="detail-text">${resource.contact}</span>
+                        </div>
+                        ` : ''}
+                        ${resource.website ? `
+                        <div class="resource-detail-item">
+                            <span class="detail-icon">🌐</span>
+                            <span class="detail-text">${resource.website}</span>
+                        </div>
+                        ` : ''}
+                    </div>
                 `;
-                grid.appendChild(item);
+                
+                resourcesGrid.appendChild(item);
             });
+            
+            categorySection.appendChild(resourcesGrid);
+            container.appendChild(categorySection);
         });
+    }
+
+    // Utils
+    setPhotoCredit(elementId, building) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        if (building.photoCredit) {
+            const licenseText = building.photoLicense ? ` (${building.photoLicense})` : '';
+            if (building.photoCreditUrl) {
+                element.innerHTML = `Photo: <a href="${building.photoCreditUrl}" target="_blank" rel="noopener">${building.photoCredit}</a>${licenseText}`;
+            } else {
+                element.textContent = `Photo: ${building.photoCredit}${licenseText}`;
+            }
+            element.style.display = 'block';
+        } else {
+            element.innerHTML = '';
+            element.style.display = 'none';
+        }
+    }
+    
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
 }
 
