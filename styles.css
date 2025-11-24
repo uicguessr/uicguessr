@@ -341,6 +341,11 @@ body {
     background: #C4C4C4;
     margin-bottom: 15px;
 }
+/* Progressive blur levels for image reveal */
+.blur-level-3 { filter: blur(6px); transition: filter 0.3s ease; }
+.blur-level-2 { filter: blur(4px); transition: filter 0.3s ease; }
+.blur-level-1 { filter: blur(2px); transition: filter 0.3s ease; }
+.blur-level-0 { filter: blur(0); transition: filter 0.3s ease; }
 
 .photo-credit {
     display: none;
@@ -681,6 +686,16 @@ body {
     color: #616161;
     font-size: 14px;
     margin: 0;
+}
+.resource-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #1565C0;
+    font-weight: 600;
+    text-decoration: none;
+}
+.resource-link:hover {
+    text-decoration: underline;
 }
 
 .helpful-tips {
@@ -1495,6 +1510,27 @@ kbd {
     justify-content: center;
     gap: 20px;
 }
+/* Achievements */
+.achievement-badge {
+    background: #FFFDE7;
+    border: 2px solid #FFECB3;
+    border-radius: 14px;
+    padding: 16px;
+}
+.achievement-badge.unlocked {
+    border-color: #FFD54F;
+    background: linear-gradient(135deg, #FFF59D, #FFFDE7);
+    box-shadow: 0 4px 12px rgba(255,213,79,0.25);
+}
+.achievement-badge h4 {
+    margin-bottom: 6px;
+    color: #5D4037;
+    font-size: 16px;
+}
+.achievement-badge p {
+    font-size: 13px;
+    color: #616161;
+}
 
 /* Resources Screen */
 .resources-container {
@@ -1523,6 +1559,39 @@ kbd {
     font-size: 16px;
     margin-bottom: 25px;
 }
+.resource-filters {
+    margin-top: 20px;
+    display: grid;
+    gap: 12px;
+}
+.resource-search-input {
+    padding: 12px 16px;
+    border: 2px solid #E0E0E0;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+}
+.resource-search-input:focus {
+    border-color: #1565C0;
+    box-shadow: 0 0 0 3px rgba(21,101,192,0.15);
+}
+.resource-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.chip {
+    background: #FAFAFA;
+    border: 2px solid #E0E0E0;
+    border-radius: 20px;
+    padding: 6px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.chip input { width: 16px; height: 16px; }
+.chip span { font-size: 13px; color: #424242; }
 
 .resources-stats {
     display: flex;
@@ -1756,6 +1825,30 @@ kbd {
     margin-bottom: 10px;
     line-height: 1.5;
     font-size: 14px;
+}
+/* Compare section */
+.compare-section {
+    margin: 20px 0 10px;
+}
+.compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 10px 0 10px;
+}
+.compare-card {
+    background: #FAFAFA;
+    border: 2px solid #E0E0E0;
+    border-radius: 12px;
+    padding: 16px;
+}
+.distance-card {
+    background: #E3F2FD;
+    border: 2px solid #90CAF9;
+    color: #0D47A1;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-weight: 600;
 }
 
 /* Responsive Design */

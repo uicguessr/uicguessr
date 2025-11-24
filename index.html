@@ -35,6 +35,9 @@
                         <button class="btn btn-secondary btn-lg" onclick="game.showScreen('options')">
                             Game Options
                         </button>
+                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('achievements')">
+                            Achievements
+                        </button>
                         <button class="btn btn-secondary btn-lg" onclick="game.showScreen('resources')">
                             View All Resources
                         </button>
@@ -68,7 +71,7 @@
             <header class="header-bar">
                 <div class="header-content">
                     <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
-                    <h1 class="header-title">Round <span id="question-number">1</span> of 5 • Score: <span id="current-score">0</span></h1>
+                    <h1 class="header-title">Round <span id="question-number">1</span> of <span id="total-rounds">5</span> • Score: <span id="current-score">0</span></h1>
                     <span id="timer-display" class="timer-display">⏱ 1:00</span>
                 </div>
             </header>
@@ -276,6 +279,14 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="reveal-compare" class="compare-section" style="display:none;">
+                        <h4>How close was your last guess?</h4>
+                        <div class="compare-grid">
+                            <div class="compare-card" id="compare-guess-card"></div>
+                            <div class="compare-card" id="compare-correct-card"></div>
+                        </div>
+                        <div class="distance-card" id="reveal-distance"></div>
+                    </div>
                     <button class="btn btn-primary btn-lg" onclick="game.showMap()">
                         Continue to Map View →
                     </button>
@@ -386,6 +397,32 @@
             <main class="main-container">
                 <div class="options-container">
                     <h2>⚙️ Customize Your Experience</h2>
+                    
+                    <div class="option-section">
+                        <h3>Game Mode</h3>
+                        <div class="option-group">
+                            <label class="option-label">
+                                <input type="radio" name="mode" value="classic" checked>
+                                <span>Classic — 2 attempts, timer optional, hints optional</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="mode" value="zen">
+                                <span>Zen — No timer, 2 attempts, hints on</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="mode" value="sprint">
+                                <span>Sprint — 30s timer, 1 attempt, hints on</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="mode" value="hardcore">
+                                <span>Hardcore — 45s timer, 1 attempt, no hints</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="mode" value="endless">
+                                <span>Endless — Keep going indefinitely</span>
+                            </label>
+                        </div>
+                    </div>
                     
                     <div class="option-section">
                         <h3>Difficulty Level</h3>
@@ -588,6 +625,40 @@
                             <span class="stat-badge">📞 Direct Contacts</span>
                             <span class="stat-badge">🕐 Hours Listed</span>
                         </div>
+                        <div class="resource-filters">
+                            <input id="resource-search-input" type="text" class="resource-search-input" placeholder="Search resources by name, service, or description..." aria-label="Search resources">
+                            <div class="resource-filter-chips">
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Academic Support" checked>
+                                    <span>Academic Support</span>
+                                </label>
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Health & Wellness" checked>
+                                    <span>Health & Wellness</span>
+                                </label>
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Student Services" checked>
+                                    <span>Student Services</span>
+                                </label>
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Dining & Social" checked>
+                                    <span>Dining & Social</span>
+                                </label>
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Technology" checked>
+                                    <span>Technology</span>
+                                </label>
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Safety & Transportation" checked>
+                                    <span>Safety & Transportation</span>
+                                </label>
+                                <label class="chip">
+                                    <input type="checkbox" class="resource-filter-checkbox" value="Cultural & Community" checked>
+                                    <span>Cultural & Community</span>
+                                </label>
+                            </div>
+                            <button id="resource-clear-filters" class="btn btn-secondary">Clear Filters</button>
+                        </div>
                     </div>
                     
                     <div class="resources-content" id="all-resources-grid">
@@ -605,6 +676,26 @@
                 </div>
             </main>
         </div>
+    </div>
+    <!-- Screen: Achievements -->
+    <div id="achievements-screen" class="screen">
+        <header class="header-bar">
+            <div class="header-content">
+                <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                <h1 class="header-title">🏆 Achievements</h1>
+            </div>
+        </header>
+        <main class="main-container">
+            <div class="resources-container">
+                <div class="resources-header">
+                    <h2>Collect badges as you explore UIC</h2>
+                    <p class="resources-intro">Badges unlock automatically as you play. Try different modes for unique challenges.</p>
+                </div>
+                <div id="achievements-grid" class="resources-category-grid">
+                    <!-- Populated via JavaScript -->
+                </div>
+            </div>
+        </main>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>

@@ -7,10 +7,14 @@ class UICGuessrGame {
         this.attemptsRemaining = 2;
         this.currentQuestion = null;
         this.selectedAnswer = null;
+        this.lastGuess = null;
         this.roundResults = [];
         this.difficulty = 'easy';
         this.gameStarted = false;
         this.focusFilters = ['academic', 'recreation', 'services', 'dining'];
+        this.mode = 'classic';
+        this.endless = false;
+        this.attemptsPerQuestion = gameSettings.attemptsPerQuestion;
         
         // Timer properties
         this.timer = null;
@@ -18,6 +22,7 @@ class UICGuessrGame {
         this.timerEnabled = true;
         this.timePerQuestion = 60; // seconds
         this.hintTimeoutId = null;
+        this.currentBlurLevel = 0;
         
         // Question pool per game session
         this.activeQuestionPool = [];
@@ -34,7 +39,11 @@ class UICGuessrGame {
         this.timeBonus = 0;
         this.perfectRounds = 0;
         
+        // Achievements
+        this.achievements = {};
+        
         this.loadSettings();
+        this.loadAchievements();
         this.init();
     }
 
@@ -99,6 +108,13 @@ class UICGuessrGame {
         badges.push(`<div class="settings-badge">
             <span class="settings-badge-icon">${difficultyEmoji[this.difficulty]}</span>
             <span>${this.difficulty.charAt(0).toUpperCase() + this.difficulty.slice(1)}</span>
+        </div>`);
+        
+        // Mode badge
+        const modeIcon = this.mode === 'zen' ? '🧘' : this.mode === 'sprint' ? '⚡' : this.mode === 'hardcore' ? '💀' : this.mode === 'endless' ? '♾️' : '🎮';
+        badges.push(`<div class="settings-badge">
+            <span class="settings-badge-icon">${modeIcon}</span>
+            <span>${this.mode.charAt(0).toUpperCase() + this.mode.slice(1)} Mode</span>
         </div>`);
         
         // Focus areas count
@@ -167,12 +183,31 @@ class UICGuessrGame {
             // Handle screen-specific initialization
             if (screenId === 'resources') {
                 this.populateAllResources();
+                // Wire filters
+                const search = document.getElementById('resource-search-input');
+                const clearBtn = document.getElementById('resource-clear-filters');
+                if (search) {
+                    search.oninput = () => this.populateAllResources();
+                }
+                if (clearBtn) {
+                    clearBtn.onclick = () => {
+                        document.querySelectorAll('.resource-filter-checkbox').forEach(cb => cb.checked = true);
+                        if (search) search.value = '';
+                        this.populateAllResources();
+                    };
+                }
+                document.querySelectorAll('.resource-filter-checkbox').forEach(cb => {
+                    cb.onchange = () => this.populateAllResources();
+                });
             } else if (screenId === 'campus-map-overview') {
                 this.showCampusMapOverviewContent();
             } else if (screenId === 'options') {
                 // Reflect current settings to the options UI
                 const difficultyInput = document.querySelector(`input[name="difficulty"][value="${this.difficulty}"]`);
                 if (difficultyInput) difficultyInput.checked = true;
+                
+                const modeInput = document.querySelector(`input[name="mode"][value="${this.mode}"]`);
+                if (modeInput) modeInput.checked = true;
                 
                 const soundInput = document.querySelector('input[name="settings"][value="sound"]');
                 if (soundInput) soundInput.checked = !!gameSettings.soundEnabled;
@@ -186,6 +221,8 @@ class UICGuessrGame {
                 document.querySelectorAll('input[name="focus"]').forEach(cb => {
                     cb.checked = this.focusFilters.includes(cb.value);
                 });
+            } else if (screenId === 'achievements') {
+                this.populateAchievementsScreen();
             }
         }
     }
@@ -218,14 +255,15 @@ class UICGuessrGame {
     loadNextQuestion() {
         this.currentRound++;
         
-        if (this.currentRound > gameSettings.totalRounds) {
+        if (!this.endless && this.currentRound > gameSettings.totalRounds) {
             this.showGameComplete();
             return;
         }
 
         // Reset attempts and hints
-        this.attemptsRemaining = gameSettings.attemptsPerQuestion;
+        this.attemptsRemaining = this.attemptsPerQuestion;
         this.selectedAnswer = null;
+        this.lastGuess = null;
         this.hintAvailable = true;
         this.currentHints = [];
         this.clearHintTimeout();
@@ -400,6 +438,10 @@ class UICGuessrGame {
         // Update question number and score
         document.getElementById('question-number').textContent = this.currentRound;
         document.getElementById('current-score').textContent = this.score;
+        const totalRoundsEl = document.getElementById('total-rounds');
+        if (totalRoundsEl) {
+            totalRoundsEl.textContent = this.endless ? '∞' : String(gameSettings.totalRounds);
+        }
         
         // Clear hint container
         const hintContainer = document.getElementById('hint-container');
@@ -416,11 +458,17 @@ class UICGuessrGame {
         
         // Reset hints used
         this.hintsUsed = 0;
+        this.currentBlurLevel = 3;
         
         // Update photo
         const building = buildings[this.currentQuestion.building];
-        document.getElementById('question-photo').src = building.photo;
-        document.getElementById('question-photo').alt = `Photo of ${building.name}`;
+        const photoEl = document.getElementById('question-photo');
+        if (photoEl) {
+            photoEl.src = building.photo;
+            photoEl.alt = `Photo of ${building.name}`;
+            photoEl.classList.remove('blur-level-0','blur-level-1','blur-level-2','blur-level-3');
+            photoEl.classList.add('blur-level-3');
+        }
         this.setPhotoCredit('question-photo-credit', building);
         
         // Update answer options
@@ -469,6 +517,7 @@ class UICGuessrGame {
         if (!this.selectedAnswer) return;
         
         const isCorrect = this.selectedAnswer === this.currentQuestion.correctAnswer;
+        this.lastGuess = this.selectedAnswer;
         
         // Stop timer
         this.stopTimer();
@@ -526,6 +575,7 @@ class UICGuessrGame {
             const timeBonus = Math.floor((this.timeRemaining - 45) * 2);
             bonusPoints += timeBonus;
             bonusReasons.push(`⚡ Speed Bonus: +${timeBonus} (${this.timeRemaining}s remaining)`);
+            this.unlockAchievement('sprinter');
         }
         
         // Streak bonus
@@ -537,6 +587,7 @@ class UICGuessrGame {
                 const streakBonus = this.streak * 10;
                 bonusPoints += streakBonus;
                 bonusReasons.push(`🔥 ${this.streak}x Streak Bonus: +${streakBonus}`);
+                this.unlockAchievement('streak_3');
             }
             
             this.perfectRounds++;
@@ -548,6 +599,7 @@ class UICGuessrGame {
         if (this.attemptsRemaining === 2 && this.hintsUsed === 0) {
             bonusPoints += 25;
             bonusReasons.push(`💎 Perfect Round (No Hints): +25`);
+            this.unlockAchievement('no_hints_round');
         }
         
         const totalPoints = points + bonusPoints;
@@ -569,6 +621,10 @@ class UICGuessrGame {
             hintsUsed: this.hintsUsed,
             streak: this.streak
         });
+        // First correct achievement
+        if (this.roundResults.filter(r => r.correct).length === 1) {
+            this.unlockAchievement('first_correct');
+        }
         
         // Update correct screen
         const building = buildings[this.currentQuestion.building];
@@ -669,6 +725,25 @@ class UICGuessrGame {
             featuresList.appendChild(li);
         });
         
+        // Compare guessed vs correct if user had a last guess different from correct
+        const compareSection = document.getElementById('reveal-compare');
+        if (this.lastGuess && this.lastGuess !== this.currentQuestion.correctAnswer && compareSection) {
+            const guessed = buildings[this.lastGuess];
+            const correct = building;
+            const guessCard = document.getElementById('compare-guess-card');
+            const correctCard = document.getElementById('compare-correct-card');
+            const distanceCard = document.getElementById('reveal-distance');
+            if (guessCard && correctCard && distanceCard) {
+                guessCard.innerHTML = `<strong>Your Guess</strong><br>${guessed.name}<br><span style="color:#757575;">${guessed.address}</span>`;
+                correctCard.innerHTML = `<strong>Correct</strong><br>${correct.name}<br><span style="color:#757575;">${correct.address}</span>`;
+                const { meters, minutes, bearing } = this.getDistanceAndBearing(guessed.coordinates, correct.coordinates);
+                distanceCard.textContent = `Distance: ${(meters/1000).toFixed(2)} km • ~${minutes} min walk • Head ${bearing}`;
+                compareSection.style.display = 'block';
+            }
+        } else if (compareSection) {
+            compareSection.style.display = 'none';
+        }
+        
         this.showScreen('answer-reveal');
     }
 
@@ -702,6 +777,7 @@ class UICGuessrGame {
                 officialBtn.style.display = 'none';
             }
         }
+        this.unlockAchievement('map_lover');
         
         // Render enhanced interactive map
         if (typeof campusMap !== 'undefined') {
@@ -744,6 +820,7 @@ class UICGuessrGame {
         }
         if (this.score === gameSettings.totalRounds * gameSettings.pointsFirstTry) {
             this.stats.perfectGames++;
+            this.unlockAchievement('perfect_game');
         }
         this.saveStats();
         
@@ -755,6 +832,9 @@ class UICGuessrGame {
         const secondTryCorrect = this.roundResults.filter(r => r.correct && r.attempts === 2).length;
         const missed = this.roundResults.filter(r => !r.correct).length;
         const totalBonus = this.roundResults.reduce((sum, r) => sum + (r.bonusPoints || 0), 0);
+        if (this.mode === 'hardcore' && firstTryCorrect >= 4) {
+            this.unlockAchievement('hardcore_clear');
+        }
         
         // Update final score
         document.getElementById('final-score').textContent = this.score;
@@ -844,10 +924,17 @@ class UICGuessrGame {
     // Progress Updates
     updateProgress() {
         const completedRounds = this.currentRound - 1;
-        const percentage = (completedRounds / gameSettings.totalRounds) * 100;
+        const percentage = this.endless ? 0 : (completedRounds / gameSettings.totalRounds) * 100;
         
-        document.getElementById('progress-fill').style.width = `${percentage}%`;
-        document.getElementById('progress-text').textContent = `${completedRounds} of ${gameSettings.totalRounds} Complete`;
+        const fill = document.getElementById('progress-fill');
+        const text = document.getElementById('progress-text');
+        if (this.endless) {
+            if (fill) fill.style.width = `0%`;
+            if (text) text.textContent = `${completedRounds} rounds completed`;
+        } else {
+            if (fill) fill.style.width = `${percentage}%`;
+            if (text) text.textContent = `${completedRounds} of ${gameSettings.totalRounds} Complete`;
+        }
     }
 
     updateProgressOnFeedback(screenType) {
@@ -862,7 +949,7 @@ class UICGuessrGame {
     }
 
     updateQuestionInfo() {
-        document.getElementById('attempts-remaining').textContent = `${this.attemptsRemaining}/${gameSettings.attemptsPerQuestion}`;
+        document.getElementById('attempts-remaining').textContent = `${this.attemptsRemaining}/${this.attemptsPerQuestion}`;
         
         const points = this.attemptsRemaining === 2 ? gameSettings.pointsFirstTry : gameSettings.pointsSecondTry;
         document.getElementById('points-possible').textContent = points;
@@ -877,6 +964,15 @@ class UICGuessrGame {
                 this.difficulty = input.value;
             }
         });
+        
+        // Get mode
+        const modeInputs = document.querySelectorAll('input[name="mode"]');
+        modeInputs.forEach(input => {
+            if (input.checked) {
+                this.mode = input.value;
+            }
+        });
+        this.applyModeSettings();
         
         // Get sound setting
         const soundInput = document.querySelector('input[name="settings"][value="sound"]');
@@ -910,6 +1006,7 @@ class UICGuessrGame {
         localStorage.setItem('uicguessr_hints', gameSettings.hintsEnabled);
         localStorage.setItem('uicguessr_timer', this.timerEnabled);
         localStorage.setItem('uicguessr_focus', JSON.stringify(this.focusFilters));
+        localStorage.setItem('uicguessr_mode', this.mode);
         
         // Update settings display on welcome screen
         this.updateSettingsDisplay();
@@ -925,6 +1022,8 @@ class UICGuessrGame {
         gameSettings.hintsEnabled = true;
         this.timerEnabled = true;
         this.focusFilters = ['academic', 'recreation', 'services', 'dining'];
+        this.mode = 'classic';
+        this.applyModeSettings();
         
         // Update UI
         document.querySelector('input[name="difficulty"][value="easy"]').checked = true;
@@ -933,6 +1032,8 @@ class UICGuessrGame {
         const timerInput = document.querySelector('input[name="settings"][value="timer"]');
         if (timerInput) timerInput.checked = true;
         document.querySelectorAll('input[name="focus"]').forEach(cb => cb.checked = true);
+        const modeInput = document.querySelector('input[name="mode"][value="classic"]');
+        if (modeInput) modeInput.checked = true;
         if (typeof soundManager !== 'undefined') {
             soundManager.setEnabled(true);
         }
@@ -943,6 +1044,7 @@ class UICGuessrGame {
         localStorage.removeItem('uicguessr_hints');
         localStorage.removeItem('uicguessr_timer');
         localStorage.removeItem('uicguessr_focus');
+        localStorage.removeItem('uicguessr_mode');
         
         alert('Settings reset to defaults!');
     }
@@ -978,12 +1080,50 @@ class UICGuessrGame {
                 }
             } catch (e) {}
         }
+        const savedMode = localStorage.getItem('uicguessr_mode');
+        if (savedMode) {
+            this.mode = savedMode;
+        }
+        this.applyModeSettings();
         
         // Reflect to runtime systems
         if (typeof soundManager !== 'undefined') {
             soundManager.setEnabled(gameSettings.soundEnabled);
         }
         this.updateTimerDisplay();
+    }
+    
+    applyModeSettings() {
+        // Defaults
+        this.endless = false;
+        this.attemptsPerQuestion = gameSettings.attemptsPerQuestion;
+        // Do not permanently override global points or total rounds
+        if (this.mode === 'zen') {
+            this.timerEnabled = false;
+            gameSettings.hintsEnabled = true;
+            this.attemptsPerQuestion = 2;
+            this.timePerQuestion = 60;
+        } else if (this.mode === 'sprint') {
+            this.timerEnabled = true;
+            this.timePerQuestion = 30;
+            gameSettings.hintsEnabled = true;
+            this.attemptsPerQuestion = 1;
+        } else if (this.mode === 'hardcore') {
+            this.timerEnabled = true;
+            this.timePerQuestion = 45;
+            gameSettings.hintsEnabled = false;
+            this.attemptsPerQuestion = 1;
+        } else if (this.mode === 'endless') {
+            this.endless = true;
+            // Keep current timer/hints, but endless progression and UI changes handle display
+            this.attemptsPerQuestion = 2;
+            this.timePerQuestion = 60;
+        } else {
+            // classic
+            this.timerEnabled = this.timerEnabled;
+            this.attemptsPerQuestion = gameSettings.attemptsPerQuestion;
+            this.timePerQuestion = 60;
+        }
     }
 
     // Campus Map Overview
@@ -1056,9 +1196,29 @@ ${building.resources.map(r => `• ${r.name}: ${r.description}`).join('\n')}
         const container = document.getElementById('all-resources-grid');
         container.innerHTML = '';
         
-        // Group resources by category
+        // Filters
+        const search = (document.getElementById('resource-search-input')?.value || '').toLowerCase().trim();
+        const enabledCategories = Array.from(document.querySelectorAll('.resource-filter-checkbox'))
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+        const categorySet = new Set(enabledCategories.length ? enabledCategories : Array.from(new Set(allResources.map(r => r.category))));
+        
+        // Filtered list
+        const filtered = allResources.filter(r => {
+            if (!categorySet.has(r.category)) return false;
+            if (!search) return true;
+            const hay = [
+                r.name,
+                r.description,
+                r.location,
+                (r.services || []).join(' ')
+            ].join(' ').toLowerCase();
+            return hay.includes(search);
+        });
+        
+        // Group filtered resources by category
         const categories = {};
-        allResources.forEach(resource => {
+        filtered.forEach(resource => {
             if (!categories[resource.category]) {
                 categories[resource.category] = [];
             }
@@ -1164,6 +1324,127 @@ ${building.resources.map(r => `• ${r.name}: ${r.description}`).join('\n')}
         } else {
             element.innerHTML = '';
             element.style.display = 'none';
+        }
+    }
+    
+    getDistanceAndBearing(from, to) {
+        // Haversine distance
+        const toRad = (v) => v * Math.PI / 180;
+        const R = 6371000; // meters
+        const dLat = toRad(to.lat - from.lat);
+        const dLng = toRad(to.lng - from.lng);
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(toRad(from.lat)) * Math.cos(toRad(to.lat)) *
+                  Math.sin(dLng/2) * Math.sin(dLng/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const meters = R * c;
+        const minutes = Math.max(1, Math.round(meters / 80));
+        const bearing = this.computeCardinalBearing(from, to);
+        return { meters, minutes, bearing };
+    }
+    
+    computeCardinalBearing(from, to) {
+        const dx = to.lng - from.lng;
+        const dy = to.lat - from.lat;
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        if (angle >= -22.5 && angle < 22.5) return 'east';
+        if (angle >= 22.5 && angle < 67.5) return 'northeast';
+        if (angle >= 67.5 && angle < 112.5) return 'north';
+        if (angle >= 112.5 && angle < 157.5) return 'northwest';
+        if (angle >= -67.5 && angle < -22.5) return 'southeast';
+        if (angle >= -112.5 && angle < -67.5) return 'south';
+        if (angle >= -157.5 && angle < -112.5) return 'southwest';
+        return 'west';
+    }
+    
+    // Achievements
+    loadAchievements() {
+        try {
+            const saved = localStorage.getItem('uicguessr_achievements');
+            this.achievements = saved ? JSON.parse(saved) : {};
+        } catch (e) {
+            this.achievements = {};
+        }
+    }
+    saveAchievements() {
+        localStorage.setItem('uicguessr_achievements', JSON.stringify(this.achievements));
+    }
+    unlockAchievement(key) {
+        const valid = this.getAchievementCatalog()[key];
+        if (!valid) return;
+        if (!this.achievements[key]) {
+            this.achievements[key] = true;
+            this.saveAchievements();
+        }
+    }
+    getAchievementCatalog() {
+        return {
+            first_correct: { title: 'First Steps', desc: 'Get your first correct answer' },
+            no_hints_round: { title: 'No Hint Hero', desc: 'Get a perfect round with no hints' },
+            streak_3: { title: 'On Fire', desc: 'Achieve a 3+ first-try streak' },
+            sprinter: { title: 'Speed Runner', desc: 'Answer with >45s remaining' },
+            map_lover: { title: 'Map Lover', desc: 'Open the map view' },
+            perfect_game: { title: 'Flawless', desc: 'Finish with perfect base score' },
+            hardcore_clear: { title: 'Hardcore Clear', desc: 'Win Hardcore with 4+ first-tries' }
+        };
+    }
+    populateAchievementsScreen() {
+        const grid = document.getElementById('achievements-grid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        const catalog = this.getAchievementCatalog();
+        Object.keys(catalog).forEach(key => {
+            const meta = catalog[key];
+            const unlocked = !!this.achievements[key];
+            const card = document.createElement('div');
+            card.className = 'achievement-badge resource-detail-card ' + (unlocked ? 'unlocked' : '');
+            card.innerHTML = `
+                <h4>${unlocked ? '✅ ' : '🔒 '}${meta.title}</h4>
+                <p>${meta.desc}</p>
+            `;
+            grid.appendChild(card);
+        });
+    }
+    
+    showProgressiveHint() {
+        if (!this.hintAvailable || this.hintsUsed >= this.currentHints.length) {
+            alert('No more hints available for this question!');
+            return;
+        }
+        
+        const hintText = this.currentHints[this.hintsUsed];
+        this.hintsUsed++;
+        
+        // Display hint
+        const hintContainer = document.getElementById('hint-container');
+        if (hintContainer) {
+            const hintDiv = document.createElement('div');
+            hintDiv.className = 'hint-message';
+            hintDiv.innerHTML = `💡 Hint ${this.hintsUsed}: ${hintText}`;
+            hintContainer.appendChild(hintDiv);
+            
+            // Animate in
+            setTimeout(() => hintDiv.classList.add('show'), 10);
+        }
+        
+        // Reduce blur on image progressively
+        if (this.currentBlurLevel > 0) {
+            const photoEl = document.getElementById('question-photo');
+            if (photoEl) {
+                photoEl.classList.remove(`blur-level-${this.currentBlurLevel}`);
+                this.currentBlurLevel = Math.max(0, this.currentBlurLevel - 1);
+                photoEl.classList.add(`blur-level-${this.currentBlurLevel}`);
+            }
+        }
+        
+        // Play hint sound
+        if (soundManager) soundManager.playHint();
+        
+        // Update hint button
+        const hintBtn = document.getElementById('hint-btn');
+        if (hintBtn && this.hintsUsed >= this.currentHints.length) {
+            hintBtn.disabled = true;
+            hintBtn.textContent = 'No More Hints';
         }
     }
     
