@@ -227,10 +227,10 @@ const buildings = {
         address: "1000 S Morgan Street, Chicago, IL 60607",
         coordinates: { lat: 41.869384, lng: -87.651232 },
         description: "Lecture Center A contains large auditorium-style classrooms for introductory and general education courses.",
-        photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxv026zxhDnyMHvJb2xs95DhP68kA8tfEvGQ7kjX8HE4bvRjXUvZrXggkHyi7JQbs9wFQzPU5GJvLS3JFD6txr4mkBeOnXg10nZcDkKpu7HXVQqwnGagfv95AeypUh-avWYQ9OTfg=s1360-w1360-h1020-rw",
-        photoCredit: "Vanessa Van via Google Maps",
-        photoCreditUrl: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxv026zxhDnyMHvJb2xs95DhP68kA8tfEvGQ7kjX8HE4bvRjXUvZrXggkHyi7JQbs9wFQzPU5GJvLS3JFD6txr4mkBeOnXg10nZcDkKpu7HXVQqwnGagfv95AeypUh-avWYQ9OTfg=s1360-w1360-h1020-rw",
-        photoLicense: "Google Maps",
+        photo: "https://pspm.uic.edu/wp-content/uploads/sites/874/2023/05/LCA-01.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
         resources: [
             { name: "Large Lecture Halls", description: "100-300 seat auditoriums" },
             { name: "Study Lounges", description: "Between-class study space" }
@@ -369,6 +369,441 @@ const buildings = {
             "CADA or CASA signage"
         ],
         tips: "CADA has a distinctive creative atmosphere with visible studio spaces and artistic elements."
+    },
+    ARC: {
+        name: "Academic & Residential Complex (ARC)",
+        fullName: "Academic & Residential Complex",
+        abbreviation: "ARC",
+        categories: ["academic", "residence"],
+        address: "940 W Harrison Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8746969, lng: -87.650147 },
+        description: "Mixed-use complex combining classrooms with a residence hall; a major east campus landmark.",
+        photo: "https://housing.uic.edu/wp-content/uploads/sites/23/2019/08/20190718-ARC-OpenHouse-01-1090x541.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near Harrison/Morgan",
+            "Close to Lecture Center complex"
+        ],
+        features: [
+            "Modern glass-and-brick facade",
+            "Dual-purpose academic and housing facility"
+        ],
+        tips: "Look for the tower residence next to classroom floors."
+    },
+    SSB: {
+        name: "Student Services Building (SSB)",
+        fullName: "Student Services Building",
+        abbreviation: "SSB",
+        categories: ["services"],
+        address: "1200 W Harrison Street, Chicago, IL 60607",
+        coordinates: { lat: 41.874961, lng: -87.658113 },
+        description: "Centralized location for admissions, registrar, financial aid, and other student-facing services.",
+        photo: "https://studentcenters.uic.edu/wp-content/uploads/sites/159/2020/12/32b_BiWeekly_Vol9_13-1090x613.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near University Hall",
+            "Short walk from Daley Library"
+        ],
+        features: [
+            "Administrative offices",
+            "Service counters and waiting areas"
+        ],
+        tips: "Look for signage for Admissions and Financial Aid."
+    },
+    GH: {
+        name: "Grant Hall (GH)",
+        fullName: "Grant Hall",
+        abbreviation: "GH",
+        categories: ["academic"],
+        address: "703 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8728496, lng: -87.6494706 },
+        description: "Classic academic building featuring classrooms and faculty offices.",
+        photo: "https://lclc.uic.edu/wp-content/uploads/sites/408/2025/02/Grant-Hall-Exterior-1000x464-1.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Adjacent to Taft Hall",
+            "Near the central quad"
+        ],
+        features: [
+            "Traditional brick exterior",
+            "Multiple classroom levels"
+        ],
+        tips: "Often paired with Burnham and Taft halls in the same cluster."
+    },
+    BH: {
+        name: "Burnham Hall (BH)",
+        fullName: "Burnham Hall",
+        abbreviation: "BH",
+        categories: ["academic"],
+        address: "828 S Halsted Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8707534, lng: -87.6470896 },
+        description: "Academic building with classrooms and study spaces close to the lecture centers.",
+        photo: "https://files.blogs.illinois.edu/files/1516/911191049/205495.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near Taft and Grant Halls",
+            "Close to Lecture Centers"
+        ],
+        features: [
+            "Brick facade",
+            "Prominent entryway signage"
+        ],
+        tips: "Look for BH lettering near the entrances."
+    },
+    SEO: {
+        name: "Science & Engineering Offices (SEO)",
+        fullName: "Science & Engineering Offices",
+        abbreviation: "SEO",
+        categories: ["academic"],
+        address: "851 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8707566, lng: -87.6510408 },
+        description: "Office and classroom building serving multiple science and engineering departments.",
+        photo: "https://ece.uic.edu/wp-content/uploads/sites/351/2019/03/UndergraduateAdmissionsThe-College-600x397.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near SES and SEL",
+            "Close to Taylor Street"
+        ],
+        features: [
+            "Office-heavy layout",
+            "Mid-century concrete design"
+        ],
+        tips: "Commonly used for upper-level STEM courses and faculty offices."
+    },
+    EIB: {
+        name: "Engineering Innovation Building (EIB)",
+        fullName: "Engineering Innovation Building",
+        abbreviation: "EIB",
+        categories: ["academic"],
+        address: "945 W Taylor Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8696808, lng: -87.6497674 },
+        description: "Modern engineering hub with advanced research and maker spaces.",
+        photo: "https://engineering.uic.edu/wp-content/uploads/sites/217/2020/06/EIB-overhead-MISC_JY_8761.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near ERF and SES",
+            "Along Taylor corridor"
+        ],
+        features: [
+            "Contemporary glass-and-metal architecture",
+            "Innovation labs and collaboration areas"
+        ],
+        tips: "Look for modern angular design elements."
+    },
+    LCB: {
+        name: "Lecture Center B (LCB)",
+        fullName: "Lecture Center B",
+        abbreviation: "LCB",
+        categories: ["academic"],
+        address: "803 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8720562, lng: -87.6493186 },
+        description: "Part of the lecture center complex with large auditorium-style classrooms.",
+        photo: "https://pspm.uic.edu/wp-content/uploads/sites/874/2023/05/LCB-1.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Adjacent to other Lecture Centers",
+            "Near Daley Library"
+        ],
+        features: [
+            "Large lecture halls",
+            "Interconnected walkways"
+        ],
+        tips: "Follow signage for Lecture Centers when near the Library."
+    },
+    LCC: {
+        name: "Lecture Center C (LCC)",
+        fullName: "Lecture Center C",
+        abbreviation: "LCC",
+        categories: ["academic"],
+        address: "802 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8721284, lng: -87.6487003 },
+        description: "Lecture hall building with medium to large classrooms.",
+        photo: "https://pspm.uic.edu/wp-content/uploads/sites/874/2023/05/LC-C1.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Part of the LC complex",
+            "Close to SCE and LIB"
+        ],
+        features: [
+            "Concrete exterior",
+            "Shared courtyards"
+        ],
+        tips: "Check room schedules posted near entrances."
+    },
+    LCD: {
+        name: "Lecture Center D (LCD)",
+        fullName: "Lecture Center D",
+        abbreviation: "LCD",
+        categories: ["academic"],
+        address: "804 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8717064, lng: -87.6486249 },
+        description: "Lecture center with interconnected hallways and signage leading to auditoriums.",
+        photo: "https://pspm.uic.edu/wp-content/uploads/sites/874/2023/05/LCD-1.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Adjacent to LCA",
+            "Connected to the LC network"
+        ],
+        features: [
+            "Multiple auditoriums",
+            "Wayfinding signage"
+        ],
+        tips: "Auditorium rooms are often labeled with LC prefixes."
+    },
+    LCE: {
+        name: "Lecture Center E (LCE)",
+        fullName: "Lecture Center E",
+        abbreviation: "LCE",
+        categories: ["academic"],
+        address: "806 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8716314, lng: -87.6492017 },
+        description: "Lecture center serving a variety of general education courses.",
+        photo: "https://pspm.uic.edu/wp-content/uploads/sites/874/2023/05/LCE-1.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near the other Lecture Centers",
+            "Close to Quad paths"
+        ],
+        features: [
+            "Auditorium seating",
+            "Interior corridors connecting to other LCs"
+        ],
+        tips: "Arrive early to find the correct auditorium in the LC complex."
+    },
+    LCF: {
+        name: "Lecture Center F (LCF)",
+        fullName: "Lecture Center F",
+        abbreviation: "LCF",
+        categories: ["academic"],
+        address: "807 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8717287, lng: -87.6498168 },
+        description: "Lecture center serving a variety of general education courses.",
+        photo: "https://pspm.uic.edu/wp-content/uploads/sites/874/2023/05/LCF-1.jpg",
+        photoCredit: "UIC",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Near the other Lecture Centers",
+            "Close to Quad paths"
+        ],
+        features: [
+            "Auditorium seating",
+            "Interior corridors connecting to other LCs"
+        ],
+        tips: "Arrive early to find the correct auditorium in the LC complex."
+    },
+    AH: {
+        name: "Addams Hall (AH)",
+        fullName: "Addams Hall",
+        abbreviation: "AH",
+        categories: ["academic"],
+        address: "830 S Halsted Street, Chicago, IL 60607",
+        coordinates: { lat: 41.8709474, lng: -87.649184 },
+        description: "Hands-on innovation and maker-oriented facility supporting student projects and studios.",
+        photo: "https://scontent-ord5-2.cdninstagram.com/v/t51.29350-15/457733356_8234712796609094_5900289591931886548_n.jpg?se=-1&stp=dst-jpegr_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTgwMC5oZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGQaoPbaT97fdpqqCt_qrt6Vek1c7opTiNIPK3t6LlZtgWHgSNaU9yLGnPYF_xnWlM&_nc_ohc=CHVC3BHBBs0Q7kNvwHGvXoq&_nc_gid=DZTVuD9iAnaApm_zM_iq1Q&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzQ0NTYxMTg1Mjc3MDI5NTQ3Mw%3D%3D.3-ccb7-5&oh=00_Afia3Fg7WCBTdJGYUekcGQRRYz6jE1CKjiI9a06rwyPOTw&oe=692A018D&_nc_sid=10d13b",
+        photoCredit: "awtpoetrychicago via Instagram",
+        photoCreditUrl: "https://www.instagram.com/p/C_RRbtDvGGK/?img_index=1",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "West side of campus",
+            "Near ERF/EIB corridor"
+        ],
+        features: [
+            "Studios and workshops",
+            "Open collaboration areas"
+        ],
+        tips: "Look for signage for innovation or maker spaces."
+    },
+    PAV: {
+        name: "Credit Union 1 Arena (Pavilion)",
+        fullName: "Credit Union 1 Arena",
+        abbreviation: "PAV",
+        categories: ["recreation", "events"],
+        address: "525 S Racine Avenue, Chicago, IL 60607",
+        coordinates: { lat: 41.87472, lng: -87.65611 },
+        description: "Large multi-purpose arena hosting athletics, concerts, and large events.",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/UIC_pavilion_%28Chicago%2C_USA%29.JPG/1600px-UIC_pavilion_%28Chicago%2C_USA%29.JPG?20220422021012",
+        photoCredit: "Hied5 via Wikimedia Commons",
+        photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_pavilion_%28Chicago%2C_USA%29.JPG",
+        photoLicense: "Wikimedia Commons",
+        resources: [],
+        landmarks: [
+            "Near SRF",
+            "Prominent event venue on campus"
+        ],
+        features: [
+            "Arena bowl with exterior signage",
+            "Event entrances and ticketing windows"
+        ],
+        tips: "Often referred to as the Pavilion by students and staff."
+    },
+    AHSB: {
+        name: "Applied Health Sciences Building (AHSB)",
+        fullName: "Applied Health Sciences Building",
+        abbreviation: "AHSB",
+        categories: ["academic"],
+        address: "1919 W Taylor Street, Chicago, IL 60612",
+        coordinates: { lat: 41.86889, lng: -87.67411 },
+        description: "Building serving programs in applied health sciences with classrooms and labs.",
+        photo: "https://www.envdesigni.com/wp-content/uploads/2020/12/applied-health-sciences-800x533.jpg",
+        photoCredit: "EnvDesign",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Medical District side of campus"
+        ],
+        features: [
+            "Classrooms and program offices",
+            "Discipline-specific labs"
+        ],
+        tips: "Check floor directories for lab wings."
+    },
+    SPH: {
+        name: "School of Public Health (SPH)",
+        fullName: "School of Public Health",
+        abbreviation: "SPH",
+        categories: ["academic"],
+        address: "1601 W Taylor Street, Chicago, IL 60612",
+        coordinates: { lat: 41.8687186, lng: -87.6678685 },
+        description: "Academic facility for public health programs with classrooms, offices, and research spaces.",
+        photo: "https://today.uic.edu/wp-content/uploads/2016/11/SPH.jpg",
+        photoCredit: "UIC Today",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Medical District area",
+            "Near other health sciences buildings"
+        ],
+        features: [
+            "Academic offices and classrooms",
+            "Research labs"
+        ],
+        tips: "Wayfinding signs indicate department suites."
+    },
+    PHARM: {
+        name: "College of Pharmacy (PHARM)",
+        fullName: "College of Pharmacy",
+        abbreviation: "PHARM",
+        categories: ["academic"],
+        address: "833 S Wood Street, Chicago, IL 60612",
+        coordinates: { lat: 41.870829, lng: -87.671468 },
+        description: "Home to pharmacy education and research; includes teaching labs and lecture spaces.",
+        photo: "https://uhp.pharmacy.uic.edu/wp-content/uploads/sites/474/2021/04/Untitled-design-1-e1619191634192-600x397.png",
+        photoCredit: "UIC Pharmacy",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "West campus (Medical District)"
+        ],
+        features: [
+            "Pharmacy teaching labs",
+            "Specialized research spaces"
+        ],
+        tips: "Some areas may require special access due to lab safety."
+    },
+    COMRB: {
+        name: "College of Medicine Research Building (COMRB)",
+        fullName: "College of Medicine Research Building",
+        abbreviation: "COMRB",
+        categories: ["academic"],
+        address: "909 S Wolcott Avenue, Chicago, IL 60612",
+        coordinates: { lat: 41.871121, lng: -87.671079 },
+        description: "Research building supporting College of Medicine programs and labs.",
+        photo: "https://chicago.medicine.uic.edu/wp-content/uploads/2023/05/909-600x397.jpg",
+        photoCredit: "UIC Medicine",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Within the Medical District",
+            "Near CSB/CSN"
+        ],
+        features: [
+            "Research lab floors",
+            "Controlled access areas"
+        ],
+        tips: "Expect lab safety signage and restricted areas."
+    },
+    CSB: {
+        name: "Clinical Sciences Building (CSB)",
+        fullName: "Clinical Sciences Building",
+        abbreviation: "CSB",
+        categories: ["academic"],
+        address: "840 S Wood Street, Chicago, IL 60612",
+        coordinates: { lat: 41.870918, lng: -87.671492 },
+        description: "Clinical sciences facility with classrooms, labs, and clinical education spaces.",
+        photo: "https://chicago.medicine.uic.edu/wp-content/uploads/2023/06/920-600x397.jpg",
+        photoCredit: "UIC Medicine",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Medical campus cluster",
+            "Near COMRB and CSN"
+        ],
+        features: [
+            "Clinical training spaces",
+            "Lecture and seminar rooms"
+        ],
+        tips: "Follow floor directories to find clinic-oriented rooms."
+    },
+    CSN: {
+        name: "Clinical Sciences North (CSN)",
+        fullName: "Clinical Sciences North",
+        abbreviation: "CSN",
+        categories: ["academic"],
+        address: "820 S Wood Street, Chicago, IL 60612",
+        coordinates: { lat: 41.870773, lng: -87.672597 },
+        description: "Companion building in the clinical sciences area supporting instruction and research.",
+        photo: "https://chicago.medicine.uic.edu/wp-content/uploads/2023/06/911-600x397.jpg",
+        photoCredit: "UIC Medicine",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: [
+            "Medical campus cluster",
+            "Adjacent to other CS buildings"
+        ],
+        features: [
+            "Classrooms and labs",
+            "Shared clinical resources"
+        ],
+        tips: "Look for CSN directional signage in the medical campus area."
     }
 };
 

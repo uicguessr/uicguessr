@@ -14,6 +14,7 @@ class CampusMap {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         };
         this.buildingStyles = {
+            // Core set
             SCE: { color: '#D32F2F', label: 'SCE' },
             SRF: { color: '#2196F3', label: 'SRF' },
             BSB: { color: '#9C27B0', label: 'BSB' },
@@ -25,7 +26,27 @@ class CampusMap {
             ERF: { color: '#4CAF50', label: 'ERF' },
             SCW: { color: '#FF6F00', label: 'SCW' },
             SELE: { color: '#E91E63', label: 'SEL' },
-            CASA: { color: '#9C27B0', label: 'CASA' }
+            CASA: { color: '#9C27B0', label: 'CASA' },
+            // Expanded set
+            ARC: { color: '#C2185B', label: 'ARC' },
+            SSB: { color: '#455A64', label: 'SSB' },
+            GH: { color: '#8D6E63', label: 'GH' },
+            BH: { color: '#6D4C41', label: 'BH' },
+            SEO: { color: '#5D4037', label: 'SEO' },
+            EIB: { color: '#2E7D32', label: 'EIB' },
+            LCB: { color: '#0288D1', label: 'LCB' },
+            LCC: { color: '#00796B', label: 'LCC' },
+            LCD: { color: '#512DA8', label: 'LCD' },
+            LCE: { color: '#303F9F', label: 'LCE' },
+            LCF: { color: '#1976D2', label: 'LCF' },
+            AH: { color: '#7B1FA2', label: 'AH' },
+            PAV: { color: '#D84315', label: 'PAV' },
+            AHSB: { color: '#388E3C', label: 'AHSB' },
+            SPH: { color: '#0097A7', label: 'SPH' },
+            PHARM: { color: '#F57C00', label: 'PHARM' },
+            COMRB: { color: '#455A64', label: 'COMRB' },
+            CSB: { color: '#9E9D24', label: 'CSB' },
+            CSN: { color: '#5C6BC0', label: 'CSN' }
         };
     }
 
