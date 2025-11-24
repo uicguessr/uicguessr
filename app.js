@@ -914,6 +914,12 @@ class UICGuessrGame {
         const building = buildings[this.currentQuestion.building];
         document.getElementById('hint-photo').src = building.photo;
         this.setPhotoCredit('hint-photo-credit', building);
+        // Sync blur level on the enlarged image with current hint state
+        const hintEl = document.getElementById('hint-photo');
+        if (hintEl) {
+            hintEl.classList.remove('blur-level-0','blur-level-1','blur-level-2','blur-level-3');
+            hintEl.classList.add(`blur-level-${this.currentBlurLevel}`);
+        }
         this.showScreen('hint');
     }
 
@@ -1427,14 +1433,16 @@ ${building.resources.map(r => `• ${r.name}: ${r.description}`).join('\n')}
             setTimeout(() => hintDiv.classList.add('show'), 10);
         }
         
-        // Reduce blur on image progressively
+        // Reduce blur on images progressively (main + enlarged)
         if (this.currentBlurLevel > 0) {
-            const photoEl = document.getElementById('question-photo');
-            if (photoEl) {
-                photoEl.classList.remove(`blur-level-${this.currentBlurLevel}`);
-                this.currentBlurLevel = Math.max(0, this.currentBlurLevel - 1);
-                photoEl.classList.add(`blur-level-${this.currentBlurLevel}`);
-            }
+            this.currentBlurLevel = Math.max(0, this.currentBlurLevel - 1);
+            ['question-photo','hint-photo'].forEach(id => {
+                const img = document.getElementById(id);
+                if (img) {
+                    img.classList.remove('blur-level-0','blur-level-1','blur-level-2','blur-level-3');
+                    img.classList.add(`blur-level-${this.currentBlurLevel}`);
+                }
+            });
         }
         
         // Play hint sound
