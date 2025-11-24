@@ -594,9 +594,13 @@ class UICGuessrGame {
         building.resources.forEach(resource => {
             const card = document.createElement('div');
             card.className = 'resource-card';
+            const linkHtml = resource.url 
+                ? `<a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="resource-link" aria-label="Open ${resource.name} official page">Learn more →</a>`
+                : '';
             card.innerHTML = `
                 <h5>${resource.name}</h5>
                 <p>${resource.description}</p>
+                ${linkHtml}
             `;
             resourcesContainer.appendChild(card);
         });
@@ -677,6 +681,26 @@ class UICGuessrGame {
         const mapBuildingLabel = document.getElementById('map-building-label');
         if (mapBuildingLabel) {
             mapBuildingLabel.textContent = building.abbreviation;
+        }
+        
+        // External links: Google Maps + Official page (if any)
+        const gmapsBtn = document.getElementById('open-google-maps');
+        if (gmapsBtn && building.coordinates && typeof building.coordinates.lat === 'number' && typeof building.coordinates.lng === 'number') {
+            const lat = building.coordinates.lat;
+            const lng = building.coordinates.lng;
+            gmapsBtn.href = `https://www.google.com/maps?q=${lat},${lng}`;
+            gmapsBtn.style.display = 'inline-block';
+        } else if (gmapsBtn) {
+            gmapsBtn.style.display = 'none';
+        }
+        const officialBtn = document.getElementById('open-official-page');
+        if (officialBtn) {
+            if (building.officialUrl) {
+                officialBtn.href = building.officialUrl;
+                officialBtn.style.display = 'inline-block';
+            } else {
+                officialBtn.style.display = 'none';
+            }
         }
         
         // Render enhanced interactive map
@@ -1103,12 +1127,16 @@ ${building.resources.map(r => `• ${r.name}: ${r.description}`).join('\n')}
                             <span class="detail-text">${resource.contact}</span>
                         </div>
                         ` : ''}
-                        ${resource.website ? `
-                        <div class="resource-detail-item">
-                            <span class="detail-icon">🌐</span>
-                            <span class="detail-text">${resource.website}</span>
-                        </div>
-                        ` : ''}
+                        ${resource.website ? (() => {
+                            const normalized = resource.website.startsWith('http') ? resource.website : `https://${resource.website}`;
+                            const safeLabel = resource.website.replace(/^https?:\/\//, '');
+                            return `
+                                <div class="resource-detail-item">
+                                    <span class="detail-icon">🌐</span>
+                                    <a class="detail-text" href="${normalized}" target="_blank" rel="noopener noreferrer" aria-label="Open ${resource.name} website">${safeLabel}</a>
+                                </div>
+                            `;
+                        })() : ''}
                     </div>
                 `;
                 

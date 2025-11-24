@@ -9,14 +9,15 @@ const buildings = {
         categories: ["services", "dining"],
         address: "750 S Halsted Street, Chicago, IL 60607",
         coordinates: { lat: 41.871969, lng: -87.647939 },
+        officialUrl: "https://studentcenters.uic.edu/student-center-east/",
         description: "The Student Center East is a hub of student activity, featuring dining options, study spaces, and various student services. It's a central gathering point for the UIC community.",
         photo: "https://upload.wikimedia.org/wikipedia/commons/5/58/UIC_Student_Center_East.JPG",
         photoCredit: "Hied5 via Wikimedia Commons",
         photoCreditUrl: "https://commons.wikimedia.org/wiki/File:UIC_Student_Center_East.JPG",
         photoLicense: "Public Domain",
         resources: [
-            { name: "Food Court", description: "Multiple dining options" },
-            { name: "Wellness Center", description: "Health & wellness services" },
+            { name: "Food Court", description: "Multiple dining options", url: "https://dining.uic.edu/" },
+            { name: "Wellness Center", description: "Health & wellness services", url: "https://wellnesscenter.uic.edu/" },
             { name: "Study Spaces", description: "Individual and group study areas" }
         ],
         landmarks: [
@@ -39,6 +40,7 @@ const buildings = {
         categories: ["recreation"],
         address: "737 S Halsted Street, Chicago, IL 60607",
         coordinates: { lat: 41.872627, lng: -87.646351 },
+        officialUrl: "https://recreation.uic.edu/",
         description: "The SRF is UIC's premier fitness and recreation facility, offering a wide range of athletic facilities, fitness equipment, and recreational programs for students.",
         photo: "https://upload.wikimedia.org/wikipedia/commons/b/b8/UIC_SRF.JPG",
         photoCredit: "Hied5 via Wikimedia Commons",
@@ -100,6 +102,7 @@ const buildings = {
         categories: ["academic", "dining"],
         address: "801 S Morgan Street, Chicago, IL 60607",
         coordinates: { lat: 41.871881, lng: -87.650494 },
+        officialUrl: "https://library.uic.edu/libraries/daley-library/",
         description: "UIC's main library is a massive brutalist structure that serves as the university's primary research library, offering extensive collections, study spaces, and research assistance.",
         photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzEe_V5ceHxVmZ4o_7AR4i7yUQh_IXZK9DlwVxBPGWzwqinMWKAVbAuq3Cc9oG9qCc3kttbnixrc79uVgrZiwyrQepmZcxb0rCuf0C3YCEzxm6ABciwwGnP3v0H1HQKiyL9Fdw=s1360-w1360-h1020-rw",
         photoCredit: "steven B",
@@ -224,7 +227,7 @@ const buildings = {
         address: "1000 S Morgan Street, Chicago, IL 60607",
         coordinates: { lat: 41.869384, lng: -87.651232 },
         description: "Lecture Center A contains large auditorium-style classrooms for introductory and general education courses.",
-        photo: "hhttps://lh3.googleusercontent.com/gps-cs-s/AG0ilSxv026zxhDnyMHvJb2xs95DhP68kA8tfEvGQ7kjX8HE4bvRjXUvZrXggkHyi7JQbs9wFQzPU5GJvLS3JFD6txr4mkBeOnXg10nZcDkKpu7HXVQqwnGagfv95AeypUh-avWYQ9OTfg=s1360-w1360-h1020-rw",
+        photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxv026zxhDnyMHvJb2xs95DhP68kA8tfEvGQ7kjX8HE4bvRjXUvZrXggkHyi7JQbs9wFQzPU5GJvLS3JFD6txr4mkBeOnXg10nZcDkKpu7HXVQqwnGagfv95AeypUh-avWYQ9OTfg=s1360-w1360-h1020-rw",
         photoCredit: "Vanessa Van via Google Maps",
         photoCreditUrl: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSxv026zxhDnyMHvJb2xs95DhP68kA8tfEvGQ7kjX8HE4bvRjXUvZrXggkHyi7JQbs9wFQzPU5GJvLS3JFD6txr4mkBeOnXg10nZcDkKpu7HXVQqwnGagfv95AeypUh-avWYQ9OTfg=s1360-w1360-h1020-rw",
         photoLicense: "Google Maps",
@@ -282,6 +285,7 @@ const buildings = {
         categories: ["dining", "services"],
         address: "828 S Wolcott Avenue, Chicago, IL 60612",
         coordinates: { lat: 41.870775, lng: -87.67454 },
+        officialUrl: "https://studentcenters.uic.edu/student-center-west/",
         description: "Student Center West offers additional dining, meeting spaces, and student organization offices, complementing the facilities at SCE.",
         photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyD4Q64VZem_2-UlHwBrRK8EW65K5CrM6Y5Rb1yo6JyIMB57DlgPC_XbGd7prCoqepEv2qEIVuAMUtyPtqP1DL7reCjq2-eDgeNzfd0kqEZO-F0_ujYPUWdqxfmCsHyFWWB2Lk0hA=s1360-w1360-h1020-rw",
         photoCredit: "ch via Google Maps",
@@ -556,6 +560,7 @@ const allResources = [
         location: "801 S Morgan St",
         hours: "Mon-Thu: 7:30am-11pm, Fri: 7:30am-6pm, Sat-Sun: 10am-6pm",
         contact: "(312) 996-2716",
+        website: "https://library.uic.edu/libraries/daley-library/",
         icon: "📚",
         services: ["Research help", "Study rooms", "Computer labs", "Special collections", "24/7 online chat"]
     },
@@ -566,6 +571,7 @@ const allResources = [
         location: "Student Center East 2095",
         hours: "Mon-Fri: 9am-5pm",
         contact: "(312) 413-0031",
+        website: "https://ace.uic.edu/",
         icon: "🎯",
         services: ["Academic coaching", "Workshops", "Peer mentoring", "Learning strategies"]
     },
@@ -577,6 +583,7 @@ const allResources = [
         location: "Student Services Building 2010",
         hours: "Mon-Fri: 8:30am-5pm, Crisis services 24/7",
         contact: "(312) 996-3490",
+        website: "https://counseling.uic.edu/",
         icon: "🧠",
         services: ["Individual therapy", "Group counseling", "Crisis support", "Psychiatric care", "Workshops"]
     },
@@ -587,6 +594,7 @@ const allResources = [
         location: "UIC Student Recreation Facility",
         hours: "Mon-Thu: 6am-midnight, Fri: 6am-10pm, Sat-Sun: 10am-10pm",
         contact: "(312) 413-5150",
+        website: "https://recreation.uic.edu/",
         icon: "💪",
         services: ["Gym access", "Pool", "Group fitness", "Intramural sports", "Personal training", "Climbing wall"]
     },
@@ -607,6 +615,7 @@ const allResources = [
         location: "Student Services Building 1190",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 413-2183",
+        website: "https://drc.uic.edu/",
         icon: "♿",
         services: ["Accommodations", "Assistive tech", "Testing support", "Note-taking", "Sign language"]
     },
@@ -617,6 +626,7 @@ const allResources = [
         location: "Student Services Building 3030",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 413-1025",
+        website: "https://wlrc.uic.edu/programs/campus-advocacy-network/",
         icon: "🛡️",
         services: ["Advocacy", "Safety planning", "Resource connection", "Support groups"]
     },
@@ -628,6 +638,7 @@ const allResources = [
         location: "Student Services Building 1200",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 996-4350",
+        website: "https://registrar.uic.edu/",
         icon: "📋",
         services: ["Registration", "Transcripts", "Degree audits", "Enrollment verification", "Grade changes"]
     },
@@ -638,6 +649,7 @@ const allResources = [
         location: "Student Services Building 1700",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 996-3126",
+        website: "https://financialaid.uic.edu/",
         icon: "💰",
         services: ["FAFSA help", "Scholarships", "Loans", "Work-study", "Financial counseling"]
     },
@@ -648,6 +660,7 @@ const allResources = [
         location: "Student Services Building 3050",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 996-2300",
+        website: "https://careerservices.uic.edu/",
         icon: "💼",
         services: ["Career counseling", "Resume help", "Mock interviews", "Job search", "Internships", "Career fairs"]
     },
@@ -668,6 +681,7 @@ const allResources = [
         location: "Student Services Building 3020",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 996-3121",
+        website: "https://ois.uic.edu/",
         icon: "🌍",
         services: ["Visa support", "Immigration advising", "Cultural programs", "Orientation", "Work authorization"]
     },
@@ -678,6 +692,7 @@ const allResources = [
         description: "Multiple dining options including Chick-fil-A, Panda Express, Starbucks, Subway, and more. Meal plans and Flame Dollars accepted.",
         location: "Student Center East, Lower Level",
         hours: "Mon-Fri: 7am-8pm, Sat-Sun: 10am-6pm (varies by vendor)",
+        website: "https://dining.uic.edu/",
         icon: "🍔",
         services: ["Fast food", "Coffee", "Meal plans", "Grab & go", "Halal options"]
     },
@@ -696,6 +711,7 @@ const allResources = [
         description: "Additional dining with Einstein Bros Bagels, salad bar, and various meal options. Quieter alternative to SCE.",
         location: "Student Center West",
         hours: "Mon-Fri: 7:30am-7pm",
+        website: "https://dining.uic.edu/",
         icon: "🥗",
         services: ["Bagels", "Salads", "Hot meals", "Vegetarian options"]
     },
@@ -706,6 +722,7 @@ const allResources = [
         location: "Student Center East 3144",
         hours: "Mon-Fri: 8:30am-5pm",
         contact: "(312) 996-2585",
+        website: "https://involvement.uic.edu/",
         icon: "🎉",
         services: ["Student orgs", "Event planning", "Leadership programs", "Meeting rooms"]
     },
@@ -717,6 +734,7 @@ const allResources = [
         location: "Multiple locations (LIB, SCE, UH, BSB)",
         hours: "Varies by location, some 24/7 in Library",
         contact: "(312) 413-0003",
+        website: "https://it.uic.edu/",
         icon: "💻",
         services: ["Free computing", "Software", "Printing", "Scanning", "24/7 access"]
     },
@@ -727,6 +745,7 @@ const allResources = [
         location: "Library 120",
         hours: "Mon-Fri: 8am-5pm, 24/7 phone support",
         contact: "(312) 413-0003",
+        website: "https://it.uic.edu/support/",
         icon: "🖥️",
         services: ["Account help", "Password resets", "Software support", "Wifi troubleshooting"]
     },
@@ -747,6 +766,7 @@ const allResources = [
         location: "1140 S Paulina St",
         hours: "24/7",
         contact: "Emergency: (312) 355-5555, Non-emergency: (312) 996-2830",
+        website: "https://police.uic.edu/",
         icon: "👮",
         services: ["24/7 patrol", "Safety escorts", "Emergency response", "Crime prevention", "Blue lights"]
     },
@@ -757,6 +777,7 @@ const allResources = [
         location: "Campus-wide service",
         hours: "Mon-Thu: 6pm-2am, Fri: 6pm-4am, Sat-Sun: 6pm-2am",
         contact: "(312) 355-7433",
+        website: "https://transportation.uic.edu/",
         icon: "🚐",
         services: ["Free shuttles", "Real-time tracking", "Safe transport", "Campus routes"]
     },
@@ -767,6 +788,7 @@ const allResources = [
         location: "Parking Office: 1200 W Harrison St",
         hours: "Mon-Fri: 8am-5pm",
         contact: "(312) 996-7275",
+        website: "https://parking.uic.edu/",
         icon: "🅿️",
         services: ["Parking permits", "U-Pass", "CTA access", "Bike parking", "Divvy stations"]
     },
@@ -778,6 +800,7 @@ const allResources = [
         location: "Various locations (SCE, UH)",
         hours: "Mon-Fri: 9am-5pm (varies by center)",
         contact: "(312) 355-2727",
+        website: "https://diversity.uic.edu/centers/",
         icon: "🌈",
         services: ["Cultural programs", "Mentorship", "Safe spaces", "Community events", "Identity support"]
     },
@@ -798,6 +821,7 @@ const allResources = [
         location: "400 S Peoria St",
         hours: "Tue-Fri: 10am-6pm, Sat: 12pm-6pm",
         contact: "(312) 996-6114",
+        website: "https://gallery400.uic.edu/",
         icon: "🎨",
         services: ["Art exhibitions", "Artist talks", "Free admission", "Contemporary art"]
     }
