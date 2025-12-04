@@ -26,7 +26,7 @@ class CampusMap {
             ERF: { color: '#4CAF50', label: 'ERF' },
             SCW: { color: '#FF6F00', label: 'SCW' },
             SELE: { color: '#E91E63', label: 'SEL' },
-            CASA: { color: '#9C27B0', label: 'CASA' },
+            CADA: { color: '#9C27B0', label: 'CADA' },
             // Expanded set
             ARC: { color: '#C2185B', label: 'ARC' },
             SSB: { color: '#455A64', label: 'SSB' },

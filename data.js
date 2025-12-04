@@ -339,10 +339,10 @@ const buildings = {
         ],
         tips: "SEL is recognizable by its laboratory-specific architecture and safety features."
     },
-    CASA: {
+    CADA: {
         name: "College of Architecture, Design and the Arts (CADA)",
         fullName: "College of Architecture, Design and the Arts",
-        abbreviation: "CASA",
+        abbreviation: "CADA",
         categories: ["academic"],
         address: "845 W Harrison Street, Chicago, IL 60607",
         coordinates: { lat: 41.873585, lng: -87.648805 },
@@ -366,7 +366,7 @@ const buildings = {
             "Creative, artistic building design",
             "Large windows for natural light",
             "Student artwork often displayed outside",
-            "CADA or CASA signage"
+            "CADA signage"
         ],
         tips: "CADA has a distinctive creative atmosphere with visible studio spaces and artistic elements."
     },
@@ -904,9 +904,9 @@ const questionSets = {
             hint: "Laboratory building with specialized teaching spaces."
         },
         {
-            building: "CASA",
-            correctAnswer: "CASA",
-            options: ["CASA", "LCA", "BSB", "TH"],
+            building: "CADA",
+            correctAnswer: "CADA",
+            options: ["CADA", "LCA", "BSB", "TH"],
             difficulty: "medium",
             hint: "Creative arts building with studios and workshops."
         }
@@ -1295,7 +1295,7 @@ const personaDefinitions = {
         icon: "🔄",
         description: "Transferring to UIC? Focus on department buildings and upper-level facilities.",
         color: "#2196F3",
-        priorityBuildings: ["SCE", "LIB", "UH", "SSB", "BSB", "SES", "ERF", "SELE", "EIB", "SEO", "GH", "TH", "CASA", "AH"],
+        priorityBuildings: ["SCE", "LIB", "UH", "SSB", "BSB", "SES", "ERF", "SELE", "EIB", "SEO", "GH", "TH", "CADA", "AH"],
         focusAreas: ["Department offices", "Research facilities", "Academic advising", "Career services"],
         recommendedRounds: 10,
         tips: [
@@ -1357,11 +1357,11 @@ const personaDefinitions = {
         icon: "🎨",
         description: "Creative major? Explore studios, galleries, and humanities buildings.",
         color: "#9C27B0",
-        priorityBuildings: ["CASA", "LIB", "GH", "TH", "BH", "UH", "SCE", "AH"],
+        priorityBuildings: ["CADA", "LIB", "GH", "TH", "BH", "UH", "SCE", "AH"],
         focusAreas: ["Art studios", "Galleries", "Humanities classrooms", "Performance spaces"],
         recommendedRounds: 10,
         tips: [
-            "CADA (CASA) has 24/7 studio access",
+            "CADA has 24/7 studio access",
             "Gallery 400 hosts rotating exhibitions",
             "Grant Hall has the Writing Center",
             "Theater performances are often in the lecture centers"
@@ -1414,7 +1414,7 @@ const majorDecks = {
         name: "Architecture, Design & Arts",
         icon: "🏛️",
         description: "CADA buildings for creative majors",
-        buildings: ["CASA", "AH", "GH"],
+        buildings: ["CADA", "AH", "GH"],
         departments: ["Architecture", "Graphic Design", "Industrial Design", "Art History", "Studio Arts"],
         color: "#9C27B0"
     },
@@ -1523,7 +1523,7 @@ const extendedQuestionPool = [
     { building: "LCD", difficulty: "medium", hint: "Lecture Center D." },
     { building: "LCE", difficulty: "medium", hint: "Lecture Center E." },
     { building: "LCF", difficulty: "medium", hint: "Lecture Center F." },
-    { building: "CASA", difficulty: "medium", hint: "College of Architecture and Arts." },
+    { building: "CADA", difficulty: "medium", hint: "College of Architecture and Arts." },
     { building: "SELE", difficulty: "medium", hint: "Science and Engineering Labs." },
     
     // Hard - Specialized/Less Common
@@ -1549,7 +1549,7 @@ const buildingTags = {
     studySpaces: ["LIB", "SCE", "SCW", "SES", "BSB", "GH"],
     dining: ["SCE", "SCW", "LIB"],
     recreation: ["SRF", "PAV"],
-    arts: ["CASA", "AH", "GH"],
+    arts: ["CADA", "AH", "GH"],
     essential: ["SCE", "LIB", "UH", "SSB", "SRF", "LCA"]
 };
 
