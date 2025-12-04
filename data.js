@@ -317,10 +317,10 @@ const buildings = {
         address: "845 W Taylor Street, Chicago, IL 60607",
         coordinates: { lat: 41.869685, lng: -87.650075 },
         description: "SEL provides specialized laboratory spaces for undergraduate and graduate students in science and engineering programs.",
-        photo: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzD3eht-wpqpKadWvFnB_hR3yh8g2L3IqSCVHOvXm24kK9kLPxppuRH7u315Btw1KTbhh8mMsirAJc0dA1AtZ0i_IdVMMzXayszLP_CoBoDKLIJKl0FICuEQPPD3-vSL3AJ-t37=s1360-w1360-h1020-rw",
-        photoCredit: "Abdul Rahman via Google Maps",
-        photoCreditUrl: "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSzD3eht-wpqpKadWvFnB_hR3yh8g2L3IqSCVHOvXm24kK9kLPxppuRH7u315Btw1KTbhh8mMsirAJc0dA1AtZ0i_IdVMMzXayszLP_CoBoDKLIJKl0FICuEQPPD3-vSL3AJ-t37=s1360-w1360-h1020-rw",
-        photoLicense: "Google Maps",
+        photo: "https://chicagobikeadventures.com/wp-content/uploads/2019/04/IMG_0858-2.jpg",
+        photoCredit: "Chicago Bike Adventures",
+        photoCreditUrl: "",
+        photoLicense: "CC BY-SA 2.0",
         resources: [
             { name: "Teaching Labs", description: "Undergraduate lab courses" },
             { name: "Equipment Checkout", description: "Lab equipment and supplies" },
@@ -631,7 +631,7 @@ const buildings = {
         address: "830 S Halsted Street, Chicago, IL 60607",
         coordinates: { lat: 41.8709474, lng: -87.649184 },
         description: "Hands-on innovation and maker-oriented facility supporting student projects and studios.",
-        photo: "https://scontent-ord5-2.cdninstagram.com/v/t51.29350-15/457733356_8234712796609094_5900289591931886548_n.jpg?se=-1&stp=dst-jpegr_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTgwMC5oZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGQaoPbaT97fdpqqCt_qrt6Vek1c7opTiNIPK3t6LlZtgWHgSNaU9yLGnPYF_xnWlM&_nc_ohc=CHVC3BHBBs0Q7kNvwHGvXoq&_nc_gid=DZTVuD9iAnaApm_zM_iq1Q&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzQ0NTYxMTg1Mjc3MDI5NTQ3Mw%3D%3D.3-ccb7-5&oh=00_Afia3Fg7WCBTdJGYUekcGQRRYz6jE1CKjiI9a06rwyPOTw&oe=692A018D&_nc_sid=10d13b",
+        photo: "https://scontent-ord5-2.cdninstagram.com/v/t51.29350-15/457733356_8234712796609094_5900289591931886548_n.jpg?se=-1&stp=dst-jpegr_e35_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0uaW1hZ2VfdXJsZ2VuLjE0NDB4MTgwMC5oZHIuZjI5MzUwLmRlZmF1bHRfaW1hZ2UuYzIifQ&_nc_ht=scontent-ord5-2.cdninstagram.com&_nc_cat=102&_nc_oc=Q6cZ2QGSzlrhzYYUGkxgECFmFTlJNWVeHhndWhnD9zNYa7ND1rjFoxe4QhIYJGWVnVPQUh8&_nc_ohc=SBUapwqkSoAQ7kNvwEbJhqL&_nc_gid=iOQ1w6U5m08eVMQ1wLNUyw&edm=APs17CUBAAAA&ccb=7-5&ig_cache_key=MzQ0NTYxMTg1Mjc3MDI5NTQ3Mw%3D%3D.3-ccb7-5&oh=00_AfnL7hBkDRHWZOe4ynHJPJ5b0eMUpBXzEQ5RznudUqY3aA&oe=6937308D&_nc_sid=10d13b",
         photoCredit: "awtpoetrychicago via Instagram",
         photoCreditUrl: "https://www.instagram.com/p/C_RRbtDvGGK/?img_index=1",
         photoLicense: "",
@@ -804,163 +804,253 @@ const buildings = {
             "Shared clinical resources"
         ],
         tips: "Look for CSN directional signage in the medical campus area."
+    },
+    // New Buildings Added
+    DH: {
+        name: "Douglas Hall (DH)",
+        fullName: "Douglas Hall",
+        abbreviation: "DH",
+        categories: ["academic"],
+        address: "705 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.873729, lng: -87.650117 },
+        description: "Home to the College of Business Administration, featuring modern classrooms and student collaboration spaces.",
+        photo: "https://upload.wikimedia.org/wikipedia/commons/7/78/Douglas_Hall_%40_UiC.jpg",
+        photoCredit: "Peter Alfred Hess, Wikimedia Commons",
+        photoCreditUrl: "",
+        photoLicense: "CC BY 2.0",
+        resources: [
+            { name: "Business Career Center", description: "Career services for business students" },
+            { name: "Collaboration Spaces", description: "Group study rooms" }
+        ],
+        landmarks: ["Lincoln Hall", "University Hall", "Quad"],
+        features: ["Modern glass renovation", "LEED Gold certified"],
+        tips: "Connected to Lincoln Hall via skybridge."
+    },
+    LH: {
+        name: "Lincoln Hall (LH)",
+        fullName: "Lincoln Hall",
+        abbreviation: "LH",
+        categories: ["academic"],
+        address: "707 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.873200, lng: -87.650200 },
+        description: "Academic building housing classrooms and College of Liberal Arts and Sciences departments.",
+        photo: "https://architizer-prod.imgix.net/mediadata/projects/412010/f3fdbf9a.jpg?w=1680&q=60&auto=format,compress&cs=strip",
+        photoCredit: "Architizer",
+        photoCreditUrl: "https://architizer.com/projects/lincoln-hall-renovation/",
+        photoLicense: "CC BY-ND 4.0",
+        resources: [],
+        landmarks: ["Douglas Hall", "Quad", "University Hall"],
+        features: ["Concrete brutalist style", "Skybridge to Douglas Hall"],
+        tips: "Often confused with Douglas Hall; look for the 'LH' signs."
+    },
+    SH: {
+        name: "Stevenson Hall (SH)",
+        fullName: "Stevenson Hall",
+        abbreviation: "SH",
+        categories: ["academic"],
+        address: "701 S Morgan Street, Chicago, IL 60607",
+        coordinates: { lat: 41.872200, lng: -87.650200 },
+        description: "Classroom and office building commonly used for humanities and social sciences.",
+        photo: "https://img.p.mapq.st/?url=https://s3-media0.fl.yelpcdn.com/bphoto/Q3YONGwkUz-Vog2xJ-eFLQ/l.jpg?w=3840&q=75",
+        photoCredit: "Yelp",
+        photoCreditUrl: "",
+        photoLicense: "Yelp",
+        resources: [],
+        landmarks: ["Lecture Centers", "Quad", "Library"],
+        features: ["Long rectangular building", "Near the Quad"],
+        tips: "Located on the edge of the central Quad."
+    },
+    JST: {
+        name: "James Stukel Towers (JST)",
+        fullName: "James Stukel Towers",
+        abbreviation: "JST",
+        categories: ["residence"],
+        address: "718 W Rochford Street, Chicago, IL 60607",
+        coordinates: { lat: 41.865200, lng: -87.647500 },
+        description: "Modern residence hall complex on South Campus with dining and event spaces.",
+        photo: "https://www.powerconstruction.net/sites/default/files/styles/featured_image_2_1/public/images/uic-stukel-towers-exterior-corner-view-multiple-buildings-ppl-no-2007.jpg?h=307f0b4a&itok=VhMRzHs-",
+        photoCredit: "Power Construction",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [{ name: "JST Dining Hall", description: "Residential dining" }],
+        landmarks: ["UIC Forum", "Halsted Street"],
+        features: ["Four distinct towers", "Glass and brick exterior"],
+        tips: "Located south of Roosevelt Road."
+    },
+    TBH: {
+        name: "Thomas Beckham Hall (TBH)",
+        fullName: "Thomas Beckham Hall",
+        abbreviation: "TBH",
+        categories: ["residence"],
+        address: "1250 S Halsted Street, Chicago, IL 60607",
+        coordinates: { lat: 41.865800, lng: -87.647000 },
+        description: "Apartment-style residence hall on South Campus.",
+        photo: "https://housing.uic.edu/wp-content/uploads/sites/23/2017/07/TBH-600x365.png",
+        photoCredit: "UIC Housing",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: ["JST", "Marie Robinson Hall"],
+        features: ["Apartment style living", "South Campus location"],
+        tips: "Entrance faces Halsted Street."
+    },
+    MRH: {
+        name: "Marie Robinson Hall (MRH)",
+        fullName: "Marie Robinson Hall",
+        abbreviation: "MRH",
+        categories: ["residence"],
+        address: "811 W Maxwell Street, Chicago, IL 60607",
+        coordinates: { lat: 41.864500, lng: -87.648000 },
+        description: "Residence hall offering apartment-style units on South Campus.",
+        photo: "https://housing.uic.edu/wp-content/uploads/sites/23/2017/07/MRH-600x365.png",
+        photoCredit: "UIC Housing",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: ["TBH", "Maxwell Street"],
+        features: ["Modern apartment style", "Near Maxwell St"],
+        tips: "Located near the historic Maxwell Street market area."
+    },
+    FORUM: {
+        name: "UIC Forum",
+        fullName: "UIC Forum",
+        abbreviation: "FORUM",
+        categories: ["events"],
+        address: "725 W Roosevelt Road, Chicago, IL 60608",
+        coordinates: { lat: 41.867500, lng: -87.648000 },
+        description: "Large multi-purpose venue for conferences, concerts, and university events.",
+        photo: "https://images.squarespace-cdn.com/content/v1/54f5dd47e4b099c7be642294/1549642172996-L0DF6LVQRWGP84UKKJ9E/_MG_0057.jpg?format=1500w",
+        photoCredit: "Cardosi Kipen via Squarespace",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [{ name: "Event Spaces", description: "Large halls and meeting rooms" }],
+        landmarks: ["JST", "Roosevelt Road"],
+        features: ["Large glass facade", "Prominent location on Roosevelt"],
+        tips: "Main entrance is on Roosevelt Road."
+    },
+    PEB: {
+        name: "Physical Education Building (PEB)",
+        fullName: "Physical Education Building",
+        abbreviation: "PEB",
+        categories: ["recreation", "academic"],
+        address: "901 W Roosevelt Road, Chicago, IL 60608",
+        coordinates: { lat: 41.867800, lng: -87.650500 },
+        description: "Facility for Kinesiology programs and athletic training, featuring gyms and pools.",
+        photo: "https://www.chicagobluedolphins.com/wp-content/uploads/2022/10/UIC-PEB-Front.jpg",
+        photoCredit: "Chicago Blue Dolphins",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [{ name: "Gymnasiums", description: "Basketball and volleyball courts" }],
+        landmarks: ["Flames Athletic Center", "Roosevelt Road"],
+        features: ["Large brick building", "Athletic facilities"],
+        tips: "Located west of the Forum."
+    },
+    FAC: {
+        name: "Flames Athletic Center (FAC)",
+        fullName: "Flames Athletic Center",
+        abbreviation: "FAC",
+        categories: ["recreation"],
+        address: "839 W Roosevelt Road, Chicago, IL 60608",
+        coordinates: { lat: 41.867200, lng: -87.649500 },
+        description: "Training facility for UIC student-athletes and athletics administration.",
+        photo: "https://media.timeout.com/images/100898939/image.jpg",
+        photoCredit: "Timeout",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: ["PEB", "Tennis Courts"],
+        features: ["Athletic training equipment", "Offices"],
+        tips: "Primary facility for varsity athletes."
+    },
+    EEI: {
+        name: "Illinois Eye and Ear Infirmary (EEI)",
+        fullName: "Illinois Eye and Ear Infirmary",
+        abbreviation: "EEI",
+        categories: ["academic", "medical"],
+        address: "1855 W Taylor Street, Chicago, IL 60612",
+        coordinates: { lat: 41.869000, lng: -87.673000 },
+        description: "Renowned medical center for ophthalmology and otolaryngology research and patient care.",
+        photo: "https://s3-media0.fl.yelpcdn.com/bphoto/1VGHTi-i4odKK8aduTLAiQ/348s.jpg",
+        photoCredit: "Yelp",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [{ name: "Eye Clinics", description: "Ophthalmology services" }],
+        landmarks: ["UI Health", "West Campus"],
+        features: ["Medical clinic design", "Busy patient entrance"],
+        tips: "Located in the heart of the Illinois Medical District."
+    },
+    CMW: {
+        name: "College of Medicine West (CMW)",
+        fullName: "College of Medicine West",
+        abbreviation: "CMW",
+        categories: ["academic", "medical"],
+        address: "1819 W Polk Street, Chicago, IL 60612",
+        coordinates: { lat: 41.871500, lng: -87.672500 },
+        description: "Historic building housing College of Medicine administrative offices and classrooms.",
+        photo: "https://medicine.uic.edu/wp-content/uploads/sites/999/2023/02/chicago-600x397.jpg",
+        photoCredit: "UIC Medicine",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [{ name: "Administrative Offices", description: "College of Medicine administration" }],
+        landmarks: ["UI Hospital", "Polk Street"],
+        features: ["Gothic revival architecture", "Historic landmark"],
+        tips: "Look for the classic collegiate gothic style."
+    },
+    CMET: {
+        name: "College of Medicine East Tower (CMET)",
+        fullName: "College of Medicine East Tower",
+        abbreviation: "CMET",
+        categories: ["academic", "medical"],
+        address: "808 S Wood Street, Chicago, IL 60612",
+        coordinates: { lat: 41.870500, lng: -87.671500 },
+        description: "Tower housing medical research labs and departmental offices.",
+        photo: "https://today.uic.edu/wp-content/uploads/2021/07/060620_West-Campus_JC0088-590x393.jpg",
+        photoCredit: "UIC Medicine",
+        photoCreditUrl: "",
+        photoLicense: "",
+        resources: [],
+        landmarks: ["Clinical Sciences North", "Wood Street"],
+        features: ["High-rise tower", "Research facilities"],
+        tips: "Connected to other medical buildings via tunnels/bridges."
     }
 };
 
 // Question Sets with multiple difficulty levels
 const questionSets = {
     easy: [
-        {
-            building: "SCE",
-            correctAnswer: "SCE",
-            options: ["SCE", "SRF", "BSB", "LIB"],
-            difficulty: "easy",
-            hint: "Look for the modern glass entrance and 'SCE' abbreviation on the building signage."
-        },
-        {
-            building: "SRF",
-            correctAnswer: "SRF",
-            options: ["SRF", "SCE", "SES", "UH"],
-            difficulty: "easy",
-            hint: "This is a large athletic facility with modern architecture and lots of windows."
-        },
-        {
-            building: "LIB",
-            correctAnswer: "LIB",
-            options: ["LIB", "BSB", "UH", "TH"],
-            difficulty: "easy",
-            hint: "The iconic brutalist concrete architecture makes this building unmistakable."
-        },
-        {
-            building: "BSB",
-            correctAnswer: "BSB",
-            options: ["BSB", "SES", "TH", "LCA"],
-            difficulty: "easy",
-            hint: "Traditional brick academic building with BSB signage."
-        },
-        {
-            building: "SES",
-            correctAnswer: "SES",
-            options: ["SES", "SRF", "SCE", "LIB"],
-            difficulty: "easy",
-            hint: "Modern science building with glass and steel construction."
-        },
-        {
-            building: "ERF",
-            correctAnswer: "ERF",
-            options: ["ERF", "SES", "SELE", "BSB"],
-            difficulty: "easy",
-            hint: "Modern engineering research facility with visible lab equipment."
-        },
-        {
-            building: "SCW",
-            correctAnswer: "SCW",
-            options: ["SCW", "SCE", "UH", "SRF"],
-            difficulty: "easy",
-            hint: "Student center with dining and meeting spaces, similar to SCE."
-        }
+        { building: "SCE", correctAnswer: "SCE", options: ["SCE", "SRF", "BSB", "LIB"], difficulty: "easy", hint: "Look for the modern glass entrance and 'SCE' abbreviation." },
+        { building: "SRF", correctAnswer: "SRF", options: ["SRF", "SCE", "SES", "UH"], difficulty: "easy", hint: "Large athletic facility with modern architecture." },
+        { building: "LIB", correctAnswer: "LIB", options: ["LIB", "BSB", "UH", "TH"], difficulty: "easy", hint: "Iconic brutalist concrete architecture." },
+        { building: "BSB", correctAnswer: "BSB", options: ["BSB", "SES", "TH", "LCA"], difficulty: "easy", hint: "Traditional brick academic building." },
+        { building: "SES", correctAnswer: "SES", options: ["SES", "SRF", "SCE", "LIB"], difficulty: "easy", hint: "Modern science building with glass and steel." },
+        { building: "ERF", correctAnswer: "ERF", options: ["ERF", "SES", "SELE", "BSB"], difficulty: "easy", hint: "Modern engineering research facility." },
+        { building: "SCW", correctAnswer: "SCW", options: ["SCW", "SCE", "UH", "SRF"], difficulty: "easy", hint: "Student center on West Campus." },
+        { building: "JST", correctAnswer: "JST", options: ["JST", "TBH", "MRH", "ARC"], difficulty: "easy", hint: "Large residence tower complex on South Campus." },
+        { building: "FORUM", correctAnswer: "FORUM", options: ["FORUM", "PAV", "SCE", "JST"], difficulty: "easy", hint: "Large event venue on Roosevelt Road." }
     ],
     medium: [
-        {
-            building: "UH",
-            correctAnswer: "UH",
-            options: ["UH", "LIB", "TH", "BSB"],
-            difficulty: "medium",
-            hint: "Tall administrative building with tower structure."
-        },
-        {
-            building: "TH",
-            correctAnswer: "TH",
-            options: ["TH", "BSB", "UH", "LCA"],
-            difficulty: "medium",
-            hint: "Classic brick academic building housing classrooms."
-        },
-        {
-            building: "LCA",
-            correctAnswer: "LCA",
-            options: ["LCA", "LIB", "UH", "SCE"],
-            difficulty: "medium",
-            hint: "Large lecture hall building connected to the library."
-        },
-        {
-            building: "SCE",
-            correctAnswer: "SCE",
-            options: ["SCE", "SES", "SRF", "UH"],
-            difficulty: "medium",
-            hint: "Central student hub with dining and services."
-        },
-        {
-            building: "SRF",
-            correctAnswer: "SRF",
-            options: ["SRF", "SES", "SCE", "LCA"],
-            difficulty: "medium",
-            hint: "Recreation facility with fitness center and pool."
-        },
-        {
-            building: "SELE",
-            correctAnswer: "SELE",
-            options: ["SELE", "SES", "ERF", "BSB"],
-            difficulty: "medium",
-            hint: "Laboratory building with specialized teaching spaces."
-        },
-        {
-            building: "CADA",
-            correctAnswer: "CADA",
-            options: ["CADA", "LCA", "BSB", "TH"],
-            difficulty: "medium",
-            hint: "Creative arts building with studios and workshops."
-        }
+        { building: "UH", correctAnswer: "UH", options: ["UH", "LIB", "TH", "BSB"], difficulty: "medium", hint: "Tall administrative building." },
+        { building: "TH", correctAnswer: "TH", options: ["TH", "BSB", "UH", "LCA"], difficulty: "medium", hint: "Classic brick academic building." },
+        { building: "LCA", correctAnswer: "LCA", options: ["LCA", "LIB", "UH", "SCE"], difficulty: "medium", hint: "Large lecture hall building." },
+        { building: "SELE", correctAnswer: "SELE", options: ["SELE", "SES", "ERF", "BSB"], difficulty: "medium", hint: "Laboratory building." },
+        { building: "CADA", correctAnswer: "CADA", options: ["CADA", "LCA", "BSB", "TH"], difficulty: "medium", hint: "Creative arts building." },
+        { building: "DH", correctAnswer: "DH", options: ["DH", "LH", "UH", "SH"], difficulty: "medium", hint: "Renovated business building with glass facade." },
+        { building: "LH", correctAnswer: "LH", options: ["LH", "DH", "GH", "TH"], difficulty: "medium", hint: "Connected to Douglas Hall." },
+        { building: "TBH", correctAnswer: "TBH", options: ["TBH", "MRH", "JST", "ARC"], difficulty: "medium", hint: "Apartment style residence on Halsted." },
+        { building: "PEB", correctAnswer: "PEB", options: ["PEB", "FAC", "SRF", "PAV"], difficulty: "medium", hint: "Physical Education Building." }
     ],
     hard: [
-        {
-            building: "BSB",
-            correctAnswer: "BSB",
-            options: ["BSB", "TH", "UH", "LCA"],
-            difficulty: "hard",
-            hint: "Behavioral sciences building with psychology labs."
-        },
-        {
-            building: "SES",
-            correctAnswer: "SES",
-            options: ["SES", "SRF", "BSB", "LIB"],
-            difficulty: "hard",
-            hint: "Engineering facility with maker spaces and labs."
-        },
-        {
-            building: "LIB",
-            correctAnswer: "LIB",
-            options: ["LIB", "UH", "LCA", "BSB"],
-            difficulty: "hard",
-            hint: "Brutalist architecture landmark visible across campus."
-        },
-        {
-            building: "UH",
-            correctAnswer: "UH",
-            options: ["UH", "TH", "LIB", "SES"],
-            difficulty: "hard",
-            hint: "Administrative tower with student services."
-        },
-        {
-            building: "TH",
-            correctAnswer: "TH",
-            options: ["TH", "BSB", "LCA", "UH"],
-            difficulty: "hard",
-            hint: "Academic building near Grant and Burnham Halls."
-        },
-        {
-            building: "ERF",
-            correctAnswer: "ERF",
-            options: ["ERF", "SELE", "SES", "LCA"],
-            difficulty: "hard",
-            hint: "Advanced research facility with clean rooms."
-        },
-        {
-            building: "SCW",
-            correctAnswer: "SCW",
-            options: ["SCW", "SCE", "SRF", "UH"],
-            difficulty: "hard",
-            hint: "West campus student center connected by skybridge."
-        }
+        { building: "BSB", correctAnswer: "BSB", options: ["BSB", "TH", "UH", "LCA"], difficulty: "hard", hint: "Behavioral sciences building." },
+        { building: "SES", correctAnswer: "SES", options: ["SES", "SRF", "BSB", "LIB"], difficulty: "hard", hint: "Engineering facility." },
+        { building: "LIB", correctAnswer: "LIB", options: ["LIB", "UH", "LCA", "BSB"], difficulty: "hard", hint: "Brutalist landmark." },
+        { building: "UH", correctAnswer: "UH", options: ["UH", "TH", "LIB", "SES"], difficulty: "hard", hint: "Administrative tower." },
+        { building: "ERF", correctAnswer: "ERF", options: ["ERF", "SELE", "SES", "LCA"], difficulty: "hard", hint: "Advanced research facility." },
+        { building: "SCW", correctAnswer: "SCW", options: ["SCW", "SCE", "SRF", "UH"], difficulty: "hard", hint: "West campus student center." },
+        { building: "SH", correctAnswer: "SH", options: ["SH", "LH", "DH", "GH"], difficulty: "hard", hint: "Stevenson Hall." },
+        { building: "MRH", correctAnswer: "MRH", options: ["MRH", "TBH", "JST", "ARC"], difficulty: "hard", hint: "Marie Robinson Hall." },
+        { building: "FAC", correctAnswer: "FAC", options: ["FAC", "PEB", "SRF", "PAV"], difficulty: "hard", hint: "Flames Athletic Center." },
+        { building: "EEI", correctAnswer: "EEI", options: ["EEI", "CMW", "PHARM", "SPH"], difficulty: "hard", hint: "Eye and Ear Infirmary." },
+        { building: "CMW", correctAnswer: "CMW", options: ["CMW", "CMET", "COMRB", "CSB"], difficulty: "hard", hint: "College of Medicine West." }
     ]
 };
 
@@ -1280,7 +1370,7 @@ const personaDefinitions = {
         icon: "🎓",
         description: "New to UIC? Learn the essential buildings every freshman needs to know.",
         color: "#4CAF50",
-        priorityBuildings: ["SCE", "SRF", "LIB", "UH", "LCA", "LCB", "LCC", "LCD", "LCE", "LCF", "SSB", "BSB", "GH", "TH"],
+        priorityBuildings: ["SCE", "SRF", "LIB", "UH", "LCA", "LCB", "LCC", "LCD", "LCE", "LCF", "SSB", "BSB", "GH", "TH", "SH", "LH"],
         focusAreas: ["Common lecture halls", "Student services", "Study spaces", "Dining"],
         recommendedRounds: 10,
         tips: [
@@ -1295,7 +1385,7 @@ const personaDefinitions = {
         icon: "🔄",
         description: "Transferring to UIC? Focus on department buildings and upper-level facilities.",
         color: "#2196F3",
-        priorityBuildings: ["SCE", "LIB", "UH", "SSB", "BSB", "SES", "ERF", "SELE", "EIB", "SEO", "GH", "TH", "CADA", "AH"],
+        priorityBuildings: ["SCE", "LIB", "UH", "SSB", "BSB", "SES", "ERF", "SELE", "EIB", "SEO", "GH", "TH", "CADA", "AH", "DH", "LH"],
         focusAreas: ["Department offices", "Research facilities", "Academic advising", "Career services"],
         recommendedRounds: 10,
         tips: [
@@ -1310,11 +1400,11 @@ const personaDefinitions = {
         icon: "🚇",
         description: "Commuting to campus? Learn buildings near CTA stops and parking.",
         color: "#FF9800",
-        priorityBuildings: ["SCE", "SRF", "LIB", "UH", "LCA", "SSB", "SCW", "PAV", "ARC", "ERF", "SES"],
+        priorityBuildings: ["SCE", "SRF", "LIB", "UH", "LCA", "SSB", "SCW", "PAV", "ARC", "ERF", "SES", "JST", "TBH", "FORUM", "PEB"],
         focusAreas: ["Near Blue Line (UIC-Halsted)", "Near parking garages", "Between-class spots", "Quick dining"],
         recommendedRounds: 10,
         nearCTA: ["SCE", "SRF", "LIB", "UH", "LCA", "BSB", "ERF", "SES", "SELE"],
-        nearParking: ["SCW", "PAV", "AHSB", "SPH", "PHARM"],
+        nearParking: ["SCW", "PAV", "AHSB", "SPH", "PHARM", "TBH", "FORUM"],
         tips: [
             "UIC-Halsted Blue Line is closest to East Campus",
             "Halsted Street Parking is near SCE and SRF",
@@ -1327,7 +1417,7 @@ const personaDefinitions = {
         icon: "🩺",
         description: "Health sciences student? Master the medical campus and science buildings.",
         color: "#E91E63",
-        priorityBuildings: ["SES", "SELE", "BSB", "LIB", "SCW", "AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN"],
+        priorityBuildings: ["SES", "SELE", "BSB", "LIB", "SCW", "AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN", "EEI", "CMW", "CMET"],
         focusAreas: ["Science labs", "Medical campus", "Research facilities", "Study spaces"],
         recommendedRounds: 12,
         tips: [
@@ -1357,7 +1447,7 @@ const personaDefinitions = {
         icon: "🎨",
         description: "Creative major? Explore studios, galleries, and humanities buildings.",
         color: "#9C27B0",
-        priorityBuildings: ["CADA", "LIB", "GH", "TH", "BH", "UH", "SCE", "AH"],
+        priorityBuildings: ["CADA", "LIB", "GH", "TH", "BH", "UH", "SCE", "AH", "SH", "LH"],
         focusAreas: ["Art studios", "Galleries", "Humanities classrooms", "Performance spaces"],
         recommendedRounds: 10,
         tips: [
@@ -1375,7 +1465,7 @@ const majorDecks = {
         name: "General Education",
         icon: "📚",
         description: "Core buildings for general education requirements",
-        buildings: ["LCA", "LCB", "LCC", "LCD", "LCE", "LCF", "LIB", "BSB", "GH", "TH", "BH", "UH"],
+        buildings: ["LCA", "LCB", "LCC", "LCD", "LCE", "LCF", "LIB", "BSB", "GH", "TH", "BH", "UH", "SH", "LH"],
         color: "#607D8B"
     },
     engineering: {
@@ -1390,7 +1480,7 @@ const majorDecks = {
         name: "Sciences",
         icon: "🔬",
         description: "Natural and physical sciences buildings",
-        buildings: ["SES", "SELE", "ERF", "BSB", "LIB"],
+        buildings: ["SES", "SELE", "ERF", "BSB", "LIB", "SH"],
         departments: ["Biology", "Chemistry", "Physics", "Earth Sciences", "Mathematics"],
         color: "#4CAF50"
     },
@@ -1398,7 +1488,7 @@ const majorDecks = {
         name: "Liberal Arts & Social Sciences",
         icon: "📖",
         description: "Humanities and social sciences buildings",
-        buildings: ["BSB", "GH", "TH", "BH", "UH", "LIB"],
+        buildings: ["BSB", "GH", "TH", "BH", "UH", "LIB", "SH", "LH"],
         departments: ["Psychology", "Sociology", "History", "English", "Philosophy", "Political Science"],
         color: "#3F51B5"
     },
@@ -1406,7 +1496,7 @@ const majorDecks = {
         name: "Health Sciences",
         icon: "🏥",
         description: "Medical and health-related buildings",
-        buildings: ["AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN", "SCW"],
+        buildings: ["AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN", "SCW", "EEI", "CMW", "CMET"],
         departments: ["Nursing", "Public Health", "Pharmacy", "Medicine", "Kinesiology"],
         color: "#E91E63"
     },
@@ -1422,7 +1512,7 @@ const majorDecks = {
         name: "Business Administration",
         icon: "💼",
         description: "Business and economics buildings",
-        buildings: ["UH", "LIB", "BSB", "GH", "TH"],
+        buildings: ["UH", "LIB", "BSB", "GH", "TH", "DH"],
         departments: ["Accounting", "Finance", "Marketing", "Management", "Economics"],
         color: "#795548"
     },
@@ -1430,7 +1520,7 @@ const majorDecks = {
         name: "Student Life & Services",
         icon: "🎉",
         description: "Essential student services and recreation",
-        buildings: ["SCE", "SCW", "SRF", "SSB", "UH", "PAV", "ARC"],
+        buildings: ["SCE", "SCW", "SRF", "SSB", "UH", "PAV", "ARC", "JST", "TBH", "MRH", "FORUM", "PEB", "FAC"],
         services: ["Dining", "Recreation", "Student Organizations", "Health Services", "Career Services"],
         color: "#00BCD4"
     }

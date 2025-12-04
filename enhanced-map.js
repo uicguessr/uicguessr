@@ -46,7 +46,20 @@ class CampusMap {
             PHARM: { color: '#F57C00', label: 'PHARM' },
             COMRB: { color: '#455A64', label: 'COMRB' },
             CSB: { color: '#9E9D24', label: 'CSB' },
-            CSN: { color: '#5C6BC0', label: 'CSN' }
+            CSN: { color: '#5C6BC0', label: 'CSN' },
+            // New Buildings
+            DH: { color: '#795548', label: 'DH' },
+            LH: { color: '#8D6E63', label: 'LH' },
+            SH: { color: '#A1887F', label: 'SH' },
+            JST: { color: '#EC407A', label: 'JST' },
+            TBH: { color: '#AB47BC', label: 'TBH' },
+            MRH: { color: '#7E57C2', label: 'MRH' },
+            FORUM: { color: '#EF5350', label: 'FORUM' },
+            PEB: { color: '#FFA726', label: 'PEB' },
+            FAC: { color: '#FF7043', label: 'FAC' },
+            EEI: { color: '#26A69A', label: 'EEI' },
+            CMW: { color: '#66BB6A', label: 'CMW' },
+            CMET: { color: '#9CCC65', label: 'CMET' }
         };
     }
 

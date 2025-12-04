@@ -962,9 +962,6 @@ class UICGuessrGame {
         // Record session for learning analytics
         this.recordSessionResult();
         
-        // Record high score
-        this.recordHighScore(this.score, maxRounds, this.difficulty);
-        
         // Play game complete sound
         if (soundManager) soundManager.playGameComplete();
         
