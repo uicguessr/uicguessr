@@ -61,6 +61,18 @@
                             <p>Learn what services are available</p>
                             <span class="feature-action">Browse Resources →</span>
                         </div>
+                        <div class="feature-card clickable" onclick="game.showNavigation()">
+                            <span class="feature-icon">🚶</span>
+                            <h3>Navigate to Class</h3>
+                            <p>Get walking directions from your location</p>
+                            <span class="feature-action">Open Navigation →</span>
+                        </div>
+                        <div class="feature-card clickable" onclick="game.showHighScores()">
+                            <span class="feature-icon">🏆</span>
+                            <h3>High Scores</h3>
+                            <p>View top local scores</p>
+                            <span class="feature-action">View Leaderboard →</span>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -239,6 +251,9 @@
                             <a id="open-official-page" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open official UIC page" style="display:none;">
                                 Official UIC Page
                             </a>
+                            <button id="navigate-from-here" class="btn btn-secondary" style="display:none;" onclick="game.navigateToCurrent()">
+                                Navigate from My Location
+                            </button>
                         </div>
                         <h4>🏛️ Nearby Landmarks</h4>
                         <div id="map-landmarks" class="landmarks-list">
@@ -247,6 +262,78 @@
                         <button class="btn btn-primary btn-lg" onclick="game.continueToNextRound()">
                             Continue to Next Round →
                         </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Navigation Screen -->
+        <div id="navigation-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                    <h1 class="header-title">Navigate to Class</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="map-layout">
+                    <div class="map-section">
+                        <h3>🚶 Walking Directions</h3>
+                        <div class="map-container">
+                            <div id="navigation-map" class="campus-map-large"></div>
+                        </div>
+                    </div>
+                    <div class="map-info-section">
+                        <h3>Destination</h3>
+                        <div class="info-card">
+                            <label for="nav-destination-select"><strong>Choose Building:</strong></label>
+                            <select id="nav-destination-select" class="form-select" style="width:100%; margin-top:6px;"></select>
+                            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+                                <button id="nav-use-location" class="btn btn-secondary">Use My Location</button>
+                                <button id="nav-stop-tracking" class="btn btn-secondary" style="display:none;">Stop Tracking</button>
+                            </div>
+                        </div>
+                        <h4>Directions</h4>
+                        <div id="nav-directions" class="info-card">
+                            <p>Allow location and select a destination to see directions.</p>
+                        </div>
+                        <a id="nav-open-gmaps" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">
+                            Open in Google Maps →
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- High Scores Screen -->
+        <div id="high-scores-screen" class="screen">
+            <header class="header-bar">
+                <div class="header-content">
+                    <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                    <h1 class="header-title">High Scores</h1>
+                </div>
+            </header>
+            <main class="main-container">
+                <div class="info-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+                        <h3 style="margin:0;">Top Local Scores</h3>
+                        <button class="btn btn-secondary" onclick="game.clearHighScores()">Clear</button>
+                    </div>
+                    <div class="table-responsive" style="margin-top:12px;">
+                        <table class="score-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Score</th>
+                                    <th>Difficulty</th>
+                                    <th>Mode</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="high-scores-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </main>

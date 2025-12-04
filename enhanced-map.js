@@ -201,6 +201,51 @@ class CampusMap {
         setTimeout(() => map.invalidateSize(), 200);
     }
 
+    // Render navigation from arbitrary coordinates to a building key
+    renderNavigation(containerId, fromCoords, toBuildingKey, interactive = true) {
+        // First render all buildings with destination highlighted
+        this.renderMap(containerId, toBuildingKey, interactive);
+        const map = this.mapInstances[containerId];
+        if (!map) return;
+        const layer = this.getMarkerLayer(containerId);
+        const buildingData = this.getBuildingData();
+        const dest = buildingData[toBuildingKey]?.coordinates;
+        if (!fromCoords || !dest) return;
+
+        const fromLatLng = [fromCoords.lat, fromCoords.lng];
+        const toLatLng = [dest.lat, dest.lng];
+
+        // Route polyline (straight-line approximation)
+        const route = L.polyline([fromLatLng, toLatLng], {
+            color: '#00B0FF',
+            weight: 4,
+            opacity: 0.9,
+            dashArray: '6,4',
+            className: 'campus-map-route'
+        });
+        layer.addLayer(route);
+
+        // User location marker
+        const userMarker = L.circleMarker(fromLatLng, {
+            radius: 8,
+            color: '#FFFFFF',
+            weight: 3,
+            fillColor: '#00B0FF',
+            fillOpacity: 0.95,
+            className: 'campus-map-user-marker'
+        }).bindTooltip('You are here', {
+            direction: 'top',
+            offset: [0, -6],
+            className: 'campus-map-tooltip'
+        });
+        layer.addLayer(userMarker);
+
+        // Fit bounds to show both
+        const bounds = L.latLngBounds([fromLatLng, toLatLng]);
+        map.fitBounds(bounds, { padding: [40, 40] });
+        setTimeout(() => map.invalidateSize(), 200);
+    }
+
     buildPopupContent(building, style) {
         const categories = (building.categories || [])
             .map(cat => `<span class="campus-map-chip">${this.formatCategory(cat)}</span>`)

@@ -42,6 +42,11 @@ class UICGuessrGame {
         // Achievements
         this.achievements = {};
         
+        // Navigation state
+        this.navWatchId = null;
+        this.navFromCoords = null;
+        this.navDestKey = null;
+        
         this.loadSettings();
         this.loadAchievements();
         this.init();
@@ -168,6 +173,10 @@ class UICGuessrGame {
             this.stopTimer();
             this.clearHintTimeout();
         }
+		// Stop navigation tracking when leaving navigation screen
+		if (screenId !== 'navigation') {
+			this.stopLocationWatch();
+		}
         // Hide all screens
         const screens = document.querySelectorAll('.screen');
         screens.forEach(screen => screen.classList.remove('active'));
@@ -201,6 +210,11 @@ class UICGuessrGame {
                 });
             } else if (screenId === 'campus-map-overview') {
                 this.showCampusMapOverviewContent();
+            } else if (screenId === 'navigation') {
+                this.initNavigationScreen();
+                this.renderNavigationIfReady();
+            } else if (screenId === 'high-scores') {
+                this.populateHighScoresScreen();
             } else if (screenId === 'options') {
                 // Reflect current settings to the options UI
                 const difficultyInput = document.querySelector(`input[name="difficulty"][value="${this.difficulty}"]`);
@@ -777,6 +791,11 @@ class UICGuessrGame {
                 officialBtn.style.display = 'none';
             }
         }
+		// Show navigate button
+		const navBtn = document.getElementById('navigate-from-here');
+		if (navBtn) {
+			navBtn.style.display = 'inline-block';
+		}
         this.unlockAchievement('map_lover');
         
         // Render enhanced interactive map
@@ -901,7 +920,20 @@ class UICGuessrGame {
         }
         
         document.getElementById('score-message').textContent = message;
-        
+		
+		// Update high scores
+		if (!this.stats) this.loadStats();
+		if (!Array.isArray(this.stats.highScores)) this.stats.highScores = [];
+		this.stats.highScores.push({
+			score: this.score,
+			difficulty: this.difficulty,
+			mode: this.mode,
+			timestamp: Date.now()
+		});
+		this.stats.highScores.sort((a, b) => b.score - a.score);
+		this.stats.highScores = this.stats.highScores.slice(0, 10);
+		this.saveStats();
+
         this.showScreen('score');
     }
 
@@ -909,6 +941,166 @@ class UICGuessrGame {
         this.startGame();
     }
 
+	// Navigation
+	showNavigation() {
+		this.navDestKey = null;
+		this.showScreen('navigation');
+	}
+	navigateToBuilding(buildingKey) {
+		this.navDestKey = buildingKey;
+		this.showScreen('navigation');
+	}
+	navigateToCurrent() {
+		if (this.currentQuestion && this.currentQuestion.correctAnswer) {
+			this.navigateToBuilding(this.currentQuestion.correctAnswer);
+		} else {
+			this.showNavigation();
+		}
+	}
+	initNavigationScreen() {
+		// Populate destination select
+		const select = document.getElementById('nav-destination-select');
+		if (select) {
+			const options = Object.keys(buildings)
+				.map(key => ({ key, name: buildings[key]?.name || key }))
+				.sort((a, b) => a.name.localeCompare(b.name));
+			select.innerHTML = options.map(opt => `<option value="${opt.key}">${opt.name}</option>`).join('');
+			if (this.navDestKey) {
+				select.value = this.navDestKey;
+			}
+			select.onchange = () => {
+				this.navDestKey = select.value;
+				this.renderNavigationIfReady();
+			};
+		}
+		// Wire location buttons
+		const useBtn = document.getElementById('nav-use-location');
+		const stopBtn = document.getElementById('nav-stop-tracking');
+		if (useBtn) {
+			useBtn.onclick = () => this.useCurrentLocation();
+		}
+		if (stopBtn) {
+			stopBtn.onclick = () => this.stopLocationWatch();
+		}
+	}
+	useCurrentLocation() {
+		if (!navigator.geolocation) {
+			alert('Geolocation is not supported by your browser.');
+			return;
+		}
+		// One-shot
+		navigator.geolocation.getCurrentPosition(
+			pos => {
+				this.navFromCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+				this.renderNavigationIfReady();
+			},
+			err => {
+				console.warn('Geolocation error', err);
+				alert('Unable to access your location. Please allow permission and try again.');
+			},
+			{ enableHighAccuracy: true, maximumAge: 5000, timeout: 10000 }
+		);
+		// Watch for updates
+		this.startLocationWatch();
+	}
+	startLocationWatch() {
+		if (!navigator.geolocation || this.navWatchId) return;
+		this.navWatchId = navigator.geolocation.watchPosition(
+			pos => {
+				this.navFromCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+				this.renderNavigationIfReady();
+			},
+			err => {
+				console.warn('watchPosition error', err);
+			},
+			{ enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+		);
+		const stopBtn = document.getElementById('nav-stop-tracking');
+		if (stopBtn) stopBtn.style.display = 'inline-block';
+	}
+	stopLocationWatch() {
+		if (this.navWatchId && navigator.geolocation) {
+			navigator.geolocation.clearWatch(this.navWatchId);
+			this.navWatchId = null;
+		}
+		const stopBtn = document.getElementById('nav-stop-tracking');
+		if (stopBtn) stopBtn.style.display = 'none';
+	}
+	renderNavigationIfReady() {
+		const select = document.getElementById('nav-destination-select');
+		if (!this.navDestKey && select && select.value) {
+			this.navDestKey = select.value;
+		}
+		if (!this.navDestKey) return;
+		const dest = buildings[this.navDestKey];
+		if (!dest || !dest.coordinates) return;
+		// Render map overlay with route
+		if (typeof campusMap !== 'undefined') {
+			campusMap.renderNavigation('navigation-map', this.navFromCoords, this.navDestKey, true);
+		}
+		// Directions and Google Maps link
+		const directionsEl = document.getElementById('nav-directions');
+		const gmapsBtn = document.getElementById('nav-open-gmaps');
+		if (this.navFromCoords) {
+			const { meters, minutes, bearing } = this.getDistanceAndBearing(this.navFromCoords, dest.coordinates);
+			if (directionsEl) {
+				directionsEl.innerHTML = `
+					<p><strong>To:</strong> ${dest.name}</p>
+					<p><strong>Distance:</strong> ${(meters/1000).toFixed(2)} km</p>
+					<p><strong>Estimated walk:</strong> ~${minutes} min</p>
+					<p><strong>Direction:</strong> Head ${bearing}</p>
+				`;
+			}
+			if (gmapsBtn) {
+				const o = `${this.navFromCoords.lat},${this.navFromCoords.lng}`;
+				const d = `${dest.coordinates.lat},${dest.coordinates.lng}`;
+				gmapsBtn.href = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(o)}&destination=${encodeURIComponent(d)}&travelmode=walking`;
+				gmapsBtn.style.display = 'inline-block';
+			}
+		} else {
+			if (directionsEl) {
+				directionsEl.innerHTML = `<p>Click "Use My Location" to get walking directions to ${dest.name}.</p>`;
+			}
+			if (gmapsBtn) gmapsBtn.style.display = 'none';
+		}
+	}
+
+	// High Scores
+	showHighScores() {
+		this.showScreen('high-scores');
+	}
+	populateHighScoresScreen() {
+		if (!this.stats) this.loadStats();
+		if (!Array.isArray(this.stats.highScores)) {
+			this.stats.highScores = [];
+		}
+		const tbody = document.getElementById('high-scores-table-body');
+		if (!tbody) return;
+		tbody.innerHTML = '';
+		const rows = this.stats.highScores
+			.slice(0, 10)
+			.map((entry, idx) => {
+				const date = new Date(entry.timestamp || Date.now());
+				const dateStr = date.toLocaleString();
+				return `
+					<tr>
+						<td>${idx + 1}</td>
+						<td>${entry.score}</td>
+						<td>${entry.difficulty || '-'}</td>
+						<td>${entry.mode || '-'}</td>
+						<td>${dateStr}</td>
+					</tr>
+				`;
+			}).join('');
+		tbody.innerHTML = rows || `<tr><td colspan="5" style="text-align:center;color:#757575;">No scores yet. Play a game!</td></tr>`;
+	}
+	clearHighScores() {
+		if (!confirm('Clear all local high scores?')) return;
+		if (!this.stats) this.loadStats();
+		this.stats.highScores = [];
+		this.saveStats();
+		this.populateHighScoresScreen();
+	}
     // Hint Modal
     showHint() {
         const building = buildings[this.currentQuestion.building];
