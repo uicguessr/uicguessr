@@ -1247,6 +1247,124 @@ class UICGuessrGame {
         this.showScreen('question');
     }
 
+    // Street View Functions
+    openStreetView(buildingKey = null) {
+        const key = buildingKey || (this.currentQuestion ? this.currentQuestion.correctAnswer : null);
+        if (!key || !buildings[key]) {
+            console.warn('No building selected for Street View');
+            return;
+        }
+        
+        const building = buildings[key];
+        const { lat, lng } = building.coordinates;
+        
+        // Update modal content
+        document.getElementById('street-view-building-name').textContent = building.name;
+        document.getElementById('street-view-address').textContent = building.address || 'UIC Campus';
+        
+        // Create Google Maps Street View embed URL
+        // Using the embed URL format that works without API key for basic street view
+        const streetViewUrl = `https://www.google.com/maps/embed?pb=!4v${Date.now()}!6m8!1m7!1s!2m2!1d${lat}!2d${lng}!3f0!4f0!5f0.7820865974627469`;
+        
+        // Alternative: Use direct Street View URL with coordinates
+        const directStreetViewUrl = `https://www.google.com/maps/@${lat},${lng},3a,75y,90t/data=!3m6!1e1!3m4!1s!2e0!7i16384!8i8192`;
+        
+        // For external link
+        const externalUrl = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}`;
+        document.getElementById('street-view-external').href = externalUrl;
+        
+        // Set iframe source - using a more reliable embed approach
+        const iframe = document.getElementById('street-view-iframe');
+        // Use Google Maps embed with place query for better reliability
+        const embedUrl = `https://www.google.com/maps/embed/v1/streetview?key=&location=${lat},${lng}&heading=0&pitch=0&fov=90`;
+        
+        // Since we don't have an API key, use the place embed which is more reliable
+        const placeEmbedUrl = `https://maps.google.com/maps?q=${lat},${lng}&layer=c&cbll=${lat},${lng}&cbp=12,0,0,0,0&output=svembed`;
+        iframe.src = placeEmbedUrl;
+        
+        // Show the modal
+        document.getElementById('street-view-modal').classList.add('active');
+    }
+    
+    closeStreetView() {
+        const modal = document.getElementById('street-view-modal');
+        modal.classList.remove('active');
+        
+        // Clear iframe to stop loading
+        const iframe = document.getElementById('street-view-iframe');
+        iframe.src = '';
+    }
+    
+    showStreetViewExplorer() {
+        this.showScreen('street-view-explorer');
+        this.populateStreetViewExplorer();
+    }
+    
+    populateStreetViewExplorer() {
+        const grid = document.getElementById('street-view-building-grid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        // Get all buildings sorted by name
+        const buildingKeys = Object.keys(buildings).sort((a, b) => 
+            buildings[a].name.localeCompare(buildings[b].name)
+        );
+        
+        buildingKeys.forEach(key => {
+            const building = buildings[key];
+            const card = document.createElement('div');
+            card.className = 'street-view-building-card';
+            card.onclick = () => this.openStreetViewForBuilding(key);
+            
+            // Get category icon
+            const categoryIcons = {
+                'academic': '📚',
+                'services': '🎯',
+                'recreation': '💪',
+                'dining': '🍔',
+                'residence': '🏠',
+                'events': '🎉'
+            };
+            const mainCategory = building.categories ? building.categories[0] : 'academic';
+            const icon = categoryIcons[mainCategory] || '🏛️';
+            
+            card.innerHTML = `
+                <div class="sv-card-image" style="background-image: url('${building.photo}');">
+                    <div class="sv-card-overlay">
+                        <span class="sv-card-icon">🌐</span>
+                        <span class="sv-card-action">View in 3D</span>
+                    </div>
+                </div>
+                <div class="sv-card-content">
+                    <span class="sv-card-category">${icon} ${mainCategory}</span>
+                    <h4 class="sv-card-title">${building.abbreviation}</h4>
+                    <p class="sv-card-name">${building.fullName || building.name}</p>
+                </div>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    openStreetViewForBuilding(buildingKey) {
+        if (!buildings[buildingKey]) return;
+        
+        const building = buildings[buildingKey];
+        const { lat, lng } = building.coordinates;
+        
+        // Open directly in Google Maps Street View (external link)
+        const streetViewUrl = `https://www.google.com/maps?layer=c&cbll=${lat},${lng}`;
+        window.open(streetViewUrl, '_blank');
+    }
+    
+    // Also add quick street view link from map screen
+    getStreetViewUrl(buildingKey) {
+        if (!buildings[buildingKey]) return null;
+        const { lat, lng } = buildings[buildingKey].coordinates;
+        return `https://www.google.com/maps?layer=c&cbll=${lat},${lng}`;
+    }
+
     // Progress Updates
     updateProgress() {
         const completedRounds = this.currentRound - 1;

@@ -76,6 +76,12 @@
                             <p>View top local scores</p>
                             <span class="feature-action">View Leaderboard →</span>
                         </div>
+                        <div class="feature-card clickable" onclick="game.showStreetViewExplorer()">
+                            <span class="feature-icon">🌐</span>
+                            <h3>3D Street View</h3>
+                            <p>Explore buildings in 3D from ground level</p>
+                            <span class="feature-action">Explore →</span>
+                        </div>
                     </div>
                 </div>
             </main>
@@ -248,6 +254,9 @@
                             <p><strong>📍 Address:</strong> <span id="map-address">750 S Halsted Street, Chicago, IL 60607</span></p>
                         </div>
                         <div class="resources-actions" style="justify-content:flex-start; gap:10px; margin-top:10px; margin-bottom:10px;">
+                            <button id="open-street-view" class="btn btn-primary" onclick="game.openStreetView()">
+                                🌐 3D Street View
+                            </button>
                             <a id="open-google-maps" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer" aria-label="Open location in Google Maps" style="display:none;">
                                 Open in Google Maps
                             </a>
@@ -910,6 +919,72 @@
                     <button class="btn btn-small btn-danger" onclick="game.clearLearningData()">
                         Reset Progress
                     </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Street View Modal -->
+    <div id="street-view-modal" class="screen">
+        <div class="modal-overlay" onclick="game.closeStreetView()">
+            <div class="modal-content street-view-modal" onclick="event.stopPropagation()">
+                <div class="modal-header">
+                    <h2>🌐 3D Street View</h2>
+                    <button class="btn btn-icon close-btn" onclick="game.closeStreetView()">✕</button>
+                </div>
+                <div class="modal-body street-view-body">
+                    <div id="street-view-container" class="street-view-container">
+                        <iframe 
+                            id="street-view-iframe" 
+                            src="" 
+                            class="street-view-iframe"
+                            allowfullscreen
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="street-view-info">
+                        <h3 id="street-view-building-name">Building Name</h3>
+                        <p id="street-view-address">Address</p>
+                        <div class="street-view-tips">
+                            <h4>💡 Navigation Tips:</h4>
+                            <ul>
+                                <li><strong>Click and drag</strong> to look around in 360°</li>
+                                <li><strong>Double-click</strong> to move forward</li>
+                                <li><strong>Scroll</strong> to zoom in/out</li>
+                                <li><strong>Use arrows</strong> on screen to navigate streets</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer street-view-footer">
+                    <a id="street-view-external" class="btn btn-secondary" href="#" target="_blank" rel="noopener noreferrer">
+                        Open Full Screen in Google Maps ↗
+                    </a>
+                    <button class="btn btn-primary" onclick="game.closeStreetView()">
+                        ← Back to Map
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Street View Explorer Screen -->
+    <div id="street-view-explorer-screen" class="screen">
+        <header class="header-bar">
+            <div class="header-content">
+                <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                <h1 class="header-title">🌐 Street View Explorer</h1>
+            </div>
+        </header>
+        <main class="main-container">
+            <div class="resources-container">
+                <div class="resources-header">
+                    <h2>Explore UIC Campus in 3D</h2>
+                    <p class="resources-intro">Click any building to view it in 3D Street View. Get familiar with how buildings look from ground level!</p>
+                </div>
+                <div class="street-view-explorer-grid" id="street-view-building-grid">
+                    <!-- Populated via JavaScript -->
                 </div>
             </div>
         </main>

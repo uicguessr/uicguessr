@@ -215,35 +215,232 @@ class CampusMap {
         const fromLatLng = [fromCoords.lat, fromCoords.lng];
         const toLatLng = [dest.lat, dest.lng];
 
-        // Route polyline (straight-line approximation)
-        const route = L.polyline([fromLatLng, toLatLng], {
+        // Pulsing ring effect (underneath the marker)
+        const pulseRing = L.circleMarker(fromLatLng, {
+            radius: 16,
             color: '#00B0FF',
-            weight: 4,
-            opacity: 0.9,
-            dashArray: '6,4',
-            className: 'campus-map-route'
+            weight: 2,
+            fillColor: '#00B0FF',
+            fillOpacity: 0.2,
+            className: 'campus-map-pulse-ring'
         });
-        layer.addLayer(route);
+        layer.addLayer(pulseRing);
 
-        // User location marker
+        // User location marker (on top, static)
         const userMarker = L.circleMarker(fromLatLng, {
             radius: 8,
             color: '#FFFFFF',
             weight: 3,
             fillColor: '#00B0FF',
-            fillOpacity: 0.95,
-            className: 'campus-map-user-marker'
+            fillOpacity: 1,
+            className: 'campus-map-user-dot'
         }).bindTooltip('You are here', {
             direction: 'top',
-            offset: [0, -6],
+            offset: [0, -8],
             className: 'campus-map-tooltip'
         });
         layer.addLayer(userMarker);
 
-        // Fit bounds to show both
-        const bounds = L.latLngBounds([fromLatLng, toLatLng]);
-        map.fitBounds(bounds, { padding: [40, 40] });
+        // Fetch walking route from OSRM (free, no API key needed)
+        this.fetchWalkingRoute(fromCoords, dest, layer, map);
+    }
+
+    // Fetch real walking directions from OSRM
+    async fetchWalkingRoute(from, to, layer, map) {
+        const fromLatLng = [from.lat, from.lng];
+        const toLatLng = [to.lat, to.lng];
+        
+        // OSRM API URL for walking directions
+        const osrmUrl = `https://router.project-osrm.org/route/v1/foot/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&steps=true`;
+        
+        try {
+            const response = await fetch(osrmUrl);
+            const data = await response.json();
+            
+            if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                const route = data.routes[0];
+                const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                
+                // Draw the actual walking route
+                const routeLine = L.polyline(coordinates, {
+                    color: '#4CAF50',
+                    weight: 5,
+                    opacity: 0.9,
+                    className: 'campus-map-route walking-route'
+                });
+                layer.addLayer(routeLine);
+                
+                // Add route info popup
+                const distanceMeters = Math.round(route.distance);
+                const distanceFeet = Math.round(distanceMeters * 3.281);
+                const distanceMiles = distanceMeters / 1609.34;
+                
+                // Calculate walking time: average walking speed is ~3 mph = 80 meters/min
+                // Campus walking is slower (~2.5 mph = 67 meters/min) due to crosswalks, crowds
+                const walkingSpeed = 67; // meters per minute (~2.5 mph)
+                const totalMinutes = Math.max(1, Math.round(distanceMeters / walkingSpeed));
+                const durationDisplay = this.formatDuration(totalMinutes);
+                
+                const distanceDisplay = distanceMiles >= 0.1 
+                    ? `${distanceMiles.toFixed(2)} mi` 
+                    : `${distanceFeet} ft`;
+                
+                // Update directions display
+                this.updateDirectionsDisplay(route, durationDisplay, distanceDisplay);
+                
+                // Fit bounds to route
+                const bounds = routeLine.getBounds();
+                map.fitBounds(bounds, { padding: [50, 50] });
+                
+                // Add turn markers for key steps
+                this.addTurnMarkers(route.legs[0].steps, layer);
+                
+            } else {
+                // Fallback to straight line if OSRM fails
+                this.drawFallbackRoute(fromLatLng, toLatLng, layer, map);
+            }
+        } catch (error) {
+            console.warn('OSRM routing failed, using straight line:', error);
+            // Fallback to straight line
+            this.drawFallbackRoute(fromLatLng, toLatLng, layer, map);
+        }
+        
         setTimeout(() => map.invalidateSize(), 200);
+    }
+
+    // Draw fallback straight line route
+    drawFallbackRoute(fromLatLng, toLatLng, layer, map) {
+        const route = L.polyline([fromLatLng, toLatLng], {
+            color: '#FF9800',
+            weight: 4,
+            opacity: 0.9,
+            dashArray: '8,8',
+            className: 'campus-map-route fallback-route'
+        });
+        layer.addLayer(route);
+        
+        // Calculate straight-line distance
+        const from = L.latLng(fromLatLng);
+        const to = L.latLng(toLatLng);
+        const distance = from.distanceTo(to);
+        // Add 30% to straight-line distance to approximate actual walking path
+        const estimatedWalkingDistance = distance * 1.3;
+        // Walking speed: ~67 meters per minute (~2.5 mph, realistic for campus)
+        const walkingMinutes = Math.max(1, Math.round(estimatedWalkingDistance / 67));
+        
+        const directionsEl = document.getElementById('nav-directions');
+        if (directionsEl) {
+            const distanceFeet = Math.round(distance * 3.281);
+            const distanceMiles = distance / 1609.34;
+            const distanceDisplay = distanceMiles >= 0.1 
+                ? `${distanceMiles.toFixed(2)} mi` 
+                : `${distanceFeet} ft`;
+            const durationDisplay = this.formatDuration(walkingMinutes);
+            
+            directionsEl.innerHTML = `
+                <p><strong>📍 Approximate Route</strong></p>
+                <p>Distance: ~${distanceDisplay}</p>
+                <p>Walking time: ~${durationDisplay}</p>
+                <p class="route-note" style="color:#FF9800; font-size:0.9em; margin-top:8px;">
+                    ⚠️ Showing straight-line path. For turn-by-turn directions, check Google Maps.
+                </p>
+            `;
+        }
+        
+        const bounds = L.latLngBounds([fromLatLng, toLatLng]);
+        map.fitBounds(bounds, { padding: [50, 50] });
+    }
+
+    // Update the directions display panel
+    updateDirectionsDisplay(route, durationDisplay, distanceDisplay) {
+        const directionsEl = document.getElementById('nav-directions');
+        if (!directionsEl) return;
+        
+        const steps = route.legs[0]?.steps || [];
+        const stepsList = steps
+            .filter(step => step.maneuver && step.maneuver.type !== 'arrive' && step.maneuver.type !== 'depart')
+            .slice(0, 5)
+            .map(step => {
+                const instruction = this.formatStepInstruction(step);
+                const stepFeet = Math.round(step.distance * 3.281);
+                const stepDistance = stepFeet >= 500 
+                    ? `${(step.distance / 1609.34).toFixed(2)} mi` 
+                    : `${stepFeet} ft`;
+                return `<li>${instruction} <span class="step-distance">(${stepDistance})</span></li>`;
+            })
+            .join('');
+        
+        directionsEl.innerHTML = `
+            <div class="route-summary">
+                <div class="route-stat">
+                    <span class="route-icon">🚶</span>
+                    <span class="route-value">${durationDisplay}</span>
+                </div>
+                <div class="route-stat">
+                    <span class="route-icon">📏</span>
+                    <span class="route-value">${distanceDisplay}</span>
+                </div>
+            </div>
+            ${stepsList ? `
+                <div class="route-steps">
+                    <h5>Turn-by-turn directions:</h5>
+                    <ol class="steps-list">${stepsList}</ol>
+                </div>
+            ` : ''}
+        `;
+    }
+
+    // Format step instruction from OSRM
+    formatStepInstruction(step) {
+        const maneuver = step.maneuver;
+        const name = step.name || 'the path';
+        
+        const directions = {
+            'turn': {
+                'left': '↰ Turn left',
+                'right': '↱ Turn right',
+                'sharp left': '↰ Sharp left',
+                'sharp right': '↱ Sharp right',
+                'slight left': '↖ Slight left',
+                'slight right': '↗ Slight right',
+                'straight': '↑ Continue straight'
+            },
+            'new name': '↑ Continue',
+            'depart': '🚶 Start walking',
+            'arrive': '📍 Arrive at destination',
+            'merge': '↗ Merge',
+            'fork': '⑂ Fork',
+            'end of road': '↩ End of road'
+        };
+        
+        if (maneuver.type === 'turn' && maneuver.modifier) {
+            const turnDir = directions.turn[maneuver.modifier] || '↑ Turn';
+            return `${turnDir} onto ${name}`;
+        }
+        
+        return directions[maneuver.type] || `Continue on ${name}`;
+    }
+
+    // Add small markers at key turn points
+    addTurnMarkers(steps, layer) {
+        if (!steps || steps.length < 2) return;
+        
+        // Only add markers for significant turns (not start/end)
+        steps.forEach((step, index) => {
+            if (index === 0 || index === steps.length - 1) return;
+            if (!step.maneuver || !step.maneuver.location) return;
+            
+            const location = step.maneuver.location;
+            const turnMarker = L.circleMarker([location[1], location[0]], {
+                radius: 4,
+                color: '#FFFFFF',
+                weight: 2,
+                fillColor: '#4CAF50',
+                fillOpacity: 0.9
+            });
+            
+            layer.addLayer(turnMarker);
+        });
     }
 
     buildPopupContent(building, style) {
@@ -277,6 +474,19 @@ class CampusMap {
         return cat.charAt(0).toUpperCase() + cat.slice(1);
     }
 
+    // Format duration in minutes to "X hr Y min" or "X min"
+    formatDuration(totalMinutes) {
+        if (totalMinutes < 60) {
+            return `${totalMinutes} min`;
+        }
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+        if (mins === 0) {
+            return `${hours} hr`;
+        }
+        return `${hours} hr ${mins} min`;
+    }
+
     getDirections(fromBuilding, toBuilding) {
         if (typeof L === 'undefined') return '';
 
@@ -290,7 +500,9 @@ class CampusMap {
         const toLatLng = L.latLng(to.lat, to.lng);
 
         const distanceMeters = fromLatLng.distanceTo(toLatLng);
-        const approxMinutes = Math.max(1, Math.round(distanceMeters / 80));
+        // Add 30% for actual walking path, then use 67 m/min (~2.5 mph)
+        const estimatedWalkingDistance = distanceMeters * 1.3;
+        const approxMinutes = Math.max(1, Math.round(estimatedWalkingDistance / 67));
 
         const bearing = this.computeBearing(fromLatLng, toLatLng);
         return `Head ${bearing} for about ${approxMinutes} minute${approxMinutes !== 1 ? 's' : ''}`;
