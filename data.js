@@ -1273,3 +1273,286 @@ const gameSettings = {
     hintsEnabled: true
 };
 
+// Persona Definitions - Targeted learning paths for different student types
+const personaDefinitions = {
+    freshman: {
+        name: "Freshman",
+        icon: "🎓",
+        description: "New to UIC? Learn the essential buildings every freshman needs to know.",
+        color: "#4CAF50",
+        priorityBuildings: ["SCE", "SRF", "LIB", "UH", "LCA", "LCB", "LCC", "LCD", "LCE", "LCF", "SSB", "BSB", "GH", "TH"],
+        focusAreas: ["Common lecture halls", "Student services", "Study spaces", "Dining"],
+        recommendedRounds: 10,
+        tips: [
+            "Most freshman classes are in the Lecture Centers (LCA-LCF)",
+            "Student Center East (SCE) is your go-to for food and study breaks",
+            "The Library (LIB) has 24/7 study areas during finals",
+            "Student Services Building (SSB) handles registration and financial aid"
+        ]
+    },
+    transfer: {
+        name: "Transfer Student",
+        icon: "🔄",
+        description: "Transferring to UIC? Focus on department buildings and upper-level facilities.",
+        color: "#2196F3",
+        priorityBuildings: ["SCE", "LIB", "UH", "SSB", "BSB", "SES", "ERF", "SELE", "EIB", "SEO", "GH", "TH", "CASA", "AH"],
+        focusAreas: ["Department offices", "Research facilities", "Academic advising", "Career services"],
+        recommendedRounds: 10,
+        tips: [
+            "Meet with your department advisor in your major's building",
+            "Transfer credit questions go to SSB (Student Services Building)",
+            "Join student organizations at SCE to meet people",
+            "Career Services in SSB can help with internships"
+        ]
+    },
+    commuter: {
+        name: "Commuter Student",
+        icon: "🚇",
+        description: "Commuting to campus? Learn buildings near CTA stops and parking.",
+        color: "#FF9800",
+        priorityBuildings: ["SCE", "SRF", "LIB", "UH", "LCA", "SSB", "SCW", "PAV", "ARC", "ERF", "SES"],
+        focusAreas: ["Near Blue Line (UIC-Halsted)", "Near parking garages", "Between-class spots", "Quick dining"],
+        recommendedRounds: 10,
+        nearCTA: ["SCE", "SRF", "LIB", "UH", "LCA", "BSB", "ERF", "SES", "SELE"],
+        nearParking: ["SCW", "PAV", "AHSB", "SPH", "PHARM"],
+        tips: [
+            "UIC-Halsted Blue Line is closest to East Campus",
+            "Halsted Street Parking is near SCE and SRF",
+            "SCE food court is quick between classes",
+            "Library has lockers for commuter storage"
+        ]
+    },
+    premed: {
+        name: "Pre-Med / Health Sciences",
+        icon: "🩺",
+        description: "Health sciences student? Master the medical campus and science buildings.",
+        color: "#E91E63",
+        priorityBuildings: ["SES", "SELE", "BSB", "LIB", "SCW", "AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN"],
+        focusAreas: ["Science labs", "Medical campus", "Research facilities", "Study spaces"],
+        recommendedRounds: 12,
+        tips: [
+            "Most pre-med classes are in SES and SELE",
+            "Medical campus is west of main campus",
+            "Student Health Services is in SSB",
+            "MSLC tutoring for sciences is in SES"
+        ]
+    },
+    engineering: {
+        name: "Engineering Student",
+        icon: "⚙️",
+        description: "Engineering major? Learn the engineering quad and maker spaces.",
+        color: "#795548",
+        priorityBuildings: ["SES", "ERF", "SELE", "EIB", "SEO", "LIB", "SCE", "AH"],
+        focusAreas: ["Engineering labs", "Maker spaces", "Computer labs", "Study areas"],
+        recommendedRounds: 10,
+        tips: [
+            "Engineering Innovation Building (EIB) has the best maker space",
+            "ERF has advanced research labs",
+            "SES has the Math & Science Learning Center",
+            "AH (Addams Hall) has 3D printers and prototyping"
+        ]
+    },
+    artsHumanities: {
+        name: "Arts & Humanities",
+        icon: "🎨",
+        description: "Creative major? Explore studios, galleries, and humanities buildings.",
+        color: "#9C27B0",
+        priorityBuildings: ["CASA", "LIB", "GH", "TH", "BH", "UH", "SCE", "AH"],
+        focusAreas: ["Art studios", "Galleries", "Humanities classrooms", "Performance spaces"],
+        recommendedRounds: 10,
+        tips: [
+            "CADA (CASA) has 24/7 studio access",
+            "Gallery 400 hosts rotating exhibitions",
+            "Grant Hall has the Writing Center",
+            "Theater performances are often in the lecture centers"
+        ]
+    }
+};
+
+// Major-based Deck Definitions
+const majorDecks = {
+    generalEducation: {
+        name: "General Education",
+        icon: "📚",
+        description: "Core buildings for general education requirements",
+        buildings: ["LCA", "LCB", "LCC", "LCD", "LCE", "LCF", "LIB", "BSB", "GH", "TH", "BH", "UH"],
+        color: "#607D8B"
+    },
+    engineering: {
+        name: "Engineering & CS",
+        icon: "💻",
+        description: "College of Engineering buildings",
+        buildings: ["SES", "ERF", "SELE", "EIB", "SEO", "AH"],
+        departments: ["Computer Science", "Electrical Engineering", "Mechanical Engineering", "Civil Engineering", "Bioengineering"],
+        color: "#FF5722"
+    },
+    sciences: {
+        name: "Sciences",
+        icon: "🔬",
+        description: "Natural and physical sciences buildings",
+        buildings: ["SES", "SELE", "ERF", "BSB", "LIB"],
+        departments: ["Biology", "Chemistry", "Physics", "Earth Sciences", "Mathematics"],
+        color: "#4CAF50"
+    },
+    liberalArts: {
+        name: "Liberal Arts & Social Sciences",
+        icon: "📖",
+        description: "Humanities and social sciences buildings",
+        buildings: ["BSB", "GH", "TH", "BH", "UH", "LIB"],
+        departments: ["Psychology", "Sociology", "History", "English", "Philosophy", "Political Science"],
+        color: "#3F51B5"
+    },
+    healthSciences: {
+        name: "Health Sciences",
+        icon: "🏥",
+        description: "Medical and health-related buildings",
+        buildings: ["AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN", "SCW"],
+        departments: ["Nursing", "Public Health", "Pharmacy", "Medicine", "Kinesiology"],
+        color: "#E91E63"
+    },
+    architecture: {
+        name: "Architecture, Design & Arts",
+        icon: "🏛️",
+        description: "CADA buildings for creative majors",
+        buildings: ["CASA", "AH", "GH"],
+        departments: ["Architecture", "Graphic Design", "Industrial Design", "Art History", "Studio Arts"],
+        color: "#9C27B0"
+    },
+    business: {
+        name: "Business Administration",
+        icon: "💼",
+        description: "Business and economics buildings",
+        buildings: ["UH", "LIB", "BSB", "GH", "TH"],
+        departments: ["Accounting", "Finance", "Marketing", "Management", "Economics"],
+        color: "#795548"
+    },
+    studentLife: {
+        name: "Student Life & Services",
+        icon: "🎉",
+        description: "Essential student services and recreation",
+        buildings: ["SCE", "SCW", "SRF", "SSB", "UH", "PAV", "ARC"],
+        services: ["Dining", "Recreation", "Student Organizations", "Health Services", "Career Services"],
+        color: "#00BCD4"
+    }
+};
+
+// Enhanced Resource Context - Precise locations within buildings
+const resourceLocations = {
+    SCE: [
+        { name: "Food Court", floor: "Lower Level", section: "Central Atrium", hours: "7am-8pm weekdays" },
+        { name: "Wellness Center", floor: "2nd Floor", section: "East Wing", room: "Room 245" },
+        { name: "Study Spaces", floor: "2nd & 3rd Floors", section: "Throughout building" },
+        { name: "UIC Bookstore", floor: "Lower Level", section: "South Entrance" },
+        { name: "Student Organization Offices", floor: "3rd Floor", section: "Suite 3100" },
+        { name: "Computer Lab", floor: "2nd Floor", section: "Room 2050" }
+    ],
+    SRF: [
+        { name: "Fitness Center", floor: "1st & 2nd Floors", section: "Main Gym Area" },
+        { name: "Swimming Pool", floor: "1st Floor", section: "East Wing" },
+        { name: "Basketball Courts", floor: "2nd Floor", section: "Gymnasium" },
+        { name: "Climbing Wall", floor: "1st Floor", section: "South End" },
+        { name: "Locker Rooms", floor: "1st Floor", section: "Near main entrance" },
+        { name: "Group Fitness Studios", floor: "2nd Floor", section: "Studios A-D" }
+    ],
+    LIB: [
+        { name: "IDEA Commons", floor: "1st Floor", section: "Main Entrance Area", hours: "24/7 during finals" },
+        { name: "Research Help Desk", floor: "1st Floor", section: "Central Information Desk" },
+        { name: "Group Study Rooms", floor: "2nd-5th Floors", section: "Reserve online" },
+        { name: "Special Collections", floor: "3rd Floor", section: "East Wing" },
+        { name: "Computer Lab", floor: "1st Floor", section: "Room 120" },
+        { name: "Quiet Study", floor: "4th & 5th Floors", section: "Designated quiet zones" },
+        { name: "Café Belvedere", floor: "Ground Floor", section: "Near south entrance" }
+    ],
+    SSB: [
+        { name: "Registrar", floor: "1st Floor", section: "Room 1200" },
+        { name: "Financial Aid", floor: "1st Floor", section: "Room 1700" },
+        { name: "Admissions", floor: "1st Floor", section: "Room 1100" },
+        { name: "Counseling Center", floor: "2nd Floor", section: "Room 2010" },
+        { name: "Career Services", floor: "3rd Floor", section: "Room 3050" },
+        { name: "Disability Resource Center", floor: "1st Floor", section: "Room 1190" },
+        { name: "Student Health", floor: "Ground Floor", section: "West Wing" }
+    ],
+    UH: [
+        { name: "Admissions Office", floor: "Ground Floor", section: "Main Lobby" },
+        { name: "Academic Advising", floor: "Various by college", section: "Check directory" },
+        { name: "Dean of Students", floor: "3rd Floor", section: "Suite 3030" },
+        { name: "Computer Lab", floor: "Lower Level", section: "Room B01" }
+    ],
+    SES: [
+        { name: "Math & Science Learning Center (MSLC)", floor: "2nd Floor", section: "Room 2100", hours: "Mon-Fri 9am-5pm" },
+        { name: "Engineering Computer Labs", floor: "1st Floor", section: "Rooms 100-130" },
+        { name: "Chemistry Labs", floor: "3rd Floor", section: "East Wing" },
+        { name: "Physics Labs", floor: "2nd Floor", section: "West Wing" },
+        { name: "Study Lounge", floor: "Ground Floor", section: "Near vending machines" }
+    ],
+    GH: [
+        { name: "Writing Center", floor: "1st Floor", section: "Room 105", hours: "Mon-Thu 10am-7pm" },
+        { name: "Classrooms", floor: "1st-4th Floors", section: "Various" },
+        { name: "Faculty Offices", floor: "Upper Floors", section: "By department" }
+    ],
+    BSB: [
+        { name: "Psychology Department", floor: "10th Floor", section: "Suite 1007" },
+        { name: "Computer Labs", floor: "3rd Floor", section: "Room 305" },
+        { name: "Study Lounges", floor: "Ground Floor", section: "Near east entrance" },
+        { name: "Sociology Department", floor: "4th Floor", section: "Suite 4102" }
+    ]
+};
+
+// Extended Question Pool for longer sessions
+const extendedQuestionPool = [
+    // Easy - Iconic/Essential Buildings
+    { building: "SCE", difficulty: "easy", hint: "The main student center with food court and study spaces." },
+    { building: "SRF", difficulty: "easy", hint: "The recreation facility with gym and pool." },
+    { building: "LIB", difficulty: "easy", hint: "The iconic brutalist library building." },
+    { building: "UH", difficulty: "easy", hint: "The tall administrative tower." },
+    { building: "LCA", difficulty: "easy", hint: "One of the main lecture center buildings." },
+    { building: "SSB", difficulty: "easy", hint: "Student services like registrar and financial aid." },
+    { building: "SCW", difficulty: "easy", hint: "The west campus student center." },
+    { building: "PAV", difficulty: "easy", hint: "The large arena for sports and events." },
+    { building: "ARC", difficulty: "easy", hint: "Academic and Residential Complex." },
+    
+    // Medium - Academic Buildings
+    { building: "BSB", difficulty: "medium", hint: "Behavioral sciences and psychology." },
+    { building: "SES", difficulty: "medium", hint: "Science and engineering classrooms." },
+    { building: "ERF", difficulty: "medium", hint: "Engineering research facility." },
+    { building: "GH", difficulty: "medium", hint: "Grant Hall - humanities building." },
+    { building: "TH", difficulty: "medium", hint: "Taft Hall - academic classrooms." },
+    { building: "BH", difficulty: "medium", hint: "Burnham Hall near lecture centers." },
+    { building: "LCB", difficulty: "medium", hint: "Part of the lecture center complex." },
+    { building: "LCC", difficulty: "medium", hint: "Lecture Center C." },
+    { building: "LCD", difficulty: "medium", hint: "Lecture Center D." },
+    { building: "LCE", difficulty: "medium", hint: "Lecture Center E." },
+    { building: "LCF", difficulty: "medium", hint: "Lecture Center F." },
+    { building: "CASA", difficulty: "medium", hint: "College of Architecture and Arts." },
+    { building: "SELE", difficulty: "medium", hint: "Science and Engineering Labs." },
+    
+    // Hard - Specialized/Less Common
+    { building: "SEO", difficulty: "hard", hint: "Science and Engineering Offices." },
+    { building: "EIB", difficulty: "hard", hint: "Engineering Innovation Building." },
+    { building: "AH", difficulty: "hard", hint: "Addams Hall - maker spaces." },
+    { building: "AHSB", difficulty: "hard", hint: "Applied Health Sciences Building." },
+    { building: "SPH", difficulty: "hard", hint: "School of Public Health." },
+    { building: "PHARM", difficulty: "hard", hint: "College of Pharmacy." },
+    { building: "COMRB", difficulty: "hard", hint: "College of Medicine Research Building." },
+    { building: "CSB", difficulty: "hard", hint: "Clinical Sciences Building." },
+    { building: "CSN", difficulty: "hard", hint: "Clinical Sciences North." }
+];
+
+// Building tags for filtering
+const buildingTags = {
+    nearCTA: ["SCE", "SRF", "LIB", "UH", "LCA", "BSB", "ERF", "SES", "SELE", "GH", "TH"],
+    nearParking: ["SCW", "PAV", "AHSB", "SPH", "PHARM", "COMRB"],
+    lectureHalls: ["LCA", "LCB", "LCC", "LCD", "LCE", "LCF"],
+    scienceBuildings: ["SES", "SELE", "ERF", "EIB", "BSB"],
+    medicalCampus: ["AHSB", "SPH", "PHARM", "COMRB", "CSB", "CSN", "SCW"],
+    studentServices: ["SCE", "SCW", "SSB", "UH", "SRF"],
+    studySpaces: ["LIB", "SCE", "SCW", "SES", "BSB", "GH"],
+    dining: ["SCE", "SCW", "LIB"],
+    recreation: ["SRF", "PAV"],
+    arts: ["CASA", "AH", "GH"],
+    essential: ["SCE", "LIB", "UH", "SSB", "SRF", "LCA"]
+};
+
+// Round count options
+const roundOptions = [5, 10, 15];
+

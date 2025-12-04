@@ -27,19 +27,22 @@
                     
                     <div class="welcome-buttons">
                         <button class="btn btn-primary btn-lg" onclick="game.startGame()">
-                            Start Game
+                            🎮 Start Game
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('persona-select')">
+                            🎯 Choose Your Path
+                        </button>
+                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('major-deck-select')">
+                            📚 Major-Based Decks
                         </button>
                         <button class="btn btn-secondary btn-lg" onclick="game.showScreen('tutorial')">
-                            How to Play?
+                            ❓ How to Play
                         </button>
                         <button class="btn btn-secondary btn-lg" onclick="game.showScreen('options')">
-                            Game Options
+                            ⚙️ Game Options
                         </button>
-                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('achievements')">
-                            Achievements
-                        </button>
-                        <button class="btn btn-secondary btn-lg" onclick="game.showScreen('resources')">
-                            View All Resources
+                        <button class="btn btn-secondary btn-lg" onclick="game.showLearningInsights()">
+                            📊 Learning Insights
                         </button>
                     </div>
                     <div class="welcome-features">
@@ -530,6 +533,25 @@
                     </div>
 
                     <div class="option-section">
+                        <h3>Number of Rounds</h3>
+                        <p class="option-description">Choose how many buildings you want to learn per session</p>
+                        <div class="option-group round-selector">
+                            <label class="option-label">
+                                <input type="radio" name="rounds" value="5" checked>
+                                <span>5 Rounds - Quick session (~5 min)</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="rounds" value="10">
+                                <span>10 Rounds - Standard session (~10 min)</span>
+                            </label>
+                            <label class="option-label">
+                                <input type="radio" name="rounds" value="15">
+                                <span>15 Rounds - Extended session (~15 min)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="option-section">
                         <h3>Focus Areas</h3>
                         <div class="option-group">
                             <label class="option-label">
@@ -780,6 +802,114 @@
                 </div>
                 <div id="achievements-grid" class="resources-category-grid">
                     <!-- Populated via JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screen: Persona Selection -->
+    <div id="persona-select-screen" class="screen">
+        <header class="header-bar">
+            <div class="header-content">
+                <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                <h1 class="header-title">🎯 Choose Your Path</h1>
+            </div>
+        </header>
+        <main class="main-container">
+            <div class="resources-container">
+                <div class="resources-header">
+                    <h2>Personalized Learning Paths</h2>
+                    <p class="resources-intro">Select your student type for a targeted campus learning experience. We'll focus on buildings that matter most to you!</p>
+                </div>
+                <div id="persona-grid" class="persona-grid">
+                    <!-- Populated via JavaScript -->
+                </div>
+                <div class="persona-actions">
+                    <button class="btn btn-primary btn-lg" onclick="game.startGame()">
+                        Start with Selected Path →
+                    </button>
+                    <button class="btn btn-secondary" onclick="game.selectedPersona = null; game.startGame()">
+                        Skip & Play Random
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screen: Major Deck Selection -->
+    <div id="major-deck-select-screen" class="screen">
+        <header class="header-bar">
+            <div class="header-content">
+                <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                <h1 class="header-title">📚 Major-Based Decks</h1>
+            </div>
+        </header>
+        <main class="main-container">
+            <div class="resources-container">
+                <div class="resources-header">
+                    <h2>Learn Buildings for Your Major</h2>
+                    <p class="resources-intro">Focus on buildings relevant to your academic program. Perfect for finding your labs, offices, and classrooms!</p>
+                </div>
+                <div id="major-deck-grid" class="persona-grid">
+                    <!-- Populated via JavaScript -->
+                </div>
+                <div class="persona-actions">
+                    <button class="btn btn-primary btn-lg" onclick="game.startGame()">
+                        Start with Selected Deck →
+                    </button>
+                    <button class="btn btn-secondary" onclick="game.selectedMajorDeck = null; game.startGame()">
+                        Skip & Play All Buildings
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screen: Learning Insights -->
+    <div id="learning-insights-screen" class="screen">
+        <header class="header-bar">
+            <div class="header-content">
+                <button class="btn btn-small" onclick="game.showScreen('welcome')">← Back</button>
+                <h1 class="header-title">📊 Learning Insights</h1>
+            </div>
+        </header>
+        <main class="main-container">
+            <div class="resources-container">
+                <div class="resources-header">
+                    <h2>Your Campus Knowledge Progress</h2>
+                    <p class="resources-intro">Track which buildings you've mastered and which ones need more practice.</p>
+                </div>
+                
+                <div id="learning-stats" class="learning-stats-grid">
+                    <!-- Stats populated via JavaScript -->
+                </div>
+                
+                <div class="insights-section">
+                    <h3>🎯 Buildings to Practice</h3>
+                    <p class="section-subtitle">These buildings gave you trouble - focus on them next!</p>
+                    <div id="weak-buildings-grid" class="insights-grid">
+                        <!-- Populated via JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="insights-section">
+                    <h3>✅ Mastered Buildings</h3>
+                    <p class="section-subtitle">You know these well! Keep it up!</p>
+                    <div id="mastered-buildings-grid" class="insights-grid">
+                        <!-- Populated via JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="insights-actions">
+                    <button class="btn btn-primary btn-lg" onclick="game.practiceBuilding()">
+                        🎯 Practice Weak Buildings
+                    </button>
+                    <button class="btn btn-secondary" onclick="game.startGame()">
+                        Start Regular Game
+                    </button>
+                    <button class="btn btn-small btn-danger" onclick="game.clearLearningData()">
+                        Reset Progress
+                    </button>
                 </div>
             </div>
         </main>

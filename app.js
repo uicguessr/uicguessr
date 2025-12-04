@@ -47,8 +47,22 @@ class UICGuessrGame {
         this.navFromCoords = null;
         this.navDestKey = null;
         
+        // Persona & Learning features
+        this.selectedPersona = null;
+        this.selectedMajorDeck = null;
+        this.totalRounds = 5; // Configurable: 5, 10, or 15
+        
+        // Cross-session learning analytics
+        this.learningData = {
+            buildingAttempts: {},   // buildingKey -> { attempts: N, correct: N, lastSeen: Date }
+            sessionHistory: [],      // Array of past sessions
+            weakBuildings: [],       // Buildings player struggles with
+            masteredBuildings: []    // Buildings player knows well
+        };
+        
         this.loadSettings();
         this.loadAchievements();
+        this.loadLearningData();
         this.init();
     }
 
@@ -128,6 +142,31 @@ class UICGuessrGame {
             <span class="settings-badge-icon">🎯</span>
             <span>${focusCount} Focus Area${focusCount !== 1 ? 's' : ''}</span>
         </div>`);
+        
+        // Rounds badge
+        const rounds = this.totalRounds || 5;
+        badges.push(`<div class="settings-badge">
+            <span class="settings-badge-icon">🔢</span>
+            <span>${rounds} Rounds</span>
+        </div>`);
+        
+        // Persona badge
+        if (this.selectedPersona && typeof personaDefinitions !== 'undefined' && personaDefinitions[this.selectedPersona]) {
+            const persona = personaDefinitions[this.selectedPersona];
+            badges.push(`<div class="settings-badge">
+                <span class="settings-badge-icon">${persona.icon}</span>
+                <span>${persona.name}</span>
+            </div>`);
+        }
+        
+        // Major deck badge
+        if (this.selectedMajorDeck && typeof majorDecks !== 'undefined' && majorDecks[this.selectedMajorDeck]) {
+            const deck = majorDecks[this.selectedMajorDeck];
+            badges.push(`<div class="settings-badge">
+                <span class="settings-badge-icon">${deck.icon}</span>
+                <span>${deck.name}</span>
+            </div>`);
+        }
         
         // Timer status
         if (this.timerEnabled) {
@@ -235,8 +274,18 @@ class UICGuessrGame {
                 document.querySelectorAll('input[name="focus"]').forEach(cb => {
                     cb.checked = this.focusFilters.includes(cb.value);
                 });
+                
+                // Round count
+                const roundInput = document.querySelector(`input[name="rounds"][value="${this.totalRounds}"]`);
+                if (roundInput) roundInput.checked = true;
             } else if (screenId === 'achievements') {
                 this.populateAchievementsScreen();
+            } else if (screenId === 'persona-select') {
+                this.initPersonaScreen();
+            } else if (screenId === 'major-deck-select') {
+                this.initMajorDeckScreen();
+            } else if (screenId === 'learning-insights') {
+                this.initLearningInsightsScreen();
             }
         }
     }
@@ -248,19 +297,64 @@ class UICGuessrGame {
         this.roundResults = [];
         this.gameStarted = true;
         this.activeQuestionIndex = 0;
-        this.buildActiveQuestionPool();
+        this.streak = 0;
+        this.maxStreak = 0;
+        this.perfectRounds = 0;
+        
+        // Use persona or major deck building pools if selected
+        if (this.selectedPersona || this.selectedMajorDeck) {
+            this.buildPersonaQuestionPool();
+        } else {
+            this.buildActiveQuestionPool();
+        }
         
         this.loadNextQuestion();
     }
 
     buildActiveQuestionPool() {
-        const questions = questionSets[this.difficulty] || [];
+        // Try to use extended question pool if available
+        let questions = [];
+        
+        if (typeof extendedQuestionPool !== 'undefined' && extendedQuestionPool.length > 0) {
+            // Filter by difficulty
+            const difficultyQuestions = extendedQuestionPool.filter(q => 
+                q.difficulty === this.difficulty || this.difficulty === 'easy'
+            );
+            
+            // Generate full question objects
+            difficultyQuestions.forEach(q => {
+                if (!buildings[q.building] || !buildings[q.building].photo) return;
+                
+                // Get random distractors
+                const allBuildings = Object.keys(buildings).filter(k => 
+                    k !== q.building && buildings[k].photo
+                );
+                const distractors = this.shuffleArray(allBuildings).slice(0, 3);
+                
+                if (distractors.length >= 3) {
+                    questions.push({
+                        building: q.building,
+                        correctAnswer: q.building,
+                        options: this.shuffleArray([q.building, ...distractors]),
+                        difficulty: q.difficulty,
+                        hint: q.hint
+                    });
+                }
+            });
+        }
+        
+        // Fallback to original questionSets
+        if (questions.length < 5) {
+            questions = questionSets[this.difficulty] || questionSets.easy || [];
+        }
+        
         // Filter by focus categories if possible
         const filtered = questions.filter(q => {
             const b = buildings[q.building];
             if (!b || !Array.isArray(b.categories)) return true;
             return b.categories.some(cat => this.focusFilters.includes(cat));
         });
+        
         // Fallback to original if filter removes everything
         const pool = filtered.length > 0 ? filtered.slice() : questions.slice();
         this.activeQuestionPool = this.shuffleArray(pool);
@@ -269,7 +363,10 @@ class UICGuessrGame {
     loadNextQuestion() {
         this.currentRound++;
         
-        if (!this.endless && this.currentRound > gameSettings.totalRounds) {
+        // Use this.totalRounds instead of gameSettings.totalRounds
+        const maxRounds = this.totalRounds || gameSettings.totalRounds;
+        
+        if (!this.endless && this.currentRound > maxRounds) {
             this.showGameComplete();
             return;
         }
@@ -453,8 +550,9 @@ class UICGuessrGame {
         document.getElementById('question-number').textContent = this.currentRound;
         document.getElementById('current-score').textContent = this.score;
         const totalRoundsEl = document.getElementById('total-rounds');
+        const maxRounds = this.totalRounds || gameSettings.totalRounds;
         if (totalRoundsEl) {
-            totalRoundsEl.textContent = this.endless ? '∞' : String(gameSettings.totalRounds);
+            totalRoundsEl.textContent = this.endless ? '∞' : String(maxRounds);
         }
         
         // Clear hint container
@@ -640,6 +738,9 @@ class UICGuessrGame {
             this.unlockAchievement('first_correct');
         }
         
+        // Record learning data
+        this.recordBuildingAttempt(this.currentQuestion.building, true, 3 - this.attemptsRemaining);
+        
         // Update correct screen
         const building = buildings[this.currentQuestion.building];
         document.getElementById('correct-points').textContent = points;
@@ -658,22 +759,28 @@ class UICGuessrGame {
             bonusContainer.style.display = 'none';
         }
         
-        // Populate resources
+        // Populate enhanced resources with floor/location details
         const resourcesContainer = document.getElementById('correct-resources');
-        resourcesContainer.innerHTML = '';
-        building.resources.forEach(resource => {
-            const card = document.createElement('div');
-            card.className = 'resource-card';
-            const linkHtml = resource.url 
-                ? `<a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="resource-link" aria-label="Open ${resource.name} official page">Learn more →</a>`
-                : '';
-            card.innerHTML = `
-                <h5>${resource.name}</h5>
-                <p>${resource.description}</p>
-                ${linkHtml}
-            `;
-            resourcesContainer.appendChild(card);
-        });
+        if (resourcesContainer) {
+            this.populateEnhancedResources('correct-resources', this.currentQuestion.building);
+            
+            // Fallback to basic resources if no enhanced data
+            if (resourcesContainer.children.length === 0 && building.resources) {
+                building.resources.forEach(resource => {
+                    const card = document.createElement('div');
+                    card.className = 'resource-card';
+                    const linkHtml = resource.url 
+                        ? `<a href="${resource.url}" target="_blank" rel="noopener noreferrer" class="resource-link" aria-label="Open ${resource.name} official page">Learn more →</a>`
+                        : '';
+                    card.innerHTML = `
+                        <h5>${resource.name}</h5>
+                        <p>${resource.description}</p>
+                        ${linkHtml}
+                    `;
+                    resourcesContainer.appendChild(card);
+                });
+            }
+        }
         
         // Update progress
         this.updateProgressOnFeedback('correct');
@@ -704,6 +811,12 @@ class UICGuessrGame {
                 points: 0,
                 attempts: 2
             });
+            
+            // Record learning data (incorrect)
+            this.recordBuildingAttempt(this.currentQuestion.building, false, 2);
+            
+            // Reset streak
+            this.streak = 0;
         }
         
         // Update progress
@@ -820,7 +933,8 @@ class UICGuessrGame {
     }
 
     continueToNextRound() {
-        if (this.currentRound < gameSettings.totalRounds) {
+        const maxRounds = this.totalRounds || gameSettings.totalRounds;
+        if (this.currentRound < maxRounds) {
             this.loadNextQuestion();
         } else {
             this.showGameComplete();
@@ -831,17 +945,25 @@ class UICGuessrGame {
         // Stop any running timer
         this.stopTimer();
         
+        const maxRounds = this.totalRounds || gameSettings.totalRounds;
+        
         // Update global stats
         this.stats.gamesPlayed++;
         this.stats.totalScore += this.score;
         if (this.score > this.stats.bestScore) {
             this.stats.bestScore = this.score;
         }
-        if (this.score === gameSettings.totalRounds * gameSettings.pointsFirstTry) {
+        if (this.score === maxRounds * gameSettings.pointsFirstTry) {
             this.stats.perfectGames++;
             this.unlockAchievement('perfect_game');
         }
         this.saveStats();
+        
+        // Record session for learning analytics
+        this.recordSessionResult();
+        
+        // Record high score
+        this.recordHighScore(this.score, maxRounds, this.difficulty);
         
         // Play game complete sound
         if (soundManager) soundManager.playGameComplete();
@@ -857,6 +979,12 @@ class UICGuessrGame {
         
         // Update final score
         document.getElementById('final-score').textContent = this.score;
+        
+        // Update max score display
+        const maxScoreEl = document.querySelector('.score-max');
+        if (maxScoreEl) {
+            maxScoreEl.textContent = `/ ${maxRounds * gameSettings.pointsFirstTry}`;
+        }
         
         // Populate score table with bonuses
         const tableBody = document.getElementById('score-table-body');
@@ -897,7 +1025,7 @@ class UICGuessrGame {
         }
         
         // Performance message with streak
-        const percentage = (this.score / (gameSettings.totalRounds * gameSettings.pointsFirstTry)) * 100;
+        const percentage = (this.score / (maxRounds * gameSettings.pointsFirstTry)) * 100;
         let message = '';
         if (percentage >= 200) {
             message = '👑 LEGENDARY! Perfect score with amazing bonuses!';
@@ -1122,7 +1250,8 @@ class UICGuessrGame {
     // Progress Updates
     updateProgress() {
         const completedRounds = this.currentRound - 1;
-        const percentage = this.endless ? 0 : (completedRounds / gameSettings.totalRounds) * 100;
+        const maxRounds = this.totalRounds || gameSettings.totalRounds;
+        const percentage = this.endless ? 0 : (completedRounds / maxRounds) * 100;
         
         const fill = document.getElementById('progress-fill');
         const text = document.getElementById('progress-text');
@@ -1131,13 +1260,14 @@ class UICGuessrGame {
             if (text) text.textContent = `${completedRounds} rounds completed`;
         } else {
             if (fill) fill.style.width = `${percentage}%`;
-            if (text) text.textContent = `${completedRounds} of ${gameSettings.totalRounds} Complete`;
+            if (text) text.textContent = `${completedRounds} of ${maxRounds} Complete`;
         }
     }
 
     updateProgressOnFeedback(screenType) {
         const completedRounds = this.currentRound;
-        const percentage = (completedRounds / gameSettings.totalRounds) * 100;
+        const maxRounds = this.totalRounds || gameSettings.totalRounds;
+        const percentage = (completedRounds / maxRounds) * 100;
         
         const fillId = screenType === 'correct' ? 'progress-fill-correct' : 'progress-fill-incorrect';
         const textId = screenType === 'correct' ? 'progress-text-correct' : 'progress-text-incorrect';
@@ -1198,6 +1328,14 @@ class UICGuessrGame {
         // Ensure at least one category
         this.focusFilters = selectedFocus.length > 0 ? selectedFocus : ['academic', 'recreation', 'services', 'dining'];
         
+        // Get round count
+        const roundInputs = document.querySelectorAll('input[name="rounds"]');
+        roundInputs.forEach(input => {
+            if (input.checked) {
+                this.totalRounds = parseInt(input.value, 10);
+            }
+        });
+        
         // Save to localStorage
         localStorage.setItem('uicguessr_difficulty', this.difficulty);
         localStorage.setItem('uicguessr_sound', gameSettings.soundEnabled);
@@ -1205,6 +1343,7 @@ class UICGuessrGame {
         localStorage.setItem('uicguessr_timer', this.timerEnabled);
         localStorage.setItem('uicguessr_focus', JSON.stringify(this.focusFilters));
         localStorage.setItem('uicguessr_mode', this.mode);
+        localStorage.setItem('uicguessr_round_count', this.totalRounds);
         
         // Update settings display on welcome screen
         this.updateSettingsDisplay();
@@ -1221,6 +1360,9 @@ class UICGuessrGame {
         this.timerEnabled = true;
         this.focusFilters = ['academic', 'recreation', 'services', 'dining'];
         this.mode = 'classic';
+        this.totalRounds = 5;
+        this.selectedPersona = null;
+        this.selectedMajorDeck = null;
         this.applyModeSettings();
         
         // Update UI
@@ -1232,6 +1374,8 @@ class UICGuessrGame {
         document.querySelectorAll('input[name="focus"]').forEach(cb => cb.checked = true);
         const modeInput = document.querySelector('input[name="mode"][value="classic"]');
         if (modeInput) modeInput.checked = true;
+        const roundInput = document.querySelector('input[name="rounds"][value="5"]');
+        if (roundInput) roundInput.checked = true;
         if (typeof soundManager !== 'undefined') {
             soundManager.setEnabled(true);
         }
@@ -1283,6 +1427,26 @@ class UICGuessrGame {
             this.mode = savedMode;
         }
         this.applyModeSettings();
+        
+        // Load persona & major deck
+        const savedPersona = localStorage.getItem('uicguessr_persona');
+        if (savedPersona && typeof personaDefinitions !== 'undefined' && personaDefinitions[savedPersona]) {
+            this.selectedPersona = savedPersona;
+        }
+        
+        const savedDeck = localStorage.getItem('uicguessr_major_deck');
+        if (savedDeck && typeof majorDecks !== 'undefined' && majorDecks[savedDeck]) {
+            this.selectedMajorDeck = savedDeck;
+        }
+        
+        // Load round count
+        const savedRounds = localStorage.getItem('uicguessr_round_count');
+        if (savedRounds) {
+            const count = parseInt(savedRounds, 10);
+            if ([5, 10, 15].includes(count)) {
+                this.totalRounds = count;
+            }
+        }
         
         // Reflect to runtime systems
         if (typeof soundManager !== 'undefined') {
@@ -1654,6 +1818,447 @@ ${building.resources.map(r => `• ${r.name}: ${r.description}`).join('\n')}
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
+    }
+    
+    // ========== PERSONA & MAJOR DECK SYSTEM ==========
+    
+    selectPersona(personaKey) {
+        if (typeof personaDefinitions === 'undefined') return;
+        const persona = personaDefinitions[personaKey];
+        if (!persona) return;
+        
+        this.selectedPersona = personaKey;
+        this.totalRounds = persona.recommendedRounds || 10;
+        localStorage.setItem('uicguessr_persona', personaKey);
+        
+        if (soundManager) soundManager.playClick();
+    }
+    
+    selectMajorDeck(deckKey) {
+        if (typeof majorDecks === 'undefined') return;
+        const deck = majorDecks[deckKey];
+        if (!deck) return;
+        
+        this.selectedMajorDeck = deckKey;
+        localStorage.setItem('uicguessr_major_deck', deckKey);
+        
+        if (soundManager) soundManager.playClick();
+    }
+    
+    setRoundCount(count) {
+        const validCounts = [5, 10, 15];
+        if (validCounts.includes(count)) {
+            this.totalRounds = count;
+            localStorage.setItem('uicguessr_round_count', count);
+        }
+    }
+    
+    getPersonaPriorityBuildings() {
+        if (!this.selectedPersona || typeof personaDefinitions === 'undefined') return null;
+        const persona = personaDefinitions[this.selectedPersona];
+        return persona ? persona.priorityBuildings : null;
+    }
+    
+    getMajorDeckBuildings() {
+        if (!this.selectedMajorDeck || typeof majorDecks === 'undefined') return null;
+        const deck = majorDecks[this.selectedMajorDeck];
+        return deck ? deck.buildings : null;
+    }
+    
+    buildPersonaQuestionPool() {
+        // Get priority buildings from persona or major deck
+        let priorityBuildings = this.getPersonaPriorityBuildings() || this.getMajorDeckBuildings();
+        
+        if (!priorityBuildings) {
+            // Fall back to regular question pool
+            return this.buildActiveQuestionPool();
+        }
+        
+        // Filter to only buildings with valid photos
+        const validBuildings = priorityBuildings.filter(key => {
+            const b = buildings[key];
+            return b && b.photo && b.photo.length > 0;
+        });
+        
+        if (validBuildings.length < 4) {
+            return this.buildActiveQuestionPool();
+        }
+        
+        // Generate questions dynamically
+        const questions = [];
+        validBuildings.forEach(buildingKey => {
+            // Get 3 other buildings for distractors
+            const otherBuildings = validBuildings.filter(k => k !== buildingKey);
+            const distractors = this.shuffleArray(otherBuildings.slice()).slice(0, 3);
+            
+            if (distractors.length >= 3) {
+                questions.push({
+                    building: buildingKey,
+                    correctAnswer: buildingKey,
+                    options: this.shuffleArray([buildingKey, ...distractors]),
+                    difficulty: this.difficulty,
+                    hint: buildings[buildingKey].tips || buildings[buildingKey].description
+                });
+            }
+        });
+        
+        this.activeQuestionPool = this.shuffleArray(questions);
+    }
+    
+    showPersonaSelection() {
+        this.showScreen('persona-select');
+    }
+    
+    initPersonaScreen() {
+        const grid = document.getElementById('persona-grid');
+        if (!grid || typeof personaDefinitions === 'undefined') return;
+        
+        grid.innerHTML = '';
+        
+        Object.keys(personaDefinitions).forEach(key => {
+            const persona = personaDefinitions[key];
+            const isSelected = this.selectedPersona === key;
+            
+            const card = document.createElement('div');
+            card.className = `persona-card ${isSelected ? 'selected' : ''}`;
+            card.style.borderColor = persona.color;
+            card.onclick = () => {
+                this.selectPersona(key);
+                this.initPersonaScreen(); // Refresh
+            };
+            
+            card.innerHTML = `
+                <div class="persona-icon" style="background: ${persona.color};">${persona.icon}</div>
+                <h3 class="persona-name">${persona.name}</h3>
+                <p class="persona-description">${persona.description}</p>
+                <div class="persona-stats">
+                    <span>📍 ${persona.priorityBuildings.length} buildings</span>
+                    <span>🎯 ${persona.recommendedRounds} rounds</span>
+                </div>
+                <div class="persona-tips">
+                    <strong>Focus:</strong> ${persona.focusAreas.slice(0, 2).join(', ')}
+                </div>
+                ${isSelected ? '<div class="selected-badge">✓ Selected</div>' : ''}
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    initMajorDeckScreen() {
+        const grid = document.getElementById('major-deck-grid');
+        if (!grid || typeof majorDecks === 'undefined') return;
+        
+        grid.innerHTML = '';
+        
+        Object.keys(majorDecks).forEach(key => {
+            const deck = majorDecks[key];
+            const isSelected = this.selectedMajorDeck === key;
+            
+            const card = document.createElement('div');
+            card.className = `major-deck-card ${isSelected ? 'selected' : ''}`;
+            card.style.borderColor = deck.color;
+            card.onclick = () => {
+                this.selectMajorDeck(key);
+                this.initMajorDeckScreen(); // Refresh
+            };
+            
+            card.innerHTML = `
+                <div class="deck-icon" style="background: ${deck.color};">${deck.icon}</div>
+                <h3 class="deck-name">${deck.name}</h3>
+                <p class="deck-description">${deck.description}</p>
+                <div class="deck-stats">
+                    <span>🏛️ ${deck.buildings.length} buildings</span>
+                </div>
+                ${isSelected ? '<div class="selected-badge">✓ Selected</div>' : ''}
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+    
+    // ========== LEARNING ANALYTICS ==========
+    
+    loadLearningData() {
+        try {
+            const saved = localStorage.getItem('uicguessr_learning');
+            if (saved) {
+                this.learningData = JSON.parse(saved);
+            }
+        } catch (e) {
+            console.warn('Could not load learning data');
+        }
+    }
+    
+    saveLearningData() {
+        localStorage.setItem('uicguessr_learning', JSON.stringify(this.learningData));
+    }
+    
+    recordBuildingAttempt(buildingKey, wasCorrect, attempts) {
+        if (!this.learningData.buildingAttempts[buildingKey]) {
+            this.learningData.buildingAttempts[buildingKey] = {
+                attempts: 0,
+                correct: 0,
+                lastSeen: null,
+                history: []
+            };
+        }
+        
+        const data = this.learningData.buildingAttempts[buildingKey];
+        data.attempts++;
+        if (wasCorrect) data.correct++;
+        data.lastSeen = new Date().toISOString();
+        data.history.push({
+            date: new Date().toISOString(),
+            correct: wasCorrect,
+            attemptsUsed: attempts
+        });
+        
+        // Keep only last 20 attempts per building
+        if (data.history.length > 20) {
+            data.history = data.history.slice(-20);
+        }
+        
+        this.updateWeakAndMasteredBuildings();
+        this.saveLearningData();
+    }
+    
+    updateWeakAndMasteredBuildings() {
+        const weak = [];
+        const mastered = [];
+        
+        Object.keys(this.learningData.buildingAttempts).forEach(key => {
+            const data = this.learningData.buildingAttempts[key];
+            if (data.attempts >= 3) {
+                const accuracy = data.correct / data.attempts;
+                if (accuracy < 0.5) {
+                    weak.push({ key, accuracy, attempts: data.attempts });
+                } else if (accuracy >= 0.8 && data.attempts >= 5) {
+                    mastered.push({ key, accuracy, attempts: data.attempts });
+                }
+            }
+        });
+        
+        // Sort by accuracy (weak: lowest first, mastered: highest first)
+        weak.sort((a, b) => a.accuracy - b.accuracy);
+        mastered.sort((a, b) => b.accuracy - a.accuracy);
+        
+        this.learningData.weakBuildings = weak.map(w => w.key);
+        this.learningData.masteredBuildings = mastered.map(m => m.key);
+    }
+    
+    recordSessionResult() {
+        const session = {
+            date: new Date().toISOString(),
+            score: this.score,
+            rounds: this.currentRound,
+            difficulty: this.difficulty,
+            persona: this.selectedPersona,
+            majorDeck: this.selectedMajorDeck,
+            results: this.roundResults.map(r => ({
+                building: r.building,
+                correct: r.correct,
+                attempts: r.attempts
+            }))
+        };
+        
+        this.learningData.sessionHistory.push(session);
+        
+        // Keep only last 50 sessions
+        if (this.learningData.sessionHistory.length > 50) {
+            this.learningData.sessionHistory = this.learningData.sessionHistory.slice(-50);
+        }
+        
+        this.saveLearningData();
+    }
+    
+    showLearningInsights() {
+        this.showScreen('learning-insights');
+    }
+    
+    initLearningInsightsScreen() {
+        // Populate weak buildings
+        const weakGrid = document.getElementById('weak-buildings-grid');
+        if (weakGrid) {
+            weakGrid.innerHTML = '';
+            const weakBuildings = this.learningData.weakBuildings.slice(0, 6);
+            
+            if (weakBuildings.length === 0) {
+                weakGrid.innerHTML = '<p class="empty-message">Play more to discover which buildings need practice!</p>';
+            } else {
+                weakBuildings.forEach(key => {
+                    const building = buildings[key];
+                    const data = this.learningData.buildingAttempts[key];
+                    if (!building) return;
+                    
+                    const accuracy = Math.round((data.correct / data.attempts) * 100);
+                    const card = document.createElement('div');
+                    card.className = 'insight-card weak';
+                    card.innerHTML = `
+                        <div class="insight-building">${building.abbreviation}</div>
+                        <div class="insight-name">${building.name}</div>
+                        <div class="insight-stat">${accuracy}% accuracy (${data.attempts} tries)</div>
+                        <button class="btn btn-small" onclick="game.practiceBuilding('${key}')">Practice</button>
+                    `;
+                    weakGrid.appendChild(card);
+                });
+            }
+        }
+        
+        // Populate mastered buildings
+        const masteredGrid = document.getElementById('mastered-buildings-grid');
+        if (masteredGrid) {
+            masteredGrid.innerHTML = '';
+            const masteredBuildings = this.learningData.masteredBuildings.slice(0, 6);
+            
+            if (masteredBuildings.length === 0) {
+                masteredGrid.innerHTML = '<p class="empty-message">Keep playing to master buildings!</p>';
+            } else {
+                masteredBuildings.forEach(key => {
+                    const building = buildings[key];
+                    const data = this.learningData.buildingAttempts[key];
+                    if (!building) return;
+                    
+                    const accuracy = Math.round((data.correct / data.attempts) * 100);
+                    const card = document.createElement('div');
+                    card.className = 'insight-card mastered';
+                    card.innerHTML = `
+                        <div class="insight-building">${building.abbreviation}</div>
+                        <div class="insight-name">${building.name}</div>
+                        <div class="insight-stat">✓ ${accuracy}% accuracy</div>
+                    `;
+                    masteredGrid.appendChild(card);
+                });
+            }
+        }
+        
+        // Session stats
+        const statsContainer = document.getElementById('learning-stats');
+        if (statsContainer) {
+            const totalSessions = this.learningData.sessionHistory.length;
+            const totalBuildings = Object.keys(this.learningData.buildingAttempts).length;
+            const avgScore = totalSessions > 0 
+                ? Math.round(this.learningData.sessionHistory.reduce((sum, s) => sum + s.score, 0) / totalSessions)
+                : 0;
+            
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-value">${totalSessions}</span>
+                    <span class="stat-label">Sessions Played</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${totalBuildings}</span>
+                    <span class="stat-label">Buildings Seen</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${avgScore}</span>
+                    <span class="stat-label">Avg Score</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">${this.learningData.masteredBuildings.length}</span>
+                    <span class="stat-label">Mastered</span>
+                </div>
+            `;
+        }
+    }
+    
+    practiceBuilding(buildingKey) {
+        // Start a focused practice session on weak buildings
+        const weakBuildings = this.learningData.weakBuildings.slice(0, 8);
+        if (weakBuildings.length < 4) {
+            alert('Not enough weak buildings to practice. Keep playing!');
+            return;
+        }
+        
+        // Generate practice questions focused on weak buildings
+        const questions = [];
+        weakBuildings.forEach(key => {
+            const otherBuildings = weakBuildings.filter(k => k !== key);
+            const distractors = this.shuffleArray(otherBuildings.slice()).slice(0, 3);
+            
+            if (distractors.length >= 3 && buildings[key]) {
+                questions.push({
+                    building: key,
+                    correctAnswer: key,
+                    options: this.shuffleArray([key, ...distractors]),
+                    difficulty: 'practice',
+                    hint: buildings[key].tips || 'Focus on the building features.'
+                });
+            }
+        });
+        
+        if (questions.length < 3) {
+            alert('Not enough buildings to create practice session.');
+            return;
+        }
+        
+        this.activeQuestionPool = this.shuffleArray(questions);
+        this.totalRounds = Math.min(questions.length, 5);
+        this.mode = 'practice';
+        this.startGame();
+    }
+    
+    // ========== ENHANCED RESOURCE DISPLAY ==========
+    
+    getEnhancedResources(buildingKey) {
+        if (typeof resourceLocations === 'undefined') return null;
+        return resourceLocations[buildingKey] || null;
+    }
+    
+    populateEnhancedResources(containerId, buildingKey) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const enhanced = this.getEnhancedResources(buildingKey);
+        const building = buildings[buildingKey];
+        
+        if (!building) return;
+        
+        container.innerHTML = '';
+        
+        // Use enhanced resources if available, otherwise fall back to basic
+        const resources = enhanced || building.resources || [];
+        
+        resources.forEach(resource => {
+            const card = document.createElement('div');
+            card.className = 'resource-card enhanced';
+            
+            let locationInfo = '';
+            if (resource.floor) {
+                locationInfo = `<div class="resource-location">
+                    📍 ${resource.floor}${resource.section ? ` - ${resource.section}` : ''}
+                    ${resource.room ? ` (${resource.room})` : ''}
+                </div>`;
+            }
+            
+            let hoursInfo = '';
+            if (resource.hours) {
+                hoursInfo = `<div class="resource-hours">🕐 ${resource.hours}</div>`;
+            }
+            
+            card.innerHTML = `
+                <h5>${resource.name}</h5>
+                <p>${resource.description || ''}</p>
+                ${locationInfo}
+                ${hoursInfo}
+            `;
+            
+            container.appendChild(card);
+        });
+    }
+    
+    clearLearningData() {
+        if (confirm('This will reset all your learning progress. Are you sure?')) {
+            this.learningData = {
+                buildingAttempts: {},
+                sessionHistory: [],
+                weakBuildings: [],
+                masteredBuildings: []
+            };
+            this.saveLearningData();
+            alert('Learning data cleared.');
+            this.initLearningInsightsScreen();
+        }
     }
 }
 
