@@ -258,66 +258,77 @@ class CampusMap {
         this.fetchWalkingRoute(fromCoords, dest, layer, map);
     }
 
-    // Fetch real walking directions from OSRM
+    // Fetch real walking directions, preferring a foot-specific OSRM instance
     async fetchWalkingRoute(from, to, layer, map) {
         const fromLatLng = [from.lat, from.lng];
         const toLatLng = [to.lat, to.lng];
-        
-        // OSRM API URL for walking directions
-        const osrmUrl = `https://router.project-osrm.org/route/v1/foot/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&steps=true`;
-        
-        try {
-            const response = await fetch(osrmUrl);
-            const data = await response.json();
-            
-            if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
-                const route = data.routes[0];
-                const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
-                
-                // Draw the actual walking route
-                const routeLine = L.polyline(coordinates, {
-                    color: '#4CAF50',
-                    weight: 5,
-                    opacity: 0.9,
-                    className: 'campus-map-route walking-route'
-                });
-                layer.addLayer(routeLine);
-                
-                // Add route info popup
-                const distanceMeters = Math.round(route.distance);
-                const distanceFeet = Math.round(distanceMeters * 3.281);
-                const distanceMiles = distanceMeters / 1609.34;
-                
-                // Calculate walking time: average walking speed is ~3 mph = 80 meters/min
-                // Campus walking is slower (~2.5 mph = 67 meters/min) due to crosswalks, crowds
-                const walkingSpeed = 67; // meters per minute (~2.5 mph)
-                const totalMinutes = Math.max(1, Math.round(distanceMeters / walkingSpeed));
-                const durationDisplay = this.formatDuration(totalMinutes);
-                
-                const distanceDisplay = distanceMiles >= 0.1 
-                    ? `${distanceMiles.toFixed(2)} mi` 
-                    : `${distanceFeet} ft`;
-                
-                // Update directions display
-                this.updateDirectionsDisplay(route, durationDisplay, distanceDisplay);
-                
-                // Fit bounds to route
-                const bounds = routeLine.getBounds();
-                map.fitBounds(bounds, { padding: [50, 50] });
-                
-                // Add turn markers for key steps
-                this.addTurnMarkers(route.legs[0].steps, layer);
-                
-            } else {
-                // Fallback to straight line if OSRM fails
-                this.drawFallbackRoute(fromLatLng, toLatLng, layer, map);
+
+        // Prefer the dedicated routed-foot instance, fall back to the general OSRM demo
+        const routingEndpoints = [
+            `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&steps=true`,
+            `https://router.project-osrm.org/route/v1/foot/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&steps=true`
+        ];
+
+        let routeData = null;
+
+        for (const endpoint of routingEndpoints) {
+            try {
+                const response = await fetch(endpoint);
+                if (!response.ok) {
+                    continue;
+                }
+                const data = await response.json();
+                if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                    routeData = data;
+                    break;
+                }
+            } catch (error) {
+                console.warn('Routing endpoint failed, trying next option:', error);
             }
-        } catch (error) {
-            console.warn('OSRM routing failed, using straight line:', error);
-            // Fallback to straight line
+        }
+
+        if (routeData) {
+            const route = routeData.routes[0];
+            const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+
+            // Draw the actual walking route
+            const routeLine = L.polyline(coordinates, {
+                color: '#4CAF50',
+                weight: 5,
+                opacity: 0.9,
+                className: 'campus-map-route walking-route'
+            });
+            layer.addLayer(routeLine);
+
+            // Add route info popup
+            const distanceMeters = Math.round(route.distance);
+            const distanceFeet = Math.round(distanceMeters * 3.281);
+            const distanceMiles = distanceMeters / 1609.34;
+
+            // Calculate walking time: average walking speed is ~3 mph = 80 meters/min
+            // Campus walking is slower (~2.5 mph = 67 meters/min) due to crosswalks, crowds
+            const walkingSpeed = 67; // meters per minute (~2.5 mph)
+            const totalMinutes = Math.max(1, Math.round(distanceMeters / walkingSpeed));
+            const durationDisplay = this.formatDuration(totalMinutes);
+
+            const distanceDisplay = distanceMiles >= 0.1 
+                ? `${distanceMiles.toFixed(2)} mi` 
+                : `${distanceFeet} ft`;
+
+            // Update directions display
+            this.updateDirectionsDisplay(route, durationDisplay, distanceDisplay);
+
+            // Fit bounds to route
+            const bounds = routeLine.getBounds();
+            map.fitBounds(bounds, { padding: [50, 50] });
+
+            // Add turn markers for key steps
+            this.addTurnMarkers(route.legs[0].steps, layer);
+        } else {
+            console.warn('Foot routing unavailable, falling back to straight line.');
             this.drawFallbackRoute(fromLatLng, toLatLng, layer, map);
         }
-        
+
         setTimeout(() => map.invalidateSize(), 200);
     }
 
